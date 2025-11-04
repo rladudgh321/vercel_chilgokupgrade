@@ -31,16 +31,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb',
-    },
-  },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "10mb",
-    },
-  },
 };
 
 export default withSentryConfig(withBundleAnalyzer(nextConfig), {

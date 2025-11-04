@@ -1,19 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/app/utils/supabase/server";
+import { supabaseAdmin } from "@/app/utils/supabase/admin";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 
 // GET: 모든 거래유형 조회
 export async function GET(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = supabaseAdmin;
 
     const { data, error } = await supabase
       .from("BuyType")
       .select("*")
-      .order("order", { ascending: true, nullsLast: true });
+      .order("order", { ascending: true, nullsFirst: false });
 
     if (error) {
       Sentry.captureException(error);

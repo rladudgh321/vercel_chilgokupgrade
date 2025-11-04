@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from("BuildingOption")
       .select("*")
-      .order("order", { ascending: true, nullsLast: true });
+      .order("order", { ascending: true, nullsFirst: false });
 
     if (error) {
       Sentry.captureException(error);

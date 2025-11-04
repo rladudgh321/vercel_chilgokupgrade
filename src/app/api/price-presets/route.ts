@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       .from("PricePreset")
       .select("*")
       .eq("buyTypeId", buyTypeId)
-      .order("order", { ascending: true, nullsLast: true });
+      .order("order", { ascending: true, nullsFirst: false });
 
     if (error) {
       Sentry.captureException(error);

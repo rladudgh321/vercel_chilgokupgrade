@@ -55,7 +55,7 @@ describe('/api/theme-images API', () => {
       expect(supabaseClient.from).toHaveBeenCalledWith('ThemeImage');
       expect(supabaseClient.select).toHaveBeenCalledWith('*');
       expect(supabaseClient.is).toHaveBeenCalledWith('deletedAt', null);
-      expect(supabaseClient.order).toHaveBeenCalledWith('order', { ascending: true, nullsLast: true });
+      expect(supabaseClient.order).toHaveBeenCalledWith('order', { ascending: true, nullsFirst: false });
     });
 
     it('실패: 데이터베이스 조회 중 오류가 발생하면 400 상태 코드와 에러를 반환해야 합니다.', async () => {

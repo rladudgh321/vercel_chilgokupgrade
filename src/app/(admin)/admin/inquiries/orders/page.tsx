@@ -3,8 +3,8 @@ import { fetchOrders } from "@/app/hooks/useOrders";
 import Hydration from "@/app/components/shared/Hydration";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 
-const OrdersPage = async ({ searchParams }: { searchParams: { page?: string } }) => {
-  const page = parseInt(searchParams.page ?? "1", 10);
+const OrdersPage = async ({ searchParams }: { searchParams: Promise<{ page?: string }> }) => {
+  const page = parseInt((await searchParams).page ?? "1", 10);
   const limit = 10;
 
   const queryClient = new QueryClient();

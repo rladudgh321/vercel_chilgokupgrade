@@ -3,8 +3,8 @@ import { fetchContactRequests } from "@/app/hooks/useContactRequests";
 import Hydration from "@/app/components/shared/Hydration";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 
-const ContactRequestPage = async ({ searchParams }: { searchParams: { page?: string } }) => {
-  const page = parseInt(searchParams.page ?? "1", 10);
+const ContactRequestPage = async ({ searchParams }: { searchParams: Promise<{ page?: string }> }) => {
+  const page = parseInt((await searchParams).page ?? "1", 10);
   const limit = 10;
 
   const queryClient = new QueryClient();

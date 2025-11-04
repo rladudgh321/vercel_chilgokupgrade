@@ -74,7 +74,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       setPropertyImagesLoading(new Array(sanitized.length).fill(true));
       setPropertyImagesError(new Array(sanitized.length).fill(false));
     }
-  }, [subImageField]);
+  }, [propertyImages, subImageField]);
 
   useEffect(() => {
     const sanitized = Array.isArray(adminImageField)
@@ -85,7 +85,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       setAdminImagesLoading(new Array(sanitized.length).fill(true));
       setAdminImagesError(new Array(sanitized.length).fill(false));
     }
-  }, [adminImageField]);
+  }, [adminImageField, adminImages]);
 
   // ─────────────────────────────────────────────────────────
   // 업로드 뮤테이션

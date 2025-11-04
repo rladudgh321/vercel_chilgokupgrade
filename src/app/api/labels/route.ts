@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from("Label")
       .select("*")
-      .order("order", { ascending: true, nullsLast: true });
+      .order("order", { ascending: true, nullsFirst: false });
 
     if (error) {
       Sentry.captureException(error);

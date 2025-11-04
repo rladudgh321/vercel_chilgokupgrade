@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       .from("ThemeImage")
       .select("*")
       .is("deletedAt", null)
-      .order("order", { ascending: true, nullsLast: true });
+      .order("order", { ascending: true, nullsFirst: false });
 
     if (error) {
       Sentry.captureException(error);

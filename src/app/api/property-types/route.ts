@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/app/utils/supabase/server";
+import { supabaseAdmin } from "@/app/utils/supabase/admin";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 
 // GET: 모든 매물 종류(propertyType) 조회
 export async function GET(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = supabaseAdmin;
 
     // ThemeImage와 달리 이미지가 없을 수 있으므로, ThemeImage에서 동일 라벨의 이미지가 있으면 합쳐서 반환
     const { data: builds, error: buildError } = await supabase

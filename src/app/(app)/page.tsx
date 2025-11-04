@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import MainPicture, { Banner } from "../components/root/1MainPicture";
 import SearchMapList from "../components/root/2SearchMapList";
 import WhatTypeLand, { ListingTypeProps } from "../components/root/3WhatTypeLand";
@@ -117,14 +118,20 @@ const Home = async () => {
   const RecentlyData = getRecently();
   return (
     <main>
-      <Popup popups={popups} />
+      <Suspense fallback={<div>로딩 중...</div>}>
+        <Popup popups={popups} />
+      </Suspense>
       <MainPicture banners={banners} />
       <SearchMapList />
       <WhatTypeLand listingType={listingType} />
       <IfLandType themeImage={themeImage} />
-      <ListingSection RecommendData={RecommendData!} QuickSaleData={QuickSaleData!} RecentlyData={RecentlyData!} />
+      <Suspense fallback={<div>로딩 중...</div>}>
+        <ListingSection RecommendData={RecommendData!} QuickSaleData={QuickSaleData!} RecentlyData={RecentlyData!} />
+      </Suspense>
       <Contact>
-        <ContactForm isBanned={isBanned} />
+        <Suspense fallback={<div>로딩 중...</div>}>
+          <ContactForm isBanned={isBanned} />
+        </Suspense>
       </Contact>
       <Institue />
     </main>

@@ -4,16 +4,16 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
     const { error } = await supabase
       .from("BannedIp")
       .delete()
-      .eq("id", params.id);
+      .eq("id", (await params).id);
 
     if (error) {
       throw error;

@@ -27,7 +27,7 @@ function serializePosts(posts: any[]): BoardPost[] {
 
 
 export default async function NoticePage() {
-  const posts = await getPosts();
-  const serializedPosts = serializePosts(posts);
+  const response = await getPosts();
+  const serializedPosts = serializePosts(response.data || []);
   return <NoticeClient initialPosts={serializedPosts} />;
 }

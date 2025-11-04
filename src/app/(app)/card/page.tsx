@@ -1,4 +1,5 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
+import { fetchBuilds } from "@/app/apis/build";
 import CardPageClient from "./CardPageClient";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
@@ -11,8 +12,8 @@ async function fetchJson(url: string) {
   return res.json();
 }
 
-export default async function CardPage(props: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const searchParams = props.searchParams;
+export default async function CardPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = await props.searchParams;
 
   const query: Record<string, string> = {};
   if (searchParams.keyword) query.keyword = searchParams.keyword as string;
