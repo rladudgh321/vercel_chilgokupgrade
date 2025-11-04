@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "public"."Build" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "public"."Contact" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

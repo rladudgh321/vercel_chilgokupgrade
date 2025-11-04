@@ -1,0 +1,45 @@
+ POST http://127.0.0.1:3000/api/contact
+ Content-Type: application/json
+
+{
+  "customerText": "hello",
+  "customerPhoneNumber": "01066318911"
+}
+
+###
+# build 보내보기
+POST http://222.118.156.209:3000/api/build
+Content-Type: application/json
+
+{
+  "address": "가양동 323-21", 
+  "dong": "33", 
+  "ho": "22", 
+  "etc": "기타기타", 
+  "isAddressPublic": "public", 
+  "mapLocation": "https://127.0.0.1:3000", 
+  "themes": ["글쎄다", "아이고"]
+}
+
+###
+# get매서드
+
+POST http://localhost:3000/api/upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="sample.jpg"
+Content-Type: image/jpeg
+
+< ./public/img/contact.png
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+ #겟 메서드
+ GET http://127.0.0.1:3000/api/build
+
+ ####
+ # contact Post
+
+

@@ -1,0 +1,366 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Build {
+  id               Int            @id @default(autoincrement())
+  address          String?
+  dong             String?
+  ho               String?
+  etc              String?
+  isAddressPublic  AddressPublic? @default(public)
+  propertyType     String?
+  listingType      ListingType?   @relation(fields: [listingTypeId], references: [id], onDelete: SetNull)
+  listingTypeId    Int?
+  views            Int            @default(0)
+  buyType          BuyType?       @relation(fields: [buyTypeId], references: [id], onDelete: SetNull)
+  buyTypeId        Int?
+  dealScope        String?
+  visibility       Boolean?       @default(true)
+  priceDisplay     String?
+  salePrice        Int?
+  isSalePriceEnabled Boolean? @default(false)
+  lumpSumPrice     Int?
+  isLumpSumPriceEnabled Boolean? @default(false)
+  actualEntryCost  Int?
+  isActualEntryCostEnabled Boolean? @default(false)
+  rentalPrice      Int?
+  isRentalPriceEnabled Boolean? @default(false)
+  halfLumpSumMonthlyRent Int?
+  isHalfLumpSumMonthlyRentEnabled Boolean? @default(false)
+  deposit          Int?
+  isDepositEnabled Boolean? @default(false)
+  managementFee    Int?
+  isManagementFeeEnabled Boolean? @default(false)
+  managementEtc    String?
+  popularity       String?
+  labelId          Int?
+  label            Label?         @relation(fields: [labelId], references: [id], onDelete: SetNull)
+  floorType        String?
+  currentFloor     Int?   
+  floorOptionId    Int?
+  totalFloors      Int?
+  basementFloors   Int?
+  floorDescription String?
+  floorOption      FloorOption?   @relation(fields: [floorOptionId], references: [id], onDelete: SetNull)
+  roomOption       RoomOption?    @relation(fields: [roomOptionId], references: [id], onDelete: SetNull)
+  roomOptionId     Int?
+  bathroomOption   BathroomOption? @relation(fields: [bathroomOptionId], references: [id], onDelete: SetNull)
+  bathroomOptionId Int?
+  actualArea       Float?
+  supplyArea       Float?
+  landArea         Float?
+  buildingArea     Float?
+  totalArea        Float?
+  themes           String[]       @default([])
+  buildingOptions  BuildingOption[]
+  constructionYear DateTime?
+  permitDate       DateTime?
+  approvalDate     DateTime?
+  parkingPerUnit   Int?
+  totalParking     Int?
+  parkingFee       Int?
+  parking          String[]       @default([])
+  direction        String?
+  directionBase    String?
+  landUse          String?
+  landType         String?
+  buildingUse      String?
+  staff            String?
+  customerType     String?
+  customerName     String?
+  elevatorType     String?
+  elevatorCount    Int?
+  moveInType       String?
+  moveInDate       DateTime?
+  heatingType      String?
+  yieldType        String?
+  otherYield       String?
+  contractEndDate  DateTime?
+  buildingName     String?
+  floorAreaRatio   String?
+  otherUse         String?
+  mainStructure    String?
+  height           String?
+  roofStructure    String?
+  title            String?
+  editorContent    String?
+  secretNote       String?
+  secretContact    String?
+  mainImage        String?
+  subImage         Json?
+  adminImage       Json?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
+  deletedAt        DateTime?
+  confirmDate      DateTime?
+}
+
+model AccessLog {
+  id        Int      @id @default(autoincrement())
+  ip        String?
+  browser   String?
+  os        String?
+  referrer  String?
+  location  String?
+  createdAt DateTime @default(now())
+
+  @@map("access_logs")
+}
+
+model BannedIp {
+  id        Int      @id @default(autoincrement())
+  ipAddress String   @unique
+  reason    String?
+  contact   String?
+  details   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id                  Int      @id @default(autoincrement())
+  customerText        String
+  customerPhoneNumber String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now()) @updatedAt
+}
+
+// /admin/board/admin-board/ 게시판관리
+model BoardPost {
+  id                  Int            @id @default(autoincrement())
+  title               String
+  content             String?
+  popupContent        String?
+  representativeImage String?
+  registrationDate    DateTime?
+  manager             String?
+  isPopup             Boolean        @default(false)
+  popupWidth          Int?
+  popupHeight         Int?
+  isPublished         Boolean        @default(true)
+  popupType           PopupType      @default(IMAGE)
+  isAnnouncement      Boolean        @default(false)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now()) @updatedAt
+  deletedAt           DateTime?
+  categoryId          Int?
+  category            BoardCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+}
+
+model BoardCategory {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  order     Int?        @default(0)
+  posts     BoardPost[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now()) @updatedAt
+}
+
+// 테마 이미지 관리
+model ThemeImage {
+  id        Int      @id @default(autoincrement())
+  label     String
+  imageUrl  String
+  imageName String?
+  isActive  Boolean  @default(true)
+  order     Int?     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  deletedAt DateTime?
+}
+
+model ListingType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  imageUrl  String?
+  imageName String?
+  order     Int?     @default(0)
+  builds    Build[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model BuildingOption {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  builds    Build[]
+  imageUrl  String?
+  imageName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Label {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  builds    Build[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model BuyType {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  builds    Build[]
+  presets   PricePreset[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model PricePreset {
+  id          Int      @id @default(autoincrement())
+  name        String
+  order       Int?     @default(0)
+  buyType     BuyType  @relation(fields: [buyTypeId], references: [id])
+  buyTypeId   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model ContactRequest {
+  id          Int      @id @default(autoincrement())
+  confirm     Boolean  @default(false)
+  author      String
+  contact     String
+  ipAddress   String
+  description String
+  note        String?
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+
+  @@index([contact])
+  @@index([date])
+}
+
+model Order {
+  id              Int      @id @default(autoincrement())
+  confirm         Boolean  @default(false)
+  category        String
+  transactionType String
+  author          String
+  propertyType    String
+  estimatedAmount String
+  contact         String
+  ipAddress       String
+  region          String
+  title           String
+  description     String
+  note            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+enum AddressPublic {
+  public
+  private
+  exclude
+}
+
+model RoomOption {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  imageUrl  String?
+  imageName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  builds    Build[]
+}
+
+model BathroomOption {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  imageUrl  String?
+  imageName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  builds    Build[]
+}
+
+model FloorOption {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  imageUrl  String?
+  imageName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  builds    Build[]
+}
+
+model AreaPreset {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  order     Int?     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model SearchBarSetting {
+  id                  Int     @id @default(1)
+  showKeyword         Boolean @default(true)
+  showPropertyType    Boolean @default(true)
+  showDealType        Boolean @default(true)
+  showPriceRange      Boolean @default(true)
+  showAreaRange       Boolean @default(true)
+  showTheme           Boolean @default(true)
+  showRooms           Boolean @default(true)
+  showFloor           Boolean @default(true)
+  showBathrooms       Boolean @default(true)
+  showSubwayLine      Boolean @default(true)
+  updatedAt           DateTime @updatedAt
+}
+
+enum PopupType {
+  IMAGE
+  CONTENT
+}
+
+model WorkInfo {
+  id           String   @id @default("main")
+  companyName  String?
+  phone        String?
+  mobile       String?
+  email        String?
+  owner        String?
+  businessId   String?
+  address      String?
+  logoUrl      String?
+  logoName     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SnsSetting {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  url       String
+  imageUrl  String?
+  imageName String?
+  order     Int?     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model WebViewBanner {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  imageName String
+  order     Int?     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}

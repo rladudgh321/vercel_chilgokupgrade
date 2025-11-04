@@ -1,0 +1,50 @@
+[
+  {
+    "type": "아파트",
+    "floor": "15층",
+    "rooms": "방2, 화1",
+    "image": "/img/3/1.png",
+    "title": "보1억2천  월50만",
+    "description": "대전 동구 가양동 대주빌아파트"
+  },
+  {
+    "type": "빌라",
+    "floor": "3층",
+    "rooms": "방3, 화2",
+    "image": "/img/3/2.png",
+    "title": "보5억2천  월240만",
+    "description": "대구 북구 동천동 태양하이츠"
+  },
+  {
+    "type": "오피스텔",
+    "floor": "6층",
+    "rooms": "방3, 화1",
+    "image": "/img/3/3.png",
+    "title": "매42억  융20억",
+    "description": "경북 칠곡 황학리 다부오피스텔"
+  },
+  {
+    "type": "원룸",
+    "floor": "2층",
+    "rooms": "방1, 화1",
+    "image": "/img/3/4.png",
+    "title": "보 5천  월20만",
+    "description": "대전 유성구 구암동 콩이네"
+  },
+  {
+    "type": "투룸",
+    "floor": "2층",
+    "rooms": "방2, 화1",
+    "image": "/img/3/2.png",
+    "title": "보3억2천  월40만",
+    "description": "대전 서구 둔산동 갤러리아"
+  },
+  {
+    "type": "역세권",
+    "floor": "2층",
+    "rooms": "방1, 화1",
+    "image": "/img/3/3.png",
+    "title": "보1천  월70억",
+    "description": "서울 강남 대치동 지유는 여기 안보냄"
+  }
+]
