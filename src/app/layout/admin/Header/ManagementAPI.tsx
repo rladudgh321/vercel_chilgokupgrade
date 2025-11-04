@@ -30,7 +30,7 @@ const formatBytes = (bytes: number, decimals = 2) => {
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  let num = bytes / Math.pow(k, i);
+  const num = bytes / Math.pow(k, i);
 
   if (sizes[i] === 'GB') {
     return `${parseFloat(num.toFixed(3))} ${sizes[i]}`;

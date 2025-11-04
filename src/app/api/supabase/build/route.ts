@@ -251,7 +251,7 @@ export async function POST(request: NextRequest) {
         }
     }
 
-    let buyTypeId: number | null = raw.buyTypeId ?? null;
+    const buyTypeId: number | null = raw.buyTypeId ?? null;
 
     const dataToInsert = {
         ...restOfBody,

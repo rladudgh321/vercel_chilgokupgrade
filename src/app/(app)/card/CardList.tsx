@@ -44,7 +44,9 @@ const CardList = ({
     queryFn: () => fetchListings(searchParams),
   });
 
-  const listings = data?.listings || [];
+  const listings = useMemo(() => {
+    return data?.listings || []
+  },[data?.listings])
 
   const handleCardClick = (id: number) => {
     // Increment views

@@ -72,7 +72,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
       currentFloorDisplay = `B${Math.abs(currentFloor)}`;
     }
 
-    let floorTypeDisplay = floorType ? `${floorType} ` : '';
+    const floorTypeDisplay = floorType ? `${floorType} ` : '';
 
     let details = "";
     if (totalFloors) {
