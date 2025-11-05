@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (data.user) {
-      await createAccessLog(request, supabase);
+      createAccessLog(request, supabase);
     }
 
     // 성공 시: createClient(cookieStore) 내부에서 cookieStore.set(...)로

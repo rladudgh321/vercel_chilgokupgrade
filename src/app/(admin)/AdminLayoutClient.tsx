@@ -8,21 +8,7 @@ import { clsx } from 'clsx';
 export default function AdminLayoutClient({ children, logoUrl }: { children: React.ReactNode, logoUrl: string | null }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleTabClose = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      fetch('/api/admin/logout', {
-        method: 'POST',
-        keepalive: true,
-      });
-    };
 
-    window.addEventListener('beforeunload', handleTabClose);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleTabClose);
-    };
-  }, []);
 
   return (
     <>

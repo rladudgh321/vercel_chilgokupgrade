@@ -23,8 +23,7 @@ export default function LoginForm() {
 
     if (response.ok) {
       // On success, redirect to the admin dashboard
-      router.push('/admin');
-      router.refresh(); // to reflect login state
+      window.location.href = '/admin';
     } else {
       const data = await response.json();
       setError(data.error || '로그인에 실패했습니다.');
