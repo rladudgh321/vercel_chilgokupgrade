@@ -1,11 +1,12 @@
 import NoticeClient from './NoticeClient';
 import { BoardPost } from './NoticeClient';
 
+export const dynamic = 'force-dynamic';
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function getPosts() {
   const res = await fetch(`${BASE_URL}/api/board`, {
-    cache: 'no-store',
     next: { revalidate: 28800, tags: ['public', 'board'] },
   });
   if (!res.ok) {

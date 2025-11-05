@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import PostView, { BoardPost } from './PostView';
-export const dynamic = 'force-dynamic';
 
 // 서버 전용 클라이언트 (빌드 시점 및 SSR용)
 import {createClient as createClientClient } from '@/app/utils/supabase/client';
