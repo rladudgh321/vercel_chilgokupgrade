@@ -68,7 +68,3 @@ export async function middleware(request: NextRequest) {
   // 미들웨어는 본래의 응답(쿠키 갱신 등)을 반환할 수 있도록 NextResponse.next()를 유지
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};

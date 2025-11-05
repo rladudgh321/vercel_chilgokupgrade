@@ -5,7 +5,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function getPosts() {
   const res = await fetch(`${BASE_URL}/api/board`, {
-    next: { revalidate: 28_800, tags: ['public', 'board'] },
+    cache: 'no-store',
+    next: { revalidate: 28800, tags: ['public', 'board'] },
   });
   if (!res.ok) {
     return { data: [] };
