@@ -3,9 +3,8 @@ import { createClient as createClientServer } from "@/app/utils/supabase/server"
 import { cookies } from "next/headers";
 import OrdersPageClient from "./OrdersPageClient";
 
-export const dynamic = 'force-dynamic';
 
-// export const revalidate = 28800;
+export const revalidate = 28800;
 
 export default async function OrdersPage() {
   const cookieStore = await cookies();

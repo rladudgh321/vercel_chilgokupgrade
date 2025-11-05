@@ -3,7 +3,6 @@ import Footer from './layout/app/Footer';
 import Header from './layout/app/Header';
 import { getWorkInfo, getSnsSettings } from './(app)/layout';
 
-export const dynamic = 'force-dynamic';
 
 export default async function NotFound() {
   const [headerPromise] = 

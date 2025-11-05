@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import CardPageClient from "./CardPageClient";
-export const dynamic = 'force-dynamic';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 

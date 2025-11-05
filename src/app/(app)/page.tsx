@@ -10,7 +10,6 @@ import Institue from "../components/root/9Institue";
 import Popup from "../components/root/Popup";
 import { PopupPost } from "../components/root/Popup";
 
-export const dynamic = 'force-dynamic';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
