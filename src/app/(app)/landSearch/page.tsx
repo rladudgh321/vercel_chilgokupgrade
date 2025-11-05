@@ -1,5 +1,6 @@
 import { BuildFindAll } from "@/app/apis/build";
 import LandSearchClient from "./LandSearchClient";
+export const dynamic = 'force-dynamic';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
