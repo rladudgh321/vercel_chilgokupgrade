@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { fetchBuilds } from "@/app/apis/build";
 import CardPageClient from "./CardPageClient";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
