@@ -1,2 +1,1 @@
-Supabase admin client not initialized. Cannot check IP status.
- GET /api/ip-status 200 in 379ms
+`/admin/login`페이지에서 로그인을 하게 되면 로그인이 계속 유지가 안돼.

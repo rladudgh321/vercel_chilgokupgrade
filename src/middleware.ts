@@ -1,62 +1,48 @@
-// src/middleware.ts  (Edge runtime — Node API 사용 금지)
+import { createClient } from "@/app/utils/supabase/middlewareClient";
 import { type NextRequest, NextResponse } from "next/server";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const ACCESS_TOKEN_COOKIE_NAME = "sb-access-token"; // <-- This might need to be adjusted based on your Supabase setup
-const PUBLIC_ADMIN_ROUTES = ["/admin/login", "/admin/signup"];
-
 export async function middleware(request: NextRequest) {
+  const { supabase, response } = createClient(request);
+
+  // Refresh session cookies. This is the primary purpose of the Supabase middleware.
+  const { data: { user } } = await supabase.auth.getUser();
+
   const pathname = request.nextUrl.pathname;
 
-  // 1) Admin route protection
-  if (pathname.startsWith("/admin") && !PUBLIC_ADMIN_ROUTES.includes(pathname)) {
-    const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  // --- Route Protection Logic ---
+  const publicAdminRoutes = ['/admin/login', '/admin/signup'];
 
-    if (!accessToken) {
-      return NextResponse.rewrite(new URL("/not-found", request.url));
-    }
-
-    try {
-      const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          // The apikey header might be required depending on your project setup
-        },
-      });
-
-      if (!userRes.ok) {
-        return NextResponse.rewrite(new URL("/not-found", request.url));
-      }
-    } catch (e) {
-      console.error("Edge middleware user check failed:", e);
-      return NextResponse.rewrite(new URL("/not-found", request.url));
+  if (pathname.startsWith('/admin') && !publicAdminRoutes.includes(pathname)) {
+    if (!user) {
+      // Unauthenticated user trying to access a protected admin route.
+      // Rewrite to the not-found page.
+      return NextResponse.rewrite(new URL('/not-found', request.url));
     }
   }
 
-  // 2) IP ban check for all other routes, excluding the IP check API route itself
-  if (pathname !== '/api/ip-status') {
+  // --- IP Ban Logic ---
+  if (request.method === "POST") {
+    const ip = request.ip ?? "127.0.0.1";
     try {
-      const checkRes = await fetch(new URL("/api/ip-status", request.url).toString(), {
-        method: "GET",
-        headers: {
-          "x-forwarded-for": request.ip ?? "127.0.0.1",
-        },
-      });
+      const { data: bannedIp, error } = await supabase
+        .from("BannedIp")
+        .select("ipAddress")
+        .eq("ipAddress", ip)
+        .single();
 
-      if (checkRes.ok) {
-        const { isBanned } = await checkRes.json();
-        if (isBanned) {
-          return new NextResponse("Access Denied: Your IP is blocked.", { status: 403 });
-        }
-      } else {
-        console.warn("ip-status request failed:", checkRes.status);
+      if (error && error.code !== "PGRST116") {
+        console.error("Error checking banned IP in middleware:", error.message);
+      } else if (bannedIp) {
+        console.log(`Blocked POST request from banned IP: ${ip}`);
+        return new NextResponse("Access Denied: Your IP is blocked.", { status: 403 });
       }
     } catch (e) {
-      console.error("Middleware: failed to check banned IP:", e);
+      console.error("Exception in middleware while checking IP:", e);
     }
   }
 
-  return NextResponse.next();
+  // Return the response object to apply any session cookie updates.
+  return response;
 }
 
 export const config = {
