@@ -81,7 +81,7 @@ export type ListingSectionProps = {
 }
 
 async function getPopular(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?sortBy=popular&limit=10`, { next: { tags: ['public', 'popular'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=인기&limit=10`, { next: { tags: ['public', 'popular'], revalidate: 28800 } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -90,7 +90,7 @@ async function getPopular(): Promise<ListingSectionProps> {
 }
 
 async function getQuickSale(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?label=급매&limit=10`, { next: { tags: ['public', 'quick-sale'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=급매&limit=10`, { next: { tags: ['public', 'quick-sale'], revalidate: 28800 } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }

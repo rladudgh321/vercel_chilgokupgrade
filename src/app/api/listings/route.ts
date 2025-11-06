@@ -14,6 +14,7 @@ export async function GET(request: Request) {
   const rooms = searchParams.get("rooms") || undefined;
   const bathrooms = searchParams.get("bathrooms") || undefined;
   const sortBy = searchParams.get("sortBy") || "latest";
+  const popularity = searchParams.get("popularity") || undefined;
 
   try {
     const { data: processedListings, totalPages } = await BuildFindAll(
@@ -26,6 +27,7 @@ export async function GET(request: Request) {
         buyType,
         rooms,
         bathrooms,
+        popularity,
       },
       sortBy
     );

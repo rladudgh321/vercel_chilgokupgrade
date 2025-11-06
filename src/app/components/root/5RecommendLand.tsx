@@ -1,7 +1,7 @@
 import CardSlide from "./shaped/CardSlide";
 import { Listing } from "./ListingSection";
 
-const RecommedLand = ({ RecommendData, onCardClick }: { RecommendData: Listing[]; onCardClick: (id: number) => void }) => {
+const RecommendLand = ({ RecommendData, onCardClick }: { RecommendData: Listing[]; onCardClick: (id: number) => void }) => {
   return (
     <div className="text-center p-4 sm:p-6">
       <h2 className="text-lg sm:text-xl font-bold">이달의 인기 부동산</h2>
@@ -11,4 +11,4 @@ const RecommedLand = ({ RecommendData, onCardClick }: { RecommendData: Listing[]
   );
 };
 
-export default RecommedLand;
+export default RecommendLand;

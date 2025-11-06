@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import RecommedLand from "./5RecommedLand";
+import RecommendLand from "./5RecommendLand";
 import QuickSale from "./6QuickSale";
 import RecentlyLand from "./7RecentlyLand";
 import { ListingSectionProps } from "@/app/(app)/page";
@@ -62,7 +62,7 @@ const ListingSection = ({ RecommendData, QuickSaleData, RecentlyData }:{
   const RecentlyDataPromise = use(RecentlyData);
   return (
     <>
-      <RecommedLand RecommendData={RecommendDataPromise.listings} onCardClick={handleCardClick} />
+      <RecommendLand RecommendData={RecommendDataPromise.listings} onCardClick={handleCardClick} />
       <QuickSale QuickSaleData={QuickSaleDataPromise.listings} onCardClick={handleCardClick} />
       <RecentlyLand RecentlyData={RecentlyDataPromise.listings} onCardClick={handleCardClick} />
     </>

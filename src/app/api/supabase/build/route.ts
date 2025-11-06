@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
     const rooms = searchParams.get("rooms")?.trim();
     const bathrooms = searchParams.get("bathrooms")?.trim();
     const sortBy = searchParams.get("sortBy")?.trim() ?? "latest";
+    const popularity = searchParams.get("popularity")?.trim();
 
     const from = (page - 1) * limit;
     const to = from + limit - 1;
@@ -115,6 +116,10 @@ export async function GET(req: NextRequest) {
       } else {
           q = q.eq("bathroomOptionId", -1); // Return no results if bathroom option doesn't exist
       }
+    }
+
+    if (popularity) {
+      q = q.eq("popularity", popularity);
     }
 
     const floor = searchParams.get("floor")?.trim();
