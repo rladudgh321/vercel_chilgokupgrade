@@ -486,7 +486,7 @@ export default function LandSearchClient({
 
         <div className={`flex-1 min-w-0 ${view === 'list' && 'hidden sm:block'}`}>
 
-          <MapView listings={mapListings} onClusterClick={handleClusterClick} />
+          <MapView listings={mapListings} onClusterClick={handleClusterClick} view={view} />
 
         </div>
 

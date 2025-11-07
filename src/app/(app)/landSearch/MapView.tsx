@@ -20,6 +20,7 @@ type Props = {
   width?: number | string;
   height?: number | string;
   onClusterClick?: (listingIds: number[]) => void;
+  view: string;
 };
 
 const MapView = ({
@@ -27,6 +28,7 @@ const MapView = ({
   width = "100%",
   height = "100%",
   onClusterClick,
+  view,
 }: Props) => {
   const KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +39,16 @@ const MapView = ({
   useEffect(() => {
     onClusterClickRef.current = onClusterClick;
   }, [onClusterClick]);
+
+  useEffect(() => {
+    if (view === 'map' && mapRef.current) {
+      // The map container might have been hidden and is now visible.
+      // We need to relayout the map to ensure it fits the container.
+      setTimeout(() => {
+        mapRef.current.relayout();
+      }, 0);
+    }
+  }, [view]);
 
   const circleStyle = (size: number, bg: string) => ({
     width: `${size}px`,
