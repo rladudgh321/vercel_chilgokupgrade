@@ -464,7 +464,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
       {/* 층수 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <SelectField label="층수" name="floorType" options={["지상", "지하", "반지하", "옥탑"]} />
-        <InputField label="현재층(지하는 음수로 표현)" name="currentFloor" type="number" placeholder="숫자만 입력하세요" />
+        <InputField label="현재층" name="currentFloor" type="number" placeholder="숫자만 입력하세요" />
         <InputField label="지상 전체층" name="totalFloors" type="number" placeholder="숫자만 입력하세요" min={0} />
         <InputField label="지하 전체층" name="basementFloors" type="number" placeholder="숫자만 입력하세요" min={0} />
         <InputField label="층수 설명" name="floorDescription" placeholder="발코니 확장했어요. 중간층에 라운지가 있어요" />

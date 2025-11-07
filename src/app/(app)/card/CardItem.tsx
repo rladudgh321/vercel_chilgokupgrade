@@ -39,6 +39,9 @@ type Props = {
     bathroomOption?: { name: string };
     actualArea?: number;
     supplyArea?: number;
+    landArea?: number;
+    buildingArea?: number;
+    totalArea?: number;
     mainImage?: string;
     label?: string;
     popularity?: string;
@@ -64,7 +67,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
 
   const formatFloor = (floorType?: string, currentFloor?: number, totalFloors?: number, basementFloors?: number) => {
     if (currentFloor === undefined || currentFloor === null) {
-      return "층수 정보 없음";
+      return null;
     }
 
     let currentFloorDisplay = `${currentFloor}`;
@@ -99,6 +102,24 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
         <span className="text-base font-bold text-gray-900">{formattedPrice}</span>
       </div>
     );
+  };
+
+  const getAreaString = () => {
+    const areas = [
+      { label: "실", value: listing.actualArea },
+      { label: "공급", value: listing.supplyArea },
+      { label: "대지", value: listing.landArea },
+      { label: "건축", value: listing.buildingArea },
+      { label: "연", value: listing.totalArea },
+    ];
+
+    const validAreas = areas.filter(area => area.value && area.value > 0);
+
+    if (validAreas.length === 0) {
+      return "면적 정보 없음";
+    }
+
+    return validAreas.map(area => `${area.label} ${area.value!.toLocaleString()}m²`).join(" / ");
   };
 
   return (
@@ -176,22 +197,25 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
             <div className="flex items-center gap-1.5">
               <Square className="w-4 h-4 text-gray-500 flex-shrink-0" />
               <span>
-                실 {formatArea(listing.actualArea)} / 공{" "}
-                {formatArea(listing.supplyArea)}
+                {getAreaString()}
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-gray-500 flex-shrink-0" />
-              <span>
-                {formatFloor(listing.floorType, listing.currentFloor, listing.totalFloors, listing.basementFloors)}
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <BedDouble className="w-4 h-4 text-gray-500 flex-shrink-0" />
-              <span>
-                방 {listing.roomOption?.name || "-"} / 욕실 {listing.bathroomOption?.name || "-"}
-              </span>
-            </div>
+            {formatFloor(listing.floorType, listing.currentFloor, listing.totalFloors, listing.basementFloors) && (
+              <div className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span>
+                  {formatFloor(listing.floorType, listing.currentFloor, listing.totalFloors, listing.basementFloors)}
+                </span>
+              </div>
+            )}
+            {(listing.roomOption || listing.bathroomOption) && (
+              <div className="flex items-center gap-1.5">
+                <BedDouble className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span>
+                  방 {listing.roomOption?.name || "-"} / 욕실 {listing.bathroomOption?.name || "-"}
+                </span>
+              </div>
+            )}
             {listing.parking && listing.parking.length > 0 && (
               <div className="flex items-center gap-1.5">
                 <Car className="w-4 h-4 text-gray-500 flex-shrink-0" />
