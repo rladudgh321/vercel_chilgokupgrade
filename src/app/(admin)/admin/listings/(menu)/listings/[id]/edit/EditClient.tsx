@@ -224,6 +224,7 @@ export default function EditClient({ id }: { id: number }) {
   });
 
   const methods = useForm<FormData>({ defaultValues: BASE_DEFAULTS });
+  const [formKey, setFormKey] = useState(0);
 
   const allLoaded = useMemo(
     () => !isLoading && !isLoadingRoomOptions && !isLoadingBathroomOptions && !isLoadingThemeOptions && !isLoadingLabelOptions && !isLoadingBuildingOptions,
@@ -234,6 +235,7 @@ export default function EditClient({ id }: { id: number }) {
   useEffect(() => {
     if (allLoaded && data) {
       methods.reset(normalizeForForm(data, themeOptions));
+      setFormKey(prev => prev + 1);
     }
   }, [allLoaded, data, themeOptions, methods]);
 
@@ -363,6 +365,7 @@ export default function EditClient({ id }: { id: number }) {
 
   return (
     <BuildForm
+      key={formKey}
       mode="update"
       methods={methods}
       isSubmitting={isPending || isImageLoading}

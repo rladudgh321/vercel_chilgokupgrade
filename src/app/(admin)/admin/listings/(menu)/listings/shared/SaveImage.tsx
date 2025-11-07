@@ -32,17 +32,12 @@ const arraysEqual = (a: string[] = [], b: string[] = []) => {
 const unique = (arr: string[]) => Array.from(new Set(arr));
 
 const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => void }> = ({ onImageLoadingStateChange }) => {
-  const { getValues, setValue, watch } = useFormContext<FormShape>();
+  const { getValues, setValue } = useFormContext<FormShape>();
 
-  // RHF 값 변경 감시(서버에서 reset으로 들어오는 초기값 포함)
-  const mainImageField = watch("mainImage");
-  const subImageField = watch("subImage");
-  const adminImageField = watch("adminImage");
-
-  // 미리보기용 로컬 상태
-  const [mainImage, setMainImage] = useState<string | null>(null);
-  const [propertyImages, setPropertyImages] = useState<string[]>([]);
-  const [adminImages, setAdminImages] = useState<string[]>([]);
+  // 미리보기용 로컬 상태 (getValues로 초기화)
+  const [mainImage, setMainImage] = useState<string | null>(() => getValues("mainImage"));
+  const [propertyImages, setPropertyImages] = useState<string[]>(() => getValues("subImage") || []);
+  const [adminImages, setAdminImages] = useState<string[]>(() => getValues("adminImage") || []);
 
   // 이미지 로딩 상태
   const [mainImageLoading, setMainImageLoading] = useState(false);
@@ -54,38 +49,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   const [propertyImagesError, setPropertyImagesError] = useState<boolean[]>([]);
   const [adminImagesError, setAdminImagesError] = useState<boolean[]>([]);
 
-  // ─────────────────────────────────────────────────────────
-  //  RHF → 로컬 미리보기 동기화 (렌더 루프 방지: effect + 동등성 체크)
-  // ─────────────────────────────────────────────────────────
-  useEffect(() => {
-    setMainImage(isValidImgSrc(mainImageField) ? mainImageField : null);
-    if (isValidImgSrc(mainImageField)) {
-      setMainImageLoading(true);
-      setMainImageError(false);
-    }
-  }, [mainImageField]);
 
-  useEffect(() => {
-    const sanitized = Array.isArray(subImageField)
-      ? unique(subImageField.filter(isValidImgSrc))
-      : [];
-    if (!arraysEqual(propertyImages, sanitized)) {
-      setPropertyImages(sanitized);
-      setPropertyImagesLoading(new Array(sanitized.length).fill(true));
-      setPropertyImagesError(new Array(sanitized.length).fill(false));
-    }
-  }, [propertyImages, subImageField]);
-
-  useEffect(() => {
-    const sanitized = Array.isArray(adminImageField)
-      ? unique(adminImageField.filter(isValidImgSrc))
-      : [];
-    if (!arraysEqual(adminImages, sanitized)) {
-      setAdminImages(sanitized);
-      setAdminImagesLoading(new Array(sanitized.length).fill(true));
-      setAdminImagesError(new Array(sanitized.length).fill(false));
-    }
-  }, [adminImageField, adminImages]);
 
   // ─────────────────────────────────────────────────────────
   // 업로드 뮤테이션
@@ -106,58 +70,28 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   });
 
     const propertyImagesMutation = useMutation({
-
       mutationFn: uploadImages,
-
       onSuccess: (data: { urls: string[] }) => {
-
         const urls = unique((data.urls || []).filter(isValidImgSrc));
-
         if (urls.length === 0) return;
-
   
-
-        setPropertyImages((prev) => unique([...prev, ...urls]));
-
+        const newImages = unique([...propertyImages, ...urls]);
+        setPropertyImages(newImages);
+        setValue("subImage", newImages, { shouldDirty: true });
       },
-
     });
-
-  
 
     const adminImagesMutation = useMutation({
-
       mutationFn: uploadImages,
-
       onSuccess: (data: { urls: string[] }) => {
-
         const urls = unique((data.urls || []).filter(isValidImgSrc));
-
         if (urls.length === 0) return;
-
   
-
-        setAdminImages((prev) => unique([...prev, ...urls]));
-
+        const newImages = unique([...adminImages, ...urls]);
+        setAdminImages(newImages);
+        setValue("adminImage", newImages, { shouldDirty: true });
       },
-
     });
-
-  
-
-    useEffect(() => {
-
-      const curr = Array.isArray(getValues("subImage")) ? getValues("subImage")! : [];
-
-      if (!arraysEqual(propertyImages, curr)) {
-
-        setValue("subImage", propertyImages, { shouldDirty: true });
-
-      }
-
-    }, [propertyImages, getValues, setValue]);
-
-  
 
     useEffect(() => {
     const isLoading = mainImageLoading || propertyImagesLoading.some(Boolean) || adminImagesLoading.some(Boolean);
