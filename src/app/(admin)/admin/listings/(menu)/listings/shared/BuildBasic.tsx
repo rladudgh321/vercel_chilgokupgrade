@@ -1,7 +1,7 @@
 "use client";
 
 import React, { lazy, MouseEventHandler, Suspense } from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, useWatch } from "react-hook-form";
 import { ko } from "date-fns/locale";
 import { clsx } from "clsx";
 import "react-datepicker/dist/react-datepicker.css";
@@ -232,17 +232,17 @@ interface BuildBasicProps {
 }
 
 const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, buildingOptions }: BuildBasicProps) => {
-  const { watch, setValue, register, getValues } = useFormContext();
+  const { control, setValue, register, getValues } = useFormContext();
 
   // ✅ 폼 값 watch (오타 수정 및 값 보정)
-  const watchedPopularity = watch("popularity") ?? "";
-  const watchedDirection = watch("direction") ?? "";
-  const watchedDirectionBase = watch("directionBase") ?? "";
-  const watchedRoomOptionId = watch("roomOptionId") ?? "";
-  const watchedBathroomOptionId = watch("bathroomOptionId") ?? "";
-  const watchedThemes = watch("themes") ?? [];
-  const watchedBuildingOptions = watch("buildingOptions") ?? [];
-  const watchedParking = watch("parking") ?? [];
+  const watchedPopularity = useWatch({ control, name: "popularity" }) ?? "";
+  const watchedDirection = useWatch({ control, name: "direction" }) ?? "";
+  const watchedDirectionBase = useWatch({ control, name: "directionBase" }) ?? "";
+  const watchedRoomOptionId = useWatch({ control, name: "roomOptionId" });
+  const watchedBathroomOptionId = useWatch({ control, name: "bathroomOptionId" });
+  const watchedThemes = useWatch({ control, name: "themes" }) ?? [];
+  const watchedBuildingOptions = useWatch({ control, name: "buildingOptions" }) ?? [];
+  const watchedParking = useWatch({ control, name: "parking" }) ?? [];
 
   // ✅ 라디오(단일 선택) → 폼 값 갱신
   const handleRadioChange = (

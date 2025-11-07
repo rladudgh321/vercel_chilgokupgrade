@@ -1,61 +1,12 @@
-Console Error
+LocationCard컴포넌트에서 `대전 동구 가양남로23번길 37 (가양동)`로 신주소가 입력 되면 주소공개여부가 `지번 제외 공개`일경우에는 `대전 동구 가양동`까지 표시되도록 해줘.
+그리고 주소가 `대전 동구 가양동 323-21번지`로 구주소가 입력되면 주소 공개여부가 `지번 제외 공개`일 경우에는 마찬가지로 `대전 동구 가양동`까지 표시되도록 해줘.
 
+`경북 칠곡군 지천면 황학1길 1 (황학리)`일 경우에는 `지번 제외 공개`일 경우에는 `경북 칠곡군 지천면 황학리`까지만 주소로 나오게 해줘
 
-`value` prop on `input` should not be null. Consider using an empty string to clear the component or `undefined` for uncontrolled components.
+어디에 표시되게 해주냐면, CardItem의 주소와 BuildDetailModal의 주소에 표시해줘
+---
+`주소 정보 없음`으로 뜨는데?
+`대전 동구 가양남로23번길 37 (가양동)`은 `대전 동구 가양동`으로 노출되게 해주고
+`경북 칠곡군 지천면 황학1길 1 (황학리)`는 `경북 칠곡군 지천면 황학리`로 노출되게 해줘.
+그러니까 Build테이블의 isAddressPublic가 `exclude`일 경우에는 한국주소에서 `시도`와 `시군구`와 `읍면동`은 노출되게 해주고 나머지 숫자는 노출되지 않도록 해줘
 
-src/app/(admin)/admin/listings/(menu)/listings/shared/BuildBasic.tsx (370:15) @ BuildBasic
-
-
-  368 |             ))}
-  369 |             <label className="cursor-pointer">
-> 370 |               <input
-      |               ^
-  371 |                 type="radio"
-  372 |                 {...register("roomOptionId")}
-  373 |                 value={null}
-Call Stack
-21
-
-Hide 16 ignore-listed frame(s)
-createConsoleError
-node_modules/next/src/next-devtools/shared/console-error.ts (16:35)
-handleConsoleError
-node_modules/next/src/next-devtools/userspace/app/errors/use-error-handler.ts (35:31)
-console.error
-node_modules/next/src/next-devtools/userspace/app/errors/intercept-console-error.ts (33:27)
-validatePropertiesInDevelopment
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17712:21)
-setInitialProperties
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (18345:7)
-completeWork
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (11743:18)
-runWithFiberInDEV
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (871:30)
-completeUnitOfWork
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (15862:19)
-performUnitOfWork
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (15743:11)
-workLoopSync
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (15546:41)
-renderRootSync
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (15526:11)
-performWorkOnRoot
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (14990:13)
-performSyncWorkOnRoot
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16830:7)
-flushSyncWorkAcrossRoots_impl
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:21)
-processRootScheduleInMicrotask
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16714:9)
-<unknown>
-node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16849:13)
-input
-<anonymous>
-BuildBasic
-src/app/(admin)/admin/listings/(menu)/listings/shared/BuildBasic.tsx (370:15)
-BuildForm
-src/app/(admin)/admin/listings/(menu)/listings/shared/BuildForm.tsx (251:11)
-EditClient
-src/app/(admin)/admin/listings/(menu)/listings/[id]/edit/EditClient.tsx (367:5)
-Page
-src\app\(admin)\admin\listings\(menu)\listings\[id]\edit\page.tsx (15:10)

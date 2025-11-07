@@ -51,6 +51,54 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
     </>
   );
 
+  const formatAddress = () => {
+    if (build.isAddressPublic === 'private') {
+      return "주소 비공개";
+    }
+    if (build.isAddressPublic === 'exclude') {
+      const fullAddress = build.address || "";
+      if (!fullAddress) {
+        return "주소 정보 없음";
+      }
+
+      const parts = fullAddress.split(' ');
+      let sido = '';
+      let sigungu = '';
+      let eupmyeondongri = '';
+
+      // Find sido and sigungu
+      if (parts.length > 0) {
+          sido = parts[0];
+      }
+      if (parts.length > 1) {
+          sigungu = parts[1];
+      }
+
+      // Find eupmyeondongri
+      // 1. Check in parentheses for new addresses
+      const matchParentheses = fullAddress.match(/\(([^)]+(?:동|리|가))\)/);
+      if (matchParentheses && matchParentheses[1]) {
+          eupmyeondongri = matchParentheses[1];
+          // Also need to find eup/myeon if it exists
+          const eupmyeonPart = parts.find(p => p.endsWith('읍') || p.endsWith('면'));
+          if (eupmyeonPart) {
+              return `${sido} ${sigungu} ${eupmyeonPart} ${eupmyeondongri}`.trim();
+          }
+          return `${sido} ${sigungu} ${eupmyeondongri}`.trim();
+      }
+
+      // 2. Find last eup/myeon/dong/ri/ga in the address for old addresses
+      const adminParts = parts.filter(p => p.endsWith('읍') || p.endsWith('면') || p.endsWith('동') || p.endsWith('리') || p.endsWith('가'));
+      if (adminParts.length > 0) {
+          return parts.slice(0, parts.indexOf(adminParts[adminParts.length - 1]) + 1).join(' ');
+      }
+
+      // Fallback to first 2 parts if no admin parts found
+      return `${sido} ${sigungu}`.trim();
+    }
+    return build.address || "주소 정보 없음";
+  };
+
   return (
     <div className="fixed inset-0 backdrop-blur-sm z-50 flex justify-center items-center p-2 sm:p-4" onClick={onClose}>
       <div
@@ -67,7 +115,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
 
           <div className="pb-4 border-b">
             <h3 className="text-xl sm:text-2xl font-bold">{build.title}</h3>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">{build.address}</p>
+            <p className="text-gray-600 mt-1 text-sm sm:text-base">{formatAddress()}</p>
           </div>
 
           <div>
