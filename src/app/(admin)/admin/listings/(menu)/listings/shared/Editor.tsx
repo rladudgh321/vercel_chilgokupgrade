@@ -91,7 +91,7 @@ const Editor: React.FC<EditorProps> = ({ name, disabled }) => {
         className="min-h-[200px] sm:min-h-[300px] p-2 sm:p-4 border border-gray-300 rounded-lg shadow-md text-gray-900 text-base sm:text-lg leading-6 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-pre-wrap break-words bg-white"
       />
 
-      {/* 비밀 메모 / 비밀 연락처 (에디터 아래) */}
+      {/* 비밀 메모 (에디터 아래) */}
       <div className="mt-4 sm:mt-6 space-y-4">
         <div className="flex flex-col">
           <label htmlFor="secretNote" className="block text-sm font-medium text-gray-700">
@@ -102,20 +102,6 @@ const Editor: React.FC<EditorProps> = ({ name, disabled }) => {
             placeholder="내부 공유용 메모를 입력하세요 (외부 비공개)"
             rows={3}
             {...register("secretNote")}
-            disabled={disabled}
-            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="secretContact" className="block text-sm font-medium text-gray-700">
-            비밀 연락처 (내부용)
-          </label>
-          <input
-            id="secretContact"
-            type="text"
-            placeholder="예: 010-1234-5678 / 내선 123 등"
-            {...register("secretContact")}
             disabled={disabled}
             className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

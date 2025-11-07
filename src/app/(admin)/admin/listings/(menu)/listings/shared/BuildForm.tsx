@@ -238,6 +238,10 @@ export default function BuildForm({
         className="space-y-4"
         encType="multipart/form-data"
       >
+        <Container title="사진 정보">
+          <SaveImage onImageLoadingStateChange={onImageLoadingStateChange} />
+        </Container>
+
         <Container title="위치정보">
           <LocationCard />
         </Container>
@@ -263,10 +267,6 @@ export default function BuildForm({
 
         <Container title="상세 설명">
           <Editor name="editorContent" />
-        </Container>
-
-        <Container title="사진 작업">
-          <SaveImage onImageLoadingStateChange={onImageLoadingStateChange} />
         </Container>
 
         <div className="mt-4 flex gap-x-4">

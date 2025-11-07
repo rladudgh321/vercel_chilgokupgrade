@@ -246,7 +246,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
 
   // ✅ 라디오(단일 선택) → 폼 값 갱신
   const handleRadioChange = (
-    item: string | number,
+    item: string | number | null,
     type: "popularity" | "direction" | "directionBase" | "roomOptionId" | "bathroomOptionId"
   ) => {
     setValue(type, item, { shouldDirty: true, shouldTouch: true });
@@ -284,7 +284,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
           인기/급매
         </label>
         <div className="flex space-x-0 mt-2">
-          {["인기", "급매"].map((item) => (
+          {["인기", "급매", "선택없음"].map((item) => (
             <label key={item} className="cursor-pointer">
               <input
                 type="radio"
@@ -292,7 +292,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
                 value={item}
                 className="hidden"
                 checked={watchedPopularity === item}
-                onChange={() => handleRadioChange(item, "popularity")}
+                onChange={() => handleRadioChange(item === "선택없음" ? null : item, "popularity")}
               />
               <span style={getButtonStyle(watchedPopularity, item)}>{item}</span>
             </label>
@@ -366,6 +366,17 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
                 <span style={getButtonStyle(watchedRoomOptionId, item.id)}>{item.name}</span>
               </label>
             ))}
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="roomOptionId"
+                value=""
+                className="hidden"
+                checked={watchedRoomOptionId === null}
+                onChange={() => handleRadioChange(null, "roomOptionId")}
+              />
+              <span style={getButtonStyle(watchedRoomOptionId, null)}>선택없음</span>
+            </label>
           </div>
         </div>
         <div className="flex flex-col">
@@ -384,6 +395,17 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
                 <span style={getButtonStyle(watchedBathroomOptionId, item.id)}>{item.name}</span>
               </label>
             ))}
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="bathroomOptionId"
+                value=""
+                className="hidden"
+                checked={watchedBathroomOptionId === null}
+                onChange={() => handleRadioChange(null, "bathroomOptionId")}
+              />
+              <span style={getButtonStyle(watchedBathroomOptionId, null)}>선택없음</span>
+            </label>
           </div>
         </div>
       </div>
@@ -444,6 +466,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
         <InputField label="담당자" name="staff" placeholder='대표님 성함' />
         <SelectField label="고객 종류" name="customerType" options={["매도자", "매수자", "임대인","기타"]} />
         <InputField label="고객 이름" name="customerName" />
+        <InputField label="고객 연락처(노출안됨)" name="secretContact" placeholder='예: 010-1234-5678 / 내선 123 등' />
       </div>
     </div>
   );

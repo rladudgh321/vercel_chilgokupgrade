@@ -693,7 +693,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                         </div>
 
                         <div className="font-semibold mt-2 mb-1">
-                          비밀 연락처
+                          고객 연락처
                         </div>
                         <div className="break-words">
                           {listing.secretContact ?? "—"}
