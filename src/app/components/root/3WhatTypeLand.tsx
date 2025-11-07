@@ -10,8 +10,8 @@ const WhatTypeLand = ({listingType}: {listingType: Promise<ListingTypeProps[]>})
   const listingTypePromise = use(listingType);
   return (
     <div className="mx-auto max-w-7xl text-center p-4">
-      <h2 className="text-lg sm:text-xl font-bold">어떤 종류의 매물을 찾으세요?</h2>
-      <p className="text-gray-600 text-sm sm:text-base">원하시는 매물의 종류를 선택해주세요!</p>
+      <h2 className="text-lg sm:text-xl font-bold">찾고 계신 매물 유형을 선택하세요!</h2>
+      <p className="text-gray-600 text-sm sm:text-base">흙과 바람이 머무는 곳, 당신의 공간을 찾아보세요</p>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4 mt-4">
         {listingTypePromise.map((property, index) => {
           const href = `/landSearch?propertyType=${encodeURIComponent(property.name)}`;
