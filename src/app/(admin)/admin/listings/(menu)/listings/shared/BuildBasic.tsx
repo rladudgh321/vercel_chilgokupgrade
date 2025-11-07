@@ -411,46 +411,6 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
         </div>
       </div>
 
-      {/* 방향기준 */}
-      <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">햇빛 방향기준</label>
-        <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["거실", "안방", "주된출입구"].map((item) => (
-            <label key={item} className="cursor-pointer">
-              <input
-                type="radio"
-                {...register("directionBase")}
-                value={item}
-                className="hidden"
-                checked={watchedDirectionBase === item}
-                onChange={() => handleRadioChange(item, "directionBase")}
-              />
-              <span style={getButtonStyle(watchedDirectionBase, item)}>{item}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* 방향 */}
-      <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">햇빛 방향</label>
-        <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["동향", "서향", "남향", "북향", "북동향", "남동향", "남서향", "북서향"].map((item) => (
-            <label key={item} className="cursor-pointer">
-              <input
-                type="radio"
-                {...register("direction")}
-                value={item}
-                className="hidden"
-                checked={watchedDirection === item}
-                onChange={() => handleRadioChange(item, "direction")}
-              />
-              <span style={getButtonStyle(watchedDirection, item)}>{item}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
       {/* 라벨선택 */}
       <div className="flex flex-col">
         <SelectField
@@ -477,27 +437,6 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
         <InputField label="대지면적" name="landArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="건축면적" name="buildingArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="연면적" name="totalArea" type="number" placeholder="m² 단위 숫자" />
-      </div>
-
-      {/* 건축정보(캘린더) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <InputField label="착공일자" name="constructionYear" isDatePicker />
-        <InputField label="허가일자" name="permitDate" isDatePicker />
-        <InputField label="사용승인일자" name="approvalDate" isDatePicker />
-      </div>
-
-      {/* 주차 숫자 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <InputField label="세대당 주차수" name="parkingPerUnit" type="number" />
-        <InputField label="전체주차수" name="totalParking" type="number" />
-        <InputField label="주차비" name="parkingFee" type="number" />
-      </div>
-
-      {/* 토지건축물정보 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <SelectField label="용도지역" name="landUse" options={["주거지역", "상업지역", "공업지역", "녹지지역", "보전관리지역", "생산관리지역", "계획관리지역", "농림지역", "자연환경보전지역"]} />
-        <SelectField label="지목" name="landType" options={["전", "답", "과수원", "목장용지", "임야", "광천지", "염전", "대", "공장용지", "학교용지", "주차장", "주유소용지", "창고용지", "도로", "철도용지", "제방", "하천", "구거", "유지", "양어장", "수도용지", "공원", "체육용지", "유원지", "종교용지", "사적지", "묘지", "잡종지"]} />
-        <InputField label="건축물용도" name="buildingUse" placeholder='ex) 주거용도' />
       </div>
 
       {/* 담당자 및 고객 */}
