@@ -14,6 +14,7 @@ type Props = {
   isFetchingNextPage?: boolean;
   isLoading: boolean; // Add isLoading prop
   onCardClick: (id: number) => void;
+  view: string;
 };
 
 const ListingList = ({
@@ -25,6 +26,7 @@ const ListingList = ({
   isFetchingNextPage,
   isLoading,
   onCardClick,
+  view,
 }: Props) => {
   const handleSortClick = (sortKey: string) => {
     if (sortKey === "price") {
@@ -73,6 +75,7 @@ const ListingList = ({
   useEffect(() => {
     const lastItem = virtualItems[virtualItems.length - 1];
     if (
+      view === 'list' &&
       lastItem &&
       lastItem.index >= listings.length - 1 &&
       hasNextPage &&
@@ -86,6 +89,7 @@ const ListingList = ({
     listings.length,
     isFetchingNextPage,
     virtualItems,
+    view,
   ]);
 
   return (

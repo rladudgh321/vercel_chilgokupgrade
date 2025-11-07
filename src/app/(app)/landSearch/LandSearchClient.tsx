@@ -539,6 +539,8 @@ export default function LandSearchClient({
 
               onCardClick={handleCardClick}
 
+              view={view}
+
             />
 
           </div>
