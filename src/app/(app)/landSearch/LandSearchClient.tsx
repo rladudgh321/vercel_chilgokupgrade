@@ -426,9 +426,12 @@ export default function LandSearchClient({
 
 
   const handleClusterClick = (listingIds: number[]) => {
-
     setFilteredIds(listingIds);
 
+    const isMobile = window.innerWidth < 640; // Tailwind's 'sm' breakpoint
+    if (isMobile) {
+      setView('list');
+    }
   };
 
 
