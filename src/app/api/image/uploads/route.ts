@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
           ContentType: 'image/webp',
         },
         queueSize: 4,
-        partSize: 10 * 1024 * 1024,
+        partSize: 50 * 1024 * 1024,
         leavePartsOnError: false,
       });
 
