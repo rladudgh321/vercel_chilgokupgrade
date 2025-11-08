@@ -1,6 +1,5 @@
-"use client";
-
 import { useMemo, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import KakaoMapMarker from "@/app/components/shared/KakaoMapMarker";
 import OptionIcon from "@/app/components/shared/OptionIcon";
 import ImageSlider from "@/app/components/shared/ImageSlider";
@@ -8,6 +7,7 @@ import { IBuild } from "@/app/interface/build";
 
 export default function BuildDetailModalClient({ build, onClose }: { build: IBuild, onClose: () => void }) {
   const [areaUnit, setAreaUnit] = useState<"m2" | "pyeong">("m2");
+  const [isExtraInfoVisible, setIsExtraInfoVisible] = useState(false);
   console.log('build', build);
 
   const convertToPyeong = (m2: number) => (m2 / 3.305785);
@@ -149,40 +149,55 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
                   </button>
                 </div>
               )}
-              {(build.totalParking || build.parkingPerUnit || build.parkingFee) && Row(
-                "주차 옵션",
-                `총 ${build.totalParking || "-"}대 (세대당 ${build.parkingPerUnit || "-"}대), 주차비: ${formatPrice(
-                  build.parkingFee
-                )}`
-              )}
-              {build.elevatorType === "유" ? Row("엘리베이터", `${build.elevatorCount || "-"}개`) : build.elevatorType === "무" ? Row("엘리베이터", "없음") : null}
-              {build.heatingType && Row("난방 방식", build.heatingType)}
-              {build.yieldType && build.yieldType !== "미사용" &&
-                Row("수익률 사용", build.yieldType === "기타수익률" ? build.otherYield : build.yieldType)}
-              {(build.moveInType || build.moveInDate) && Row(
-                "입주 가능일",
-                build.moveInType === "즉시"
-                  ? "입주 즉시 가능"
-                  : build.moveInDate
-                  ? `${new Date(build.moveInDate).toLocaleDateString()} (${build.moveInType})`
-                  : build.moveInType
-              )}
-              {build.contractEndDate && Row("계약만료일", new Date(build.contractEndDate).toLocaleDateString())}
-              {build.buildingName && Row("건물명", build.buildingName)}
-              {build.floorAreaRatio && Row("용적률 산정면적", build.floorAreaRatio)}
-              {build.otherUse && Row("기타용도", build.otherUse)}
-              {build.mainStructure && Row("주구조", build.mainStructure)}
-              {build.height && Row("높이", build.height)}
-              {build.roofStructure && Row("지붕구조", build.roofStructure)}
-              {build.constructionYear && Row("건축년도", new Date(build.constructionYear).toLocaleDateString())}
-              {build.permitDate && Row("허가일자", new Date(build.permitDate).toLocaleDateString())}
-              {build.approvalDate && Row("사용승인일자", new Date(build.approvalDate).toLocaleDateString())}
-              {build.direction && Row("방향", `${build.direction} (기준: ${build.directionBase})`)}
-              {build.landUse && Row("용도지역", build.landUse)}
-              {build.landType && Row("지목", build.landType)}
-              {build.buildingUse && Row("건축물용도", build.buildingUse)}
-              {build.themes && build.themes.length > 0 && Row("테마", build.themes.join(", "))}
             </div>
+          </div>
+
+          <div>
+            <button
+              onClick={() => setIsExtraInfoVisible(!isExtraInfoVisible)}
+              className="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+            >
+              <span className="font-semibold text-purple-800">매물 추가 정보 확인하기</span>
+              {isExtraInfoVisible ? <ChevronUp className="w-5 h-5 text-purple-800" /> : <ChevronDown className="w-5 h-5 text-purple-800" />}
+            </button>
+
+            {isExtraInfoVisible && (
+              <div className="border rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 mt-4">
+                {(build.totalParking || build.parkingPerUnit || build.parkingFee) && Row(
+                  "주차 옵션",
+                  `총 ${build.totalParking || "-"}대 (세대당 ${build.parkingPerUnit || "-"}대), 주차비: ${formatPrice(
+                    build.parkingFee
+                  )}`
+                )}
+                {build.elevatorType === "유" ? Row("엘리베이터", `${build.elevatorCount || "-"}개`) : build.elevatorType === "무" ? Row("엘리베이터", "없음") : null}
+                {build.heatingType && Row("난방 방식", build.heatingType)}
+                {build.yieldType && build.yieldType !== "미사용" &&
+                  Row("수익률 사용", build.yieldType === "기타수익률" ? build.otherYield : build.yieldType)}
+                {(build.moveInType || build.moveInDate) && Row(
+                  "입주 가능일",
+                  build.moveInType === "즉시"
+                    ? "입주 즉시 가능"
+                    : build.moveInDate
+                    ? `${new Date(build.moveInDate).toLocaleDateString()} (${build.moveInType})`
+                    : build.moveInType
+                )}
+                {build.contractEndDate && Row("계약만료일", new Date(build.contractEndDate).toLocaleDateString())}
+                {build.buildingName && Row("건물명", build.buildingName)}
+                {build.floorAreaRatio && Row("용적률 산정면적", build.floorAreaRatio)}
+                {build.otherUse && Row("기타용도", build.otherUse)}
+                {build.mainStructure && Row("주구조", build.mainStructure)}
+                {build.height && Row("높이", build.height)}
+                {build.roofStructure && Row("지붕구조", build.roofStructure)}
+                {build.constructionYear && Row("건축년도", new Date(build.constructionYear).toLocaleDateString())}
+                {build.permitDate && Row("허가일자", new Date(build.permitDate).toLocaleDateString())}
+                {build.approvalDate && Row("사용승인일자", new Date(build.approvalDate).toLocaleDateString())}
+                {build.direction && Row("햇빛 방향", `${build.direction} (기준: ${build.directionBase})`)}
+                {build.landUse && Row("용도지역", build.landUse)}
+                {build.landType && Row("지목", build.landType)}
+                {build.buildingUse && Row("건축물용도", build.buildingUse)}
+                {build.themes && build.themes.length > 0 && Row("테마", build.themes.join(", "))}
+              </div>
+            )}
           </div>
 
           <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
