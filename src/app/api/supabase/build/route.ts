@@ -1,3 +1,4 @@
+import { createClient as createServiceRoleClient } from "@supabase/supabase-js";
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/app/utils/supabase/server";
@@ -26,8 +27,11 @@ export async function GET(req: NextRequest) {
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    // Use service role client for admin-level data fetching
+    const supabase = createServiceRoleClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
     let q = supabase
       .from("Build")

@@ -2,16 +2,22 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react'; // Added useState and useEffect
 import ManagementAPI from './ManagementAPI';
 
 interface HeaderProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  logoUrl: string;
+  logoUrl: string | null; // Changed type to string | null
 }
 
 const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false); // Added isMounted state
+
+  useEffect(() => {
+    setIsMounted(true); // Set isMounted to true after client-side mount
+  }, []);
 
   const handleLogout = async () => {
     const response = await fetch('/api/admin/logout', {
@@ -56,7 +62,7 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
       </button>
       <div className="flex-1 text-center">
         <div className="relative inline-block h-10 w-24">
-          <Image alt="logo" src={logoUrl} fill objectFit="contain" priority={true} />
+          {isMounted && logoUrl && <Image alt="logo" src={logoUrl} fill objectFit="contain" priority={true} />}
         </div>
       </div>
       <div>

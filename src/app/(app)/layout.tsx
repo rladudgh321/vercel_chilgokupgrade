@@ -5,7 +5,7 @@ import SnsIcon, { SnsSetting } from "@/app/components/SnsIcon";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
 export async function getWorkInfo(): Promise<HeaderProps> {
-  const response = await fetch(`${BASE_URL}/api/admin/website-info`, { next: { tags: ["public", "workInfo"], revalidate: 28800 } });
+  const response = await fetch(`${BASE_URL}/api/work-info`, { next: { tags: ["public", "workInfo"], revalidate: 28800 } });
   if (!response.ok) {
     console.error('Error fetching posts:', await response.text());
     return {};
