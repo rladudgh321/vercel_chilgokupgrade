@@ -267,11 +267,11 @@ const BuildingInfo = () => {
   const yieldType      = watch("yieldType");
   const moveInType     = watch("moveInType");
   const otherYield     = watch("otherYield");
-  const watchedDirection = watch("direction") ?? "";
-  const watchedDirectionBase = watch("directionBase") ?? "";
+  const watchedDirection = watch("direction");
+  const watchedDirectionBase = watch("directionBase");
 
   // 라디오 클릭 핸들러 (필요 시 의존 필드 정리)
-  const pick = useCallback((field: string, value: string) => {
+  const pick = useCallback((field: string, value: string | null) => {
     setValue(field as any, value, { shouldDirty: true });
 
     // 의존 필드 초기화 규칙
@@ -287,13 +287,13 @@ const BuildingInfo = () => {
   }, [setValue]);
 
   const handleRadioChange = (
-    item: string | number,
+    item: string | null,
     type: "direction" | "directionBase"
   ) => {
     setValue(type, item, { shouldDirty: true, shouldTouch: true });
   };
 
-  const getButtonStyle = (current: string | null | undefined, item: string) => ({
+  const getButtonStyle = (current: string | null | undefined, item: string | null) => ({
     backgroundColor: current === item ? "#2b6cb0" : "white",
     color: current === item ? "white" : "gray",
     borderColor: "#cbd5e0",
@@ -313,17 +313,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">엘리베이터</label>
         <div className="flex space-x-0 mt-2">
-          {["유", "무"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["유", "무", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 className="hidden"
                 {...register("elevatorType")}
-                value={item}
+                value={item === null ? "" : item}
                 checked={elevatorType === item}
                 onChange={() => pick("elevatorType", item)}
               />
-              <span style={getButtonStyle(elevatorType, item)}>{item}</span>
+              <span style={getButtonStyle(elevatorType, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -350,17 +350,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">입주 가능일</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["즉시", "가까운 시일내 협의"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["즉시", "가까운 시일내 협의", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 className="hidden"
                 {...register("moveInType")}
-                value={item}
+                value={item === null ? "" : item}
                 checked={moveInType === item}
                 onChange={() => pick("moveInType", item)}
               />
-              <span style={getButtonStyle(moveInType, item)}>{item}</span>
+              <span style={getButtonStyle(moveInType, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -387,17 +387,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">난방</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["지역난방", "개별난방", "중앙난방"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["지역난방", "개별난방", "중앙난방", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 className="hidden"
                 {...register("heatingType")}
-                value={item}
+                value={item === null ? "" : item}
                 checked={heatingType === item}
                 onChange={() => pick("heatingType", item)}
               />
-              <span style={getButtonStyle(heatingType, item)}>{item}</span>
+              <span style={getButtonStyle(heatingType, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -407,17 +407,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">수익률 사용</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["미사용", "상가수익률", "건물수익률", "기타수익률"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["미사용", "상가수익률", "건물수익률", "기타수익률", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 className="hidden"
                 {...register("yieldType")}
-                value={item}
+                value={item === null ? "" : item}
                 checked={yieldType === item}
                 onChange={() => pick("yieldType", item)}
               />
-              <span style={getButtonStyle(yieldType, item)}>{item}</span>
+              <span style={getButtonStyle(yieldType, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -456,17 +456,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">햇빛 방향기준</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["거실", "안방", "주된출입구"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["거실", "안방", "주된출입구", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 {...register("directionBase")}
-                value={item}
+                value={item === null ? "" : item}
                 className="hidden"
                 checked={watchedDirectionBase === item}
                 onChange={() => handleRadioChange(item, "directionBase")}
               />
-              <span style={getButtonStyle(watchedDirectionBase, item)}>{item}</span>
+              <span style={getButtonStyle(watchedDirectionBase, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -476,17 +476,17 @@ const BuildingInfo = () => {
       <div className="flex flex-col">
         <label className="block text-sm font-medium text-gray-700">햇빛 방향</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
-          {["동향", "서향", "남향", "북향", "북동향", "남동향", "남서향", "북서향"].map((item) => (
-            <label key={item} className="cursor-pointer">
+          {["동향", "서향", "남향", "북향", "북동향", "남동향", "남서향", "북서향", null].map((item) => (
+            <label key={item === null ? "none" : item} className="cursor-pointer">
               <input
                 type="radio"
                 {...register("direction")}
-                value={item}
+                value={item === null ? "" : item}
                 className="hidden"
                 checked={watchedDirection === item}
                 onChange={() => handleRadioChange(item, "direction")}
               />
-              <span style={getButtonStyle(watchedDirection, item)}>{item}</span>
+              <span style={getButtonStyle(watchedDirection, item)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>

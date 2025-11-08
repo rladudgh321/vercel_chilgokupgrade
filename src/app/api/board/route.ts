@@ -1,12 +1,13 @@
-import { supabaseAdmin } from "@/app/utils/supabase/admin";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
+import { createClient } from '@/app/utils/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = supabaseAdmin;
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
 
     const { data, error } = await supabase
       .from('BoardPost')
