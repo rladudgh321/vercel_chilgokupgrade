@@ -360,8 +360,6 @@ export default function EditClient({ id }: { id: number }) {
     },
   });
 
-  console.log('labelOptions', labelOptions)
-
   if (!allLoaded) return <p>로딩 중...</p>;
   if (isError) return <p>불러오기 실패</p>;
 

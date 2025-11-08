@@ -1,8 +1,1 @@
-`OrdersPage`컴포넌트에서 즉 `/orders`페이지에서 쿠키를 가지고 와서 supabase를 불러오고 있는데 fetch를 사용하여 불러오고 tags로 orders와 public을 줘서 코드를 수정해줘
-
----
-import { createClient as createClientServer } from "@/app/utils/supabase/server";
-import { cookies } from "next/headers";
-
-const cookieStore = await cookies();
-  const supabase = createClientServer(cookieStore);
+`http://localhost:3000/api/supabase/build?page=1&limit=10&keyword=11` 이렇게 요청했는데 cors 오류가 발생했어. 왜 발생하지? 나는 supabase와 local서버밖에 사용을 안하는데말이지
