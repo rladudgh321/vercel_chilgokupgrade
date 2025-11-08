@@ -157,6 +157,8 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
               )}
               {build.elevatorType === "유" ? Row("엘리베이터", `${build.elevatorCount || "-"}개`) : build.elevatorType === "무" ? Row("엘리베이터", "없음") : null}
               {build.heatingType && Row("난방 방식", build.heatingType)}
+              {build.yieldType && build.yieldType !== "미사용" &&
+                Row("수익률 사용", build.yieldType === "기타수익률" ? build.otherYield : build.yieldType)}
               {(build.moveInType || build.moveInDate) && Row(
                 "입주 가능일",
                 build.moveInType === "즉시"

@@ -1,1 +1,1 @@
-`http://localhost:3000/api/supabase/build?page=1&limit=10&keyword=11` 이렇게 요청했는데 cors 오류가 발생했어. 왜 발생하지? 나는 supabase와 local서버밖에 사용을 안하는데말이지
+BuildingInfo컴포넌트에서 `수익률 사용` 부분에 대한 내용을 CardItem컴포넌트와 BuildDetailModal컴포넌트에 데이터를 넣고 싶어. 만약에 선택없음이나 null값이면 `수익률 사용` 부분이 노출되지 않았으면 좋겠어
