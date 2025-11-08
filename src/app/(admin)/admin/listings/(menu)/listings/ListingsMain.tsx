@@ -22,7 +22,6 @@ import { IBuild } from "@/app/interface/build";
 import formatFullKoreanMoney from "@/app/utility/NumberToKoreanMoney";
 import { formatYYYYMMDD } from "@/app/utility/koreaDateControl";
 import { printPhotoVersion } from "./shared/PrintPhotoVersion";
-import { printTextVersion } from "./shared/PrintTextVersion";
 import AreaInfo from "./shared/AreaInfo";
 
 type SearchFormValues = { keyword: string };
@@ -587,7 +586,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                             type="button"
                             onClick={() => {
                               setPrintMenuRowId(null);
-                              printPhotoVersion(listing, workInfoData?.data);
+                              printPhotoVersion(listing, workInfoData?.data, { showPhotos: true });
                             }}
                             className="w-full text-left px-3 py-2 hover:bg-slate-100"
                           >
@@ -597,7 +596,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                             type="button"
                             onClick={() => {
                               setPrintMenuRowId(null);
-                              printTextVersion(listing);
+                              printPhotoVersion(listing, workInfoData?.data, { showPhotos: false });
                             }}
                             className="w-full text-left px-3 py-2 hover:bg-slate-100"
                           >

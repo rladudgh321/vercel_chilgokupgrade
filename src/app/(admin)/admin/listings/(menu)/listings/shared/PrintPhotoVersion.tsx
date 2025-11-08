@@ -4,27 +4,8 @@ import { numberToKoreanWithDigits } from '@/app/utility/NumberToKoreanWithDigits
 import { formatYYYYMMDD } from "@/app/utility/koreaDateControl";
 import { openPrintSafe } from "@/app/utility/print";
 
-// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
-
-
-export const printPhotoVersion = async (listing: IBuild) => {
-  let workInfo = null;
-  try {
-    const response = await fetch(`/api/workinfo`);
-    if (response.ok) {
-      workInfo = (await response.json()).data;
-    }
-  } catch (error) {
-    console.error("Failed to fetch work info:", error);
-  }
-
-  console.log('workInfo', workInfo);
-
-  const currentDate = new Date().toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { showPhotos: boolean }) => {
+  const showPhotos = options?.showPhotos ?? true;
 
   const formatPrice = (price: number | undefined) => {
     if (price === undefined || price === null) return "";
@@ -185,19 +166,21 @@ export const printPhotoVersion = async (listing: IBuild) => {
           <div class="title">${escapeHtml(workInfo.companyName)}</div>
           <div class="address-line">
             <span>${escapeHtml(cleanedAddress || '주소 정보 없음')}</span>
-            ${workInfo ? `<span> ${escapeHtml(workInfo.owner)} | ${escapeHtml(workInfo.phone)} | ${escapeHtml(workInfo.mobile)}</span>` : ''}
+            ${workInfo ? `<span>${escapeHtml(workInfo.owner)} | ${escapeHtml(workInfo.phone)} | ${escapeHtml(workInfo.mobile)}</span>` : ''}
           </div>
         </div>
 
+        ${showPhotos ? `
         <div class="section">
           <h2 class="section-title">매물 사진</h2>
           <div class="photo-grid">
             ${mainImages.length > 0 ? mainImages.map(src => `<img src="${escapeHtml(src)}" alt="매물 사진">`).join('') : '<div class="map-placeholder">사진 없음</div>'}
           </div>
         </div>
+        ` : ''}
 
         <div class="section">
-          <h2 class="section-title">매물 정보</h2>
+          <h2 class="section-title">핵심 정보</h2>
           <table class="info-table">
             <tbody>
               ${generateTableRows(coreInfoItems)}
@@ -229,10 +212,3 @@ export const printPhotoVersion = async (listing: IBuild) => {
 
   openPrintSafe({ title: `매물 #${listing.id}`, bodyHtml });
 };
-/*
-권장 개선 (환경설정 쪽):
-1) 가능하면 서버(예: Next.js API Route)에서 Nominatim을 호출해 좌표를 미리 가져와 DB에 저장/캐시하세요.
-   - 이렇게 하면 런타임에 외부 접속 실패가 나와도 캐시된 좌표로 정적 이미지를 만들 수 있습니다.
-2) 사내/호스팅 네트워크에서 openstreetmap.org 도메인에 대한 아웃바운드 차단이 있으면 네트워크 정책을 수정하세요.
-3) 정적 맵을 자주 사용하면 자체 프록시 또는 이미지 캐시 서버를 두는 것이 안정적입니다.
-*/

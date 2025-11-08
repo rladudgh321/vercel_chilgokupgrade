@@ -1,4 +1,1 @@
-printPhotoVersion컴포넌트에서 주소 옆에
-`/admin/websiteSettings/website-info` 페이지에서의
- `회사명`과 `핸드폰`을 삽입해줘.
-주소 바로 옆에 있으면 보기 안좋으니까 보기 좋게 회사명과 핸드폰은 justify-between하여 `주소`와 `회사명과 핸드폰`이 양쪽으로 있도록 해줘. 
+printPhotoVersion컴포넌트와 ListingsMain컴포넌트를 수정해줘. `사진버전`을 클릭하면 `매물 사진`이 나오지만, 텍스트 버전을 클릭하면 printTextVersion컴포넌트 대신에 printPhotoVersion컴포넌트를 재활용하여 `매물 사진`만 안나오도록 수정해줘
