@@ -1,23 +1,19 @@
 // app/orders/page.tsx (서버 컴포넌트)
+import { createClient as createClientServer } from "@/app/utils/supabase/server";
+import { cookies } from "next/headers";
 import OrdersPageClient from "./OrdersPageClient";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
-
-async function getOrderData() {
-    const res = await fetch(`${BASE_URL}/api/orders`, {
-        next: { revalidate: 28800, tags: ['orders', 'public'] },
-    });
-
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data');
-    }
-
-    return res.json();
-}
-
 export default async function OrdersPage() {
-  const { propertyTypes, buyTypes } = await getOrderData();
+  const cookieStore = await cookies();
+  const supabase = createClientServer(cookieStore);
+
+  const [propTypesRes, buyTypesRes] = await Promise.all([
+    supabase.from("ListingType").select("id, name"),
+    supabase.from("BuyType").select("id, name"),
+  ]);
+
+  const propertyTypes = propTypesRes.data ?? [];
+  const buyTypes = buyTypesRes.data ?? [];
 
   return <OrdersPageClient propertyTypes={propertyTypes} buyTypes={buyTypes} />;
 }
