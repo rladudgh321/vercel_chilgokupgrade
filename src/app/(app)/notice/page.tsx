@@ -1,7 +1,6 @@
 import NoticeClient from './NoticeClient';
 import { BoardPost } from './NoticeClient';
 
-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function getPosts() {

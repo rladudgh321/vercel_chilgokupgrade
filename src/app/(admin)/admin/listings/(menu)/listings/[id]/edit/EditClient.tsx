@@ -82,7 +82,7 @@ const toIdArray = (v: unknown): number[] => {
 };
 
 // ---- prisma Build -> FormData 정규화 (schema.prisma 기준) ----
-function normalizeForForm(d: any, themeOptions: string[]): FormData {
+function normalizeForForm(d: any, themeOptions: string[], labelOptions: Option[]): FormData {
   return {
     ...BASE_DEFAULTS,
 
@@ -120,7 +120,7 @@ function normalizeForForm(d: any, themeOptions: string[]): FormData {
 
     // 기본 정보
     popularity: d.popularity ?? "",
-    label: d.label?.name ?? "",
+    label: labelOptions.find(o => o.id === d.labelId)?.name ?? null,
     floorType: d.floorType ?? "지상",
     currentFloor: d.currentFloor ?? null,
     totalFloors: d.totalFloors ?? null,
@@ -234,10 +234,10 @@ export default function EditClient({ id }: { id: number }) {
   // 데이터 → 폼 reset
   useEffect(() => {
     if (allLoaded && data) {
-      methods.reset(normalizeForForm(data, themeOptions));
+      methods.reset(normalizeForForm(data, themeOptions, labelOptions));
       setFormKey(prev => prev + 1);
     }
-  }, [allLoaded, data, themeOptions, methods]);
+  }, [allLoaded, data, themeOptions, labelOptions, methods]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: FormData) => {
@@ -359,6 +359,8 @@ export default function EditClient({ id }: { id: number }) {
       alert("수정 중 에러가 발생했습니다.");
     },
   });
+
+  console.log('labelOptions', labelOptions)
 
   if (!allLoaded) return <p>로딩 중...</p>;
   if (isError) return <p>불러오기 실패</p>;
