@@ -12,7 +12,6 @@ import { cookies } from 'next/headers';
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
   const supabase = createClientClient(); // 쿠키 없이 빌드 시점에서 안전
   const { data, error } = await supabase.from('BoardPost').select('id');
-  console.log('generateStaticParams Notice id', data)
   if (error || !data) return [];
 
   return data.map((p) => ({ id: String(p.id) }));

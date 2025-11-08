@@ -17,6 +17,7 @@ import AddressVisibility from "@/app/components/admin/listings/AddressVisibility
 import SearchIcon from "@svg/Search";
 
 import { BuildDeleteSome, BuildFindAll, toggleBuild, updateConfirmDate, patchConfirmDateToToday } from "@/app/apis/build";
+import { WorkInfoFindOne } from "@/app/apis/workinfo";
 import { IBuild } from "@/app/interface/build";
 import formatFullKoreanMoney from "@/app/utility/NumberToKoreanMoney";
 import { formatYYYYMMDD } from "@/app/utility/koreaDateControl";
@@ -84,6 +85,12 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
       (searchKeyword ?? "") === "",
     [ListingsData?.currentPage, page, searchKeyword]
   );
+
+  const { data: workInfoData } = useQuery({
+    queryKey: ["workinfo"],
+    queryFn: WorkInfoFindOne,
+    staleTime: Infinity, // This data doesn't change often
+  });
 
   // 목록 조회
   const { data, isLoading, isError } = useQuery({
@@ -580,7 +587,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                             type="button"
                             onClick={() => {
                               setPrintMenuRowId(null);
-                              printPhotoVersion(listing);
+                              printPhotoVersion(listing, workInfoData?.data);
                             }}
                             className="w-full text-left px-3 py-2 hover:bg-slate-100"
                           >

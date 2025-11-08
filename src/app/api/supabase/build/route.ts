@@ -195,6 +195,7 @@ export async function GET(req: NextRequest) {
     const { data, error, count } = await q;
 
     if (error) {
+      console.error("Supabase query error in /api/supabase/build:", error);
       Sentry.captureException(error);
       await notifySlack(error, req.url);
       return NextResponse.json({ ok: false, error }, { status: 400 });
@@ -203,7 +204,6 @@ export async function GET(req: NextRequest) {
     const processedData = data.map((d: any) => ({
       ...d,
       label: d.label?.name,
-      buildingOptions: d.buildingOptions.map((o: any) => o.name),
       propertyType: d.listingType?.name,
       buyType: d.buyType?.name,
       floorType: d.floorType,

@@ -9,8 +9,6 @@ async function getPosts() {
     next: { revalidate: 28800, tags: ['public', 'board'] },
   });
 
-  console.log("Fetch response status:", res.status);
-
   if (!res.ok) {
     const errorText = await res.text();
     console.error("Failed to fetch posts. Status:", res.status, "Body:", errorText);
@@ -18,7 +16,6 @@ async function getPosts() {
   }
   
   const data = await res.json();
-  console.log("Fetched data from /api/board:", data);
   return data;
 }
 
