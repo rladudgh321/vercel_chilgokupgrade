@@ -218,10 +218,12 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
             />
           </div>
 
-          <div>
-            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">위치 및 주변 편의시설</h4>
-            {build.address && <KakaoMapMarker address={build.address} />}
-          </div>
+          {build.isAddressPublic !== 'exclude' && build.isAddressPublic !== 'private' && (
+            <div>
+              <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">위치 및 주변 편의시설</h4>
+              {build.address && <KakaoMapMarker address={build.address} />}
+            </div>
+          )}
         </div>
       </div>
     </div>
