@@ -6,15 +6,13 @@ import {createClient as createClientClient } from '@/app/utils/supabase/client';
 import { createClient } from '@/app/utils/supabase/server';
 import { cookies } from 'next/headers';
 
-export const revalidate = 28800; // 8시간
-
 // -------------------------
 // 1. SSG: 정적 경로 수집
 // -------------------------
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
   const supabase = createClientClient(); // 쿠키 없이 빌드 시점에서 안전
-  const { data, error } = await supabase.from('board').select('id');
-
+  const { data, error } = await supabase.from('BoardPost').select('id');
+  console.log('generateStaticParams Notice id', data)
   if (error || !data) return [];
 
   return data.map((p) => ({ id: String(p.id) }));
@@ -28,7 +26,7 @@ async function getPost(id: string): Promise<BoardPost> {
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase
-    .from('board')
+    .from('BoardPost')
     .select('*')
     .eq('id', id)
     .single();
