@@ -101,3 +101,72 @@ D    (auth.uid() = 'f312fbfc-cf58-405e-86ef-e9047966fa52'::uuid)
 고객의 인생 단계, 재정 여건, 그리고 꿈을 함께 듣고,
 그에 맞는 방향을 제시합니다.
 매물보다 중요한 건, 고객의 ‘다음 발걸음’이니까요.”
+
+
+-----------
+아래 사항을 복붙하여 supabase Editor에 넣기
+이것은 초기데이터 삽입에 좋다
+---****------
+-- ===========================================
+-- 1️⃣ Build 테이블 RLS 비활성화 및 기존 정책 제거
+-- ===========================================
+
+-- RLS 완전히 비활성화
+ALTER TABLE public."Build" DISABLE ROW LEVEL SECURITY;
+
+-- Build 테이블에 설정된 모든 RLS 정책 조회
+SELECT policyname
+FROM pg_policies
+WHERE schemaname = 'public' AND tablename = 'Build';
+
+-- 예시: 기존 정책 삭제
+-- DROP POLICY IF EXISTS policy_email_check ON public."Build";
+
+-- ===========================================
+-- 2️⃣ 스키마 접근 권한
+-- ===========================================
+
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT USAGE ON SCHEMA public TO anon;
+
+-- 필요 시 테이블 생성 권한 (로그인 사용자)
+GRANT CREATE ON SCHEMA public TO authenticated;
+
+-- ===========================================
+-- 3️⃣ Build 테이블 및 모든 테이블 권한 설정
+-- ===========================================
+
+-- 로그인한 사용자(authenticated) → 모든 권한
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
+
+-- 로그인하지 않은 사용자(anon) → 읽기 + 쓰기만
+GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO anon;
+
+-- ===========================================
+-- 4️⃣ 앞으로 생성되는 테이블 기본 권한
+-- ===========================================
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO authenticated;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT SELECT, INSERT ON TABLES TO anon;
+
+-- ===========================================
+-- 5️⃣ 권한 확인 (선택)
+-- ===========================================
+
+-- 스키마 접근 권한 확인
+SELECT nspname, rolname,
+       has_schema_privilege(rolname, nspname, 'USAGE') AS usage
+FROM pg_namespace
+CROSS JOIN pg_roles
+WHERE nspname = 'public';
+
+-- 테이블 권한 확인
+SELECT grantee, privilege_type, table_name
+FROM information_schema.role_table_grants
+WHERE table_schema = 'public'
+ORDER BY grantee, table_name;
+
+---***----

@@ -1,4 +1,3 @@
-import { createClient as createServiceRoleClient } from "@supabase/supabase-js";
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/app/utils/supabase/server";
@@ -8,7 +7,7 @@ import { notifySlack } from "@/app/utils/sentry/slack";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const searchParams = req.nextUrl.searchParams;
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
     const limit = Math.min(
       100,
@@ -27,11 +26,8 @@ export async function GET(req: NextRequest) {
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    // Use service role client for admin-level data fetching
-    const supabase = createServiceRoleClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
 
     let q = supabase
       .from("Build")
