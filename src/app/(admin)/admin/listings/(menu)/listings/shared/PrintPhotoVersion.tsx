@@ -87,6 +87,7 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
   ].filter(Boolean) as { label: string, value: any, unit?: string }[];
 
   const buildingInfoItems = [
+    listing.managementEtc ? { label: "기타사항", value: listing.managementEtc } : null,
     (listing.totalParking || listing.parkingPerUnit || listing.parkingFee) ? { label: "주차 옵션", value: `총 ${listing.totalParking || "-"}대 (세대당 ${listing.parkingPerUnit || "-"}대), 주차비: ${formatPriceWithDisplay(listing.parkingFee, listing.priceDisplay, numberToKoreanWithDigits)}` } : null,
     { label: "엘리베이터", value: listing.elevatorType === "유" ? `${listing.elevatorCount || "-"}개` : listing.elevatorType },
     { label: "난방 방식", value: listing.heatingType },

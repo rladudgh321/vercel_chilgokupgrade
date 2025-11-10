@@ -183,6 +183,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
 
             {isExtraInfoVisible && (
               <div className="border rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 mt-4">
+                {build.managementEtc && Row("기타사항", build.managementEtc)}
                 {(build.totalParking || build.parkingPerUnit || build.parkingFee) && Row(
                   "주차 옵션",
                   `총 ${build.totalParking || "-"}대 (세대당 ${build.parkingPerUnit || "-"}대), 주차비: ${formatPrice(

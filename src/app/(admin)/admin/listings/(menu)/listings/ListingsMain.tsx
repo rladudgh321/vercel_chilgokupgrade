@@ -506,6 +506,9 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                         {listing.totalFloors}층
                       </div>
                     )}
+                    {listing.managementEtc && (
+                      <div>기타: {listing.managementEtc}</div>
+                    )}
                   </td>
 
                   <td
