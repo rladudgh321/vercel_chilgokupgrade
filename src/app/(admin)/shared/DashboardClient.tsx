@@ -1,6 +1,7 @@
 'use client';
 
 import ManagementAPI from '@/app/layout/admin/Header/ManagementAPI';
+import VercelUsage from '@/app/layout/admin/Header/VercelUsage';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1919'];
@@ -134,7 +135,10 @@ export default function DashboardClient({ dashboardData }: DashboardClientProps)
         <ChartWithSortedList title="카테고리별 조회수" data={categoryViews} />
         <ChartWithSortedList title="테마별 조회수" data={themeViews} />
       </div>
-      <ManagementAPI />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <ManagementAPI />
+        <VercelUsage />
+      </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">조회수 상위 5개 매물</h2>
