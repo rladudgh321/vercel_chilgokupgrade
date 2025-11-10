@@ -98,7 +98,7 @@ function normalizeForForm(d: any, themeOptions: string[], labelOptions: Option[]
     listingTypeId: d.listingTypeId ?? null,
     buyTypeId: d.buyTypeId ?? null,
     dealScope: d.dealScope ?? "",
-    visibility: d.visibility ?? true,
+    visibility: !(d.visibility === false || d.visibility === 'false'),
     priceDisplay: d.priceDisplay ?? "",
 
     // 가격 + 플래그

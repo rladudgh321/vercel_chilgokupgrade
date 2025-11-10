@@ -119,7 +119,14 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-3 sm:p-4 border-b flex justify-between items-center bg-purple-800 text-white rounded-t-lg">
-          <h2 className="text-lg sm:text-xl font-bold">매물 상세 정보 (번호: {build?.id})</h2>
+          <h2 className="text-lg sm:text-xl font-bold flex items-center gap-x-2">
+            <span>매물 상세 정보 (번호: {build?.id})</span>
+            {build.dealScope === '부분' && (
+              <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-md">
+                부분 소유
+              </span>
+            )}
+          </h2>
           <button onClick={onClose} className="text-white hover:text-gray-200 text-2xl font-bold">&times;</button>
         </div>
 

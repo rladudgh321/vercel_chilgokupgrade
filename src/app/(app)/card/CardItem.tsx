@@ -54,6 +54,7 @@ type Props = {
     yieldType?: string;
     otherYield?: string;
     priceDisplay?: string;
+    dealScope?: string;
   };
 };
 
@@ -227,8 +228,15 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
         </div>
 
         {/* 매물 ID (Existing from CardItem) */}
-        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
-          #{listing.id}
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-x-2">
+          {listing.dealScope === '부분' && (
+            <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-md">
+              부분 소유
+            </span>
+          )}
+          <div className="bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+            #{listing.id}
+          </div>
         </div>
       </div>
 

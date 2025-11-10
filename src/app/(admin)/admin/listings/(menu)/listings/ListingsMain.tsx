@@ -490,6 +490,9 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                     data-label="매물정보"
                   >
                     <div>{listing.title}</div>
+                    {listing.dealScope === '부분' && (
+                      <div className="text-red-500 font-semibold">부분소유</div>
+                    )}
                     {(listing.roomOption?.name || listing.bathroomOption?.name) && (
                       <div>
                         방 {listing.roomOption?.name} / 화장실{" "}

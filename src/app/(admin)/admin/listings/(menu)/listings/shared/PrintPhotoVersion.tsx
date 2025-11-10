@@ -70,6 +70,7 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
 
   const coreInfoItems = [
     { label: "제목", value: listing.title },
+    listing.dealScope === '부분' ? { label: "소유권", value: "부분 소유" } : null,
     { label: "거래 종류", value: listing.buyType },
     { label: "매물 종류", value: listing.propertyType },
     listing.isSalePriceEnabled ? { label: "매매가", value: formatPriceWithDisplay(listing.salePrice, listing.priceDisplay, formatFullKoreanMoney) } : null,

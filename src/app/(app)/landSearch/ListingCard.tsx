@@ -45,6 +45,7 @@ type Props = {
     isAddressPublic?: string;
     visibility?: boolean;
     priceDisplay?: string;
+    dealScope?: string;
   };
 };
 
@@ -105,8 +106,15 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
               </div>
             )}
           </div>
-          <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded">
-            #{listing.id}
+          <div className="absolute top-2 right-2 flex items-center gap-x-2">
+            {listing.dealScope === '부분' && (
+              <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-md">
+                부분 소유
+              </span>
+            )}
+            <div className="bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded">
+              #{listing.id}
+            </div>
           </div>
         </div>
 
