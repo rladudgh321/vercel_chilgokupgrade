@@ -3,7 +3,7 @@
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
 import MapView from "./MapView";
 import ListingList from "./ListingList";
 import SearchBar from "./SearchBar";
@@ -119,7 +119,7 @@ export default function LandSearchClient({
     },
 
     initialPageParam: 1,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
   const { data: mapListings = [] } = useQuery({
     queryKey: ["map-listings", queryParams],

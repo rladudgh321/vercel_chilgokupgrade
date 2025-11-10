@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // --- Route Protection Logic ---
-  const publicAdminRoutes = ['/admin/login', '/admin/signup'];
+  const publicAdminRoutes = ['/admin/login'];
 
   if (pathname.startsWith('/admin') && !publicAdminRoutes.includes(pathname)) {
     if (!user) {

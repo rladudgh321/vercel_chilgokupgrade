@@ -125,30 +125,21 @@ export async function GET(req: NextRequest) {
     const floor = searchParams.get("floor")?.trim();
     if (floor) {
         console.log(`[DEBUG] Raw floor param: ${floor}`);
-        const filters = [];
         if (floor.includes("~")) {
             const [minStr, maxStr] = floor.replace(/층/g, "").split("~");
-            console.log(`[DEBUG] Floor min string: ${minStr}, max string: ${maxStr}`);
             const min = Number(minStr);
             const max = Number(maxStr);
-            console.log(`[DEBUG] Floor min value: ${min}, max value: ${max}`);
             if (!isNaN(min)) {
-                filters.push(`currentFloor.gte.${min}`);
+                q = q.gte('currentFloor', min);
             }
-            if (maxStr && !isNaN(Number(maxStr))) {
-                filters.push(`currentFloor.lte.${Number(maxStr)}`);
+            if (maxStr && !isNaN(max)) {
+                q = q.lte('currentFloor', max);
             }
         } else {
             const singleFloor = Number(floor.replace("층", ""));
-            console.log(`[DEBUG] Single floor value: ${singleFloor}`);
             if (!isNaN(singleFloor)) {
-                filters.push(`currentFloor.eq.${singleFloor}`);
+                q = q.eq('currentFloor', singleFloor);
             }
-        }
-
-        if (filters.length > 0) {
-            console.log(`[DEBUG] Applying floor filters: ${filters.join(",")}`);
-            q = q.and(filters.join(","));
         }
     }
 
@@ -164,31 +155,26 @@ export async function GET(req: NextRequest) {
         }
 
         if (priceField) {
-            const filters = [];
             if (priceRange.includes("~")) {
                 const [minStr, maxStr] = priceRange.split("~");
                 const min = koreanToNumber(minStr);
                 const max = koreanToNumber(maxStr);
                 if (min !== null) {
-                    filters.push(`${priceField}.gte.${min}`);
+                    q = q.gte(priceField, min);
                 }
                 if (max !== null) {
-                    filters.push(`${priceField}.lte.${max}`);
+                    q = q.lte(priceField, max);
                 }
             } else if (priceRange.includes("이상")) {
                 const min = koreanToNumber(priceRange.replace("이상", ""));
                 if (min !== null) {
-                    filters.push(`${priceField}.gte.${min}`);
+                    q = q.gte(priceField, min);
                 }
             } else if (priceRange.includes("이하")) {
                 const max = koreanToNumber(priceRange.replace("이하", ""));
                 if (max !== null) {
-                    filters.push(`${priceField}.lte.${max}`);
+                    q = q.lte(priceField, max);
                 }
-            }
-
-            if (filters.length > 0) {
-                q = q.and(filters.join(","));
             }
         }
     }
