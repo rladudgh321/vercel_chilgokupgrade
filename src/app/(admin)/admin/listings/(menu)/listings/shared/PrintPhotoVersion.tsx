@@ -12,6 +12,21 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
     return numberToKoreanWithDigits(price);
   };
 
+  const formatPriceWithDisplay = (
+    price: number | undefined | null,
+    priceDisplay: string | undefined | null,
+    formatter: (p: number) => string
+  ) => {
+    if (price === undefined || price === null) return "";
+    let formattedPrice = formatter(price);
+    if (priceDisplay === "비공개") {
+      formattedPrice = `${formattedPrice} (비공개)`;
+    } else if (priceDisplay === "협의가능") {
+      formattedPrice = `${formattedPrice} (협의가능)`;
+    }
+    return formattedPrice;
+  };
+
   const mainImages = [listing.mainImage, ...(Array.isArray(listing.subImage) ? listing.subImage : [])]
     .filter(src => !!src)
     .slice(0, 4);
@@ -57,12 +72,12 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
     { label: "제목", value: listing.title },
     { label: "거래 종류", value: listing.buyType },
     { label: "매물 종류", value: listing.propertyType },
-    listing.isSalePriceEnabled ? { label: "매매가", value: formatFullKoreanMoney(listing.salePrice) } : null,
-    listing.isLumpSumPriceEnabled ? { label: "전세가", value: formatFullKoreanMoney(listing.lumpSumPrice) } : null,
-    listing.isActualEntryCostEnabled ? { label: "실입주금", value: formatFullKoreanMoney(listing.actualEntryCost) } : null,
-    listing.isDepositEnabled ? { label: "보증금", value: formatFullKoreanMoney(listing.deposit) } : null,
-    listing.isRentalPriceEnabled ? { label: "월세", value: formatFullKoreanMoney(listing.rentalPrice) } : null,
-    listing.isManagementFeeEnabled ? { label: "관리비", value: formatFullKoreanMoney(listing.managementFee) } : null,
+    listing.isSalePriceEnabled ? { label: "매매가", value: formatPriceWithDisplay(listing.salePrice, listing.priceDisplay, formatFullKoreanMoney) } : null,
+    listing.isLumpSumPriceEnabled ? { label: "전세가", value: formatPriceWithDisplay(listing.lumpSumPrice, listing.priceDisplay, formatFullKoreanMoney) } : null,
+    listing.isActualEntryCostEnabled ? { label: "실입주금", value: formatPriceWithDisplay(listing.actualEntryCost, listing.priceDisplay, formatFullKoreanMoney) } : null,
+    listing.isDepositEnabled ? { label: "보증금", value: formatPriceWithDisplay(listing.deposit, listing.priceDisplay, formatFullKoreanMoney) } : null,
+    listing.isRentalPriceEnabled ? { label: "월세", value: formatPriceWithDisplay(listing.rentalPrice, listing.priceDisplay, formatFullKoreanMoney) } : null,
+    listing.isManagementFeeEnabled ? { label: "관리비", value: formatPriceWithDisplay(listing.managementFee, listing.priceDisplay, formatFullKoreanMoney) } : null,
     { label: "건물 층수", value: (listing.totalFloors || listing.basementFloors) ? `지상 ${listing.totalFloors || '-'}층 / 지하 ${listing.basementFloors || '-'}층` : null },
     { label: "해당 층수", value: listing.currentFloor !== undefined && listing.currentFloor !== null ? `${listing.floorType || ''} ${listing.currentFloor < 0 ? `B${Math.abs(listing.currentFloor)}` : listing.currentFloor}층` : null },
     { label: "방/화장실 수", value: (listing.roomOption?.name || listing.bathroomOption?.name) ? `${listing.roomOption?.name || "-"} / ${listing.bathroomOption?.name || "-"}`: null },
@@ -71,7 +86,7 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
   ].filter(Boolean) as { label: string, value: any, unit?: string }[];
 
   const buildingInfoItems = [
-    (listing.totalParking || listing.parkingPerUnit || listing.parkingFee) ? { label: "주차 옵션", value: `총 ${listing.totalParking || "-"}대 (세대당 ${listing.parkingPerUnit || "-"}대), 주차비: ${formatPrice(String(listing.parkingFee))}` } : null,
+    (listing.totalParking || listing.parkingPerUnit || listing.parkingFee) ? { label: "주차 옵션", value: `총 ${listing.totalParking || "-"}대 (세대당 ${listing.parkingPerUnit || "-"}대), 주차비: ${formatPriceWithDisplay(listing.parkingFee, listing.priceDisplay, numberToKoreanWithDigits)}` } : null,
     { label: "엘리베이터", value: listing.elevatorType === "유" ? `${listing.elevatorCount || "-"}개` : listing.elevatorType },
     { label: "난방 방식", value: listing.heatingType },
     { label: "수익률 사용", value: listing.yieldType && listing.yieldType !== "미사용" ? (listing.yieldType === "기타수익률" ? listing.otherYield : listing.yieldType) : null },

@@ -14,6 +14,19 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
   const formatPrice = (price?: number | string | null) =>
     price == null || Number.isNaN(Number(price)) ? "-" : `${Number(price).toLocaleString()}원`;
 
+  const getFormattedPriceDisplay = (priceValue: number | string | null | undefined, priceDisplayStatus: string | undefined) => {
+    if (priceDisplayStatus === "비공개") {
+      return "매물 금액 비공개";
+    }
+
+    let formatted = priceValue == null || Number.isNaN(Number(priceValue)) ? "-" : `${Number(priceValue).toLocaleString()}원`;
+
+    if (priceDisplayStatus === "협의가능") {
+      formatted = `${formatted} (협의가능)`;
+    }
+    return formatted;
+  };
+
   const allImages = useMemo(
     () =>
       build?.mainImage
@@ -123,14 +136,14 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
             <div className="border rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
               {Row("매물 종류", build.propertyType)}
               {Row("거래 종류", build.buyType)}
-              {build.isSalePriceEnabled && Row("매매가", formatPrice(build.salePrice))}
-              {build.isLumpSumPriceEnabled && Row("전세가", formatPrice(build.lumpSumPrice))}
-              {build.isActualEntryCostEnabled && Row("실입주금", formatPrice(build.actualEntryCost))}
-              {build.isDepositEnabled && Row("보증금", formatPrice(build.deposit))}
-              {build.isRentalPriceEnabled && Row("월세", formatPrice(build.rentalPrice))}
-              {build.isHalfLumpSumMonthlyRentEnabled && Row("반전세의 월세", formatPrice(build.halfLumpSumMonthlyRent))}
+              {build.isSalePriceEnabled && Row("매매가", getFormattedPriceDisplay(build.salePrice, build.priceDisplay))}
+              {build.isLumpSumPriceEnabled && Row("전세가", getFormattedPriceDisplay(build.lumpSumPrice, build.priceDisplay))}
+              {build.isActualEntryCostEnabled && Row("실입주금", getFormattedPriceDisplay(build.actualEntryCost, build.priceDisplay))}
+              {build.isDepositEnabled && Row("보증금", getFormattedPriceDisplay(build.deposit, build.priceDisplay))}
+              {build.isRentalPriceEnabled && Row("월세", getFormattedPriceDisplay(build.rentalPrice, build.priceDisplay))}
+              {build.isHalfLumpSumMonthlyRentEnabled && Row("반전세의 월세", getFormattedPriceDisplay(build.halfLumpSumMonthlyRent, build.priceDisplay))}
               {build.isManagementFeeEnabled && build.managementFee &&
-                Row("관리비", `${formatPrice(build.managementFee)}`)}
+                Row("관리비", getFormattedPriceDisplay(build.managementFee, build.priceDisplay))}
               {(build.totalFloors || build.basementFloors) && Row("건물 층수", `지상 ${build.totalFloors || '-'}층 / 지하 ${build.basementFloors || '-'}층`)}
               {build.currentFloor && Row("해당 층수", `${build.floorType || ''} ${build.currentFloor < 0 ? `B${Math.abs(build.currentFloor)}` : build.currentFloor}층`)}
               {(build.roomOption?.name || build.bathroomOption?.name) &&

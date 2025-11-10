@@ -53,6 +53,7 @@ type Props = {
     visibility?: boolean;
     yieldType?: string;
     otherYield?: string;
+    priceDisplay?: string;
   };
 };
 
@@ -95,10 +96,24 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
     return `${floorTypeDisplay}${currentFloorDisplay}층`;
   };
 
-  const renderPrice = (label: string, value: number | undefined) => {
+  const renderPrice = (label: string, value: number | undefined, priceDisplayStatus: string | undefined) => {
+    if (priceDisplayStatus === "비공개") {
+      return (
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium text-gray-600">{label}</span>
+          <span className="text-base font-bold text-gray-900">매물 금액 비공개</span>
+        </div>
+      );
+    }
+
     if (value === undefined || value === null) return null;
-    const formattedPrice = formatPrice(value);
+    let formattedPrice = formatPrice(value);
     if (!formattedPrice) return null;
+
+    if (priceDisplayStatus === "협의가능") {
+      formattedPrice = `${formattedPrice} (협의가능)`;
+    }
+
     return (
       <div className="flex justify-between items-center">
         <span className="text-sm font-medium text-gray-600">{label}</span>
@@ -231,12 +246,12 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
 
         {/* Price */}
         <div className="mb-3 sm:mb-4 space-y-1 border-t pt-2 sm:pt-3">
-            {listing.isSalePriceEnabled && renderPrice("매매", listing.salePrice)}
-            {listing.isLumpSumPriceEnabled && renderPrice("전세", listing.lumpSumPrice)}
-            {listing.isActualEntryCostEnabled && renderPrice("실입주금", listing.actualEntryCost)}
-            {listing.isDepositEnabled && renderPrice("보증금", listing.deposit)}
-            {listing.isRentalPriceEnabled && renderPrice("월세", listing.rentalPrice)}
-            {listing.isHalfLumpSumMonthlyRentEnabled && renderPrice("반전세 월세", listing.halfLumpSumMonthlyRent)}
+            {listing.isSalePriceEnabled && renderPrice("매매", listing.salePrice, listing.priceDisplay)}
+            {listing.isLumpSumPriceEnabled && renderPrice("전세", listing.lumpSumPrice, listing.priceDisplay)}
+            {listing.isActualEntryCostEnabled && renderPrice("실입주금", listing.actualEntryCost, listing.priceDisplay)}
+            {listing.isDepositEnabled && renderPrice("보증금", listing.deposit, listing.priceDisplay)}
+            {listing.isRentalPriceEnabled && renderPrice("월세", listing.rentalPrice, listing.priceDisplay)}
+            {listing.isHalfLumpSumMonthlyRentEnabled && renderPrice("반전세 월세", listing.halfLumpSumMonthlyRent, listing.priceDisplay)}
         </div>
 
         {/* Details Grid */}

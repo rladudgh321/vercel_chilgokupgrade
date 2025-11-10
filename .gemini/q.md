@@ -1,21 +1,7 @@
-요청 URL
-http://127.0.0.1:3000/api/listings/map?
-요청 메서드
-GET
-상태 코드
-400 Bad Request
-원격 주소
-127.0.0.1:3000
-리퍼러 정책
-strict-origin-when-cross-origin
+BuildDetailModal컴포넌트와 CardItem컴포넌트와 printPhotoVersion컴포넌트와 ListingCard컴포넌트와 ListingsMain컴포넌트에서
+
+`Build`테이블의 priceDisplay가 `공개`이면 기존대로 보여주되, 
+`Build`테이블의 priceDisplay가 `비공개`이면 `BuildDetailModal컴포넌트와 CardItem컴포넌트와 ListingCard컴포넌트`에서 매물 금액 비공개라고 보여주고 `printPhotoVersion컴포넌트와 ListingsMain컴포넌트`에서는 기존대로 금액을 전부 보여주고, 그 옆에 소괄호로 비공개라고 해줘
+`Build`테이블의 priceDisplay가 `협의가능`이면 `BuildDetailModal컴포넌트와 CardItem컴포넌트와 ListingCard컴포넌트와 ListingsMain컴포넌트와 printPhotoVersion컴포넌트`에서 기존대로 금액을 전부 보여주고 그 옆에 소괄호로 협의가능이라고 해줘.
 
 ---
-{
-    "ok": false,
-    "error": {
-        "code": "42703",
-        "details": null,
-        "hint": null,
-        "message": "column Build.mapLocation does not exist"
-    }
-}

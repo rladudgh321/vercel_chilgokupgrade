@@ -72,6 +72,17 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     return koreanTime.toISOString().split('T')[0];
   }, []);
 
+  const formatPriceWithDisplay = (price: number | undefined | null, priceDisplay: string | undefined | null) => {
+    if (price === undefined || price === null) return "";
+    let formattedPrice = formatFullKoreanMoney(price);
+    if (priceDisplay === "비공개") {
+      formattedPrice = `${formattedPrice} (비공개)`;
+    } else if (priceDisplay === "협의가능") {
+      formattedPrice = `${formattedPrice} (협의가능)`;
+    }
+    return formattedPrice;
+  };
+
   // Query Key
   const qk = useMemo(
     () => ["builds", page, LIMIT, (searchKeyword ?? "").trim()],
@@ -500,39 +511,39 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                   >
                     {listing.isSalePriceEnabled && listing.salePrice && (
                       <div>
-                        매: {formatFullKoreanMoney(Number(listing.salePrice))}
+                        매: {formatPriceWithDisplay(Number(listing.salePrice), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isLumpSumPriceEnabled && listing.lumpSumPrice && (
                         <div>
-                        전: {formatFullKoreanMoney(Number(listing.lumpSumPrice))}
+                        전: {formatPriceWithDisplay(Number(listing.lumpSumPrice), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isActualEntryCostEnabled && listing.actualEntryCost && (
                       <div>
                         실:{" "}
-                        {formatFullKoreanMoney(Number(listing.actualEntryCost))}
+                        {formatPriceWithDisplay(Number(listing.actualEntryCost), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isDepositEnabled && listing.deposit && (
                         <div>
-                        보: {formatFullKoreanMoney(Number(listing.deposit))}
+                        보: {formatPriceWithDisplay(Number(listing.deposit), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isRentalPriceEnabled && listing.rentalPrice && (
                       <div>
-                        월: {formatFullKoreanMoney(Number(listing.rentalPrice))}
+                        월: {formatPriceWithDisplay(Number(listing.rentalPrice), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isHalfLumpSumMonthlyRentEnabled && listing.halfLumpSumMonthlyRent && (
                         <div>
-                        반월: {formatFullKoreanMoney(Number(listing.halfLumpSumMonthlyRent))}
+                        반월: {formatPriceWithDisplay(Number(listing.halfLumpSumMonthlyRent), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isManagementFeeEnabled && listing.managementFee && (
                       <div>
                         관:{" "}
-                        {formatFullKoreanMoney(Number(listing.managementFee))}
+                        {formatPriceWithDisplay(Number(listing.managementFee), listing.priceDisplay)}
                       </div>
                     )}
                   </td>
