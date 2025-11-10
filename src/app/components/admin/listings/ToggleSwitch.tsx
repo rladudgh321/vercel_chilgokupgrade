@@ -1,25 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { clsx } from "clsx";
 
 const ToggleSwitch = ({
   toggle = false,
   id,
   onToggle,
-  className
+  className,
+  disabled = false,
 }: {
   toggle?: boolean;
   id: string;
   onToggle?: (checked: boolean) => void;
   className?: string;
+  disabled?: boolean;
 }) => {
   const [isChecked, setIsChecked] = useState(toggle);
 
+  useEffect(() => {
+    setIsChecked(toggle);
+  }, [toggle]);
+
   const handleToggle = () => {
+    if (disabled) return;
     const newValue = !isChecked;
-    setIsChecked(newValue); // 로컬 상태 즉시 업데이트
-    onToggle?.(newValue);   // 부모로 상태 전달
+    setIsChecked(newValue);
+    onToggle?.(newValue);
   };
 
   return (
@@ -31,10 +38,14 @@ const ToggleSwitch = ({
           checked={isChecked}
           onChange={handleToggle}
           className="peer hidden"
+          disabled={disabled}
         />
         <label
           htmlFor={id}
-          className="flex justify-between items-center cursor-pointer w-20 h-10 rounded-full bg-gray-300 peer-checked:bg-blue-500 transition-colors duration-300"
+          className={clsx(
+            "flex justify-between items-center cursor-pointer w-20 h-10 rounded-full bg-gray-300 peer-checked:bg-blue-500 transition-colors duration-300",
+            "peer-disabled:cursor-not-allowed peer-disabled:bg-gray-400"
+          )}
         >
           <span
             className={clsx(

@@ -116,6 +116,7 @@ const InputField = ({
                 "mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
                 className
               )}
+              portalId="react-datepicker-portal"
             />
             </Suspense>
           ) : (

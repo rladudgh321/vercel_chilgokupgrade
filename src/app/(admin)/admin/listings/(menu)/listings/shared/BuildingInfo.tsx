@@ -377,6 +377,7 @@ const BuildingInfo = () => {
                 placeholderText="입주 가능일 선택"
                 className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 locale={ko}
+                portalId="react-datepicker-portal"
               />
             )}
           />

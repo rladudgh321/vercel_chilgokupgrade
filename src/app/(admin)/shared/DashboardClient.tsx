@@ -5,7 +5,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF1919'];
 
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+interface CustomizedLabelProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+}
+
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: CustomizedLabelProps) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
   const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
@@ -17,7 +26,17 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-const ChartWithSortedList = ({ title, data }) => (
+interface ChartData {
+  name: string;
+  value: number;
+}
+
+interface ChartWithSortedListProps {
+  title: string;
+  data: ChartData[];
+}
+
+const ChartWithSortedList = ({ title, data }: ChartWithSortedListProps) => (
   <div className="bg-white p-6 rounded-lg shadow-md">
     <h2 className="text-2xl font-bold mb-4">{title}</h2>
     <div style={{ width: '100%', height: 300 }}>
@@ -37,7 +56,7 @@ const ChartWithSortedList = ({ title, data }) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => value.toLocaleString()} />
+          <Tooltip formatter={(value: number) => value.toLocaleString()} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>
@@ -55,7 +74,36 @@ const ChartWithSortedList = ({ title, data }) => (
   </div>
 );
 
-export default function DashboardClient({ dashboardData }) {
+interface ListingStats {
+  totalListings: number;
+  totalViews: number;
+}
+
+interface InquiryStats {
+  buy: number;
+  sell: number;
+  other: number;
+}
+
+interface TopListing {
+  address: string;
+  views: number;
+}
+
+interface DashboardData {
+  listingStats: ListingStats;
+  inquiryStats: InquiryStats;
+  contactRequests: number;
+  categoryViews: ChartData[];
+  themeViews: ChartData[];
+  topListings: TopListing[];
+}
+
+interface DashboardClientProps {
+  dashboardData: DashboardData;
+}
+
+export default function DashboardClient({ dashboardData }: DashboardClientProps) {
   const { listingStats, inquiryStats, contactRequests, categoryViews, themeViews, topListings } = dashboardData;
   // console.log('contactRequests',contactRequests);
 

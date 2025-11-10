@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
 import IpActions from '@/app/(admin)/shared/IpActions';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchOrders } from '@/app/hooks/useOrders';
 
 type Order = {
   id: number;
@@ -36,14 +37,35 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   const queryClient = useQueryClient();
   const [categoryFilter, setCategoryFilter] = useState<'전체' | '구해요' | '팔아요' | '기타'>('전체');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const { data: queryData } = useQuery({
+    queryKey: ['orders', currentPage],
+    queryFn: () => fetchOrders(currentPage, 10),
+    initialData: { orders: initialOrders, count: totalPages * 10 },
+  });
+
+  const orders = queryData?.orders || [];
+
   const [notes, setNotes] = useState<{ [key: number]: string }>(
-    initialOrders.reduce((acc, order) => {
+    orders.reduce((acc, order) => {
       if (order.note) {
         acc[order.id] = order.note;
       }
       return acc;
     }, {} as { [key: number]: string })
   );
+
+  useEffect(() => {
+    setNotes(
+      orders.reduce((acc, order) => {
+        if (order.note) {
+          acc[order.id] = order.note;
+        }
+        return acc;
+      }, {} as { [key: number]: string })
+    );
+  }, [orders]);
 
   const updateOrderMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<Order> }) => {
@@ -59,11 +81,17 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
       }
       return response.json();
     },
+    onMutate: () => {
+      setIsUpdating(true);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
     onError: (error) => {
       alert(error?.message ?? '업데이트 실패');
+    },
+    onSettled: () => {
+      setIsUpdating(false);
     },
   });
 
@@ -74,13 +102,22 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
       if (!response.ok) {
         throw new Error('Failed to delete order');
       }
+      if (response.status === 204) {
+        return null;
+      }
       return response.json();
+    },
+    onMutate: () => {
+      setIsUpdating(true);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
     onError: (error) => {
       alert(error?.message ?? '삭제 실패');
+    },
+    onSettled: () => {
+      setIsUpdating(false);
     },
   });
 
@@ -111,15 +148,15 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   };
 
   const filteredOrders = useMemo(() => {
-    return initialOrders.filter((order) => {
+    return orders.filter((order) => {
       const matchesCategory = categoryFilter === '전체' || order.category === categoryFilter;
       const matchesSearch = order.contact.includes(searchQuery) || order.title.includes(searchQuery);
       return matchesCategory && matchesSearch;
     });
-  }, [initialOrders, categoryFilter, searchQuery]);
+  }, [orders, categoryFilter, searchQuery]);
 
   return (
-    <div className="p-2 sm:p-4 md:p-6">
+    <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <div className="text-lg sm:text-xl font-semibold">
           의뢰수: {filteredOrders.length}건
@@ -179,6 +216,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                     toggle={order.confirm}
                     id={String(order.id)}
                     onToggle={(value) => handleToggleChange(order.id, value)}
+                    disabled={updateOrderMutation.isPending}
                   />
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="구분">{order.category}</td>
@@ -205,7 +243,8 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                   />
                   <button
                     onClick={() => handleSaveNote(order.id)}
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full"
+                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400"
+                    disabled={updateOrderMutation.isPending}
                   >
                     메모저장
                   </button>
@@ -221,8 +260,9 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="등록일">{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="비고">
                   <button
-                    className="p-2 bg-red-500 text-white rounded w-full"
+                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400"
                     onClick={() => handleDelete(order.id)}
+                    disabled={deleteOrderMutation.isPending}
                   >
                     삭제
                   </button>

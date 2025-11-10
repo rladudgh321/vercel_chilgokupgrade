@@ -4,11 +4,11 @@ import Footer from "../layout/app/Footer";
 import SnsIcon, { SnsSetting } from "@/app/components/SnsIcon";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
-export async function getWorkInfo(): Promise<HeaderProps> {
+export async function getWorkInfo(): Promise<{data?: HeaderProps; ok: boolean;}> {
   const response = await fetch(`${BASE_URL}/api/workinfo`, { next: { tags: ["public", "workInfo"], revalidate: 28800 } });
   if (!response.ok) {
     console.error('Error fetching posts:', await response.text());
-    return {};
+    return { ok: false };
   }
   return response.json();
 }
@@ -34,10 +34,10 @@ export default async function AppLayout({
    const [headerPromise, snsSettings] = await Promise.all([getWorkInfo(), getSnsSettings()]);
   return (
     <>
-      <Header headerPromise={headerPromise} />
+      <Header headerPromise={headerPromise.data!} />
       <main className="flex-grow">{children}</main>
        {Boolean(snsSettings?.length) && <SnsIcon snsSettings={snsSettings} />}
-      <Footer headerPromise={headerPromise} />
+      <Footer headerPromise={headerPromise.data!} />
       {modal}
     </>
   );

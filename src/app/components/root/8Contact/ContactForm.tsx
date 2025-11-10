@@ -1,6 +1,6 @@
 "use client"
 
-import { use } from 'react'
+import { use, useState } from 'react'
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form"
 
 export type ContactRequestInput = {
@@ -12,6 +12,7 @@ export type ContactRequestInput = {
 
 const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => {
   const isBannedPromise = use(isBanned);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,6 +24,7 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
       alert('귀하는 문의를 제출할 수 없습니다.');
       return;
     }
+    setIsSubmitting(true);
     try {
       const payload = {
         confirm: false,
@@ -46,6 +48,8 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
       reset()
     } catch (e) {
       alert((e as Error)?.message ?? '전송 중 오류가 발생했습니다')
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -99,7 +103,7 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
         <button
           type="submit"
           className="inline-block p-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 w-full sm:w-auto disabled:bg-gray-400"
-          disabled={isBannedPromise.isBanned}
+          disabled={isBannedPromise.isBanned || isSubmitting}
         >
           보내기
         </button>

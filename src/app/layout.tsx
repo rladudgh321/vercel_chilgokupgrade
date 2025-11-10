@@ -46,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${myFontWoff2.variable} ${myFontFallback.variable} antialiased h-full flex flex-col`}
       >
         <TanstackProvider>{children}</TanstackProvider>
+        <div id="react-datepicker-portal"></div>
       </body>
     </html>
   );

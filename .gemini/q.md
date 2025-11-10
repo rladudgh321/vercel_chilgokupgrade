@@ -1,4 +1,47 @@
-`/landSearch`페이지에서 Build테이블의 `isAddressPublic`컬럼이 exclude일 경우와 private일 경우에 지도에 마커가 나타나지 않았으면 좋겠어
+import type { Metadata } from "next";
+import Header, { HeaderProps } from "../layout/app/Header";
+import Footer from "../layout/app/Footer";
+import SnsIcon, { SnsSetting } from "@/app/components/SnsIcon";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
--------
-마커가 여전히 있어. 그래도 그 마커를 클릭하면 ListingCard가 목록에 뜨지 않아서 잘하긴 했는데 카카오지도에 마커도 없어졌으면 좋겠어
+export async function getWorkInfo(): Promise<HeaderProps> {
+  const response = await fetch(`${BASE_URL}/api/workinfo`, { next: { tags: ["public", "workInfo"], revalidate: 28800 } });
+  if (!response.ok) {
+    console.error('Error fetching posts:', await response.text());
+    return {};
+  }
+  return response.json();
+}
+
+export async function getSnsSettings(): Promise<SnsSetting[]> {
+  const res = await fetch(`${BASE_URL}/api/sns-settings`, { next: { tags: ["public", "sns-settings"], revalidate: 28800 } });
+  if (!res.ok) throw new Error("Network response was not ok");
+  const data = await res.json();
+  return data.data;
+}
+
+export const metadata: Metadata = {
+  title: "부동산",
+  description: "수정 사항 있을시 편히 말씀해주세요",
+};
+
+export default async function AppLayout({
+  children, modal,
+}: Readonly<{
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}>) {
+   const [headerPromise, snsSettings] = await Promise.all([getWorkInfo(), getSnsSettings()]);
+  return (
+    <>
+      <Header headerPromise={headerPromise.data} />
+      <main className="flex-grow">{children}</main>
+       {Boolean(snsSettings?.length) && <SnsIcon snsSettings={snsSettings} />}
+      <Footer headerPromise={headerPromise.data} />
+      {modal}
+    </>
+  );
+}
+
+--------
+`/src/app/(app)/layout.tsx`에서 `headerPromise.data`는 타입 오류가 발생하네? 데이터는 이게 맞는데 타입 오류가 발생한다 수정해줘

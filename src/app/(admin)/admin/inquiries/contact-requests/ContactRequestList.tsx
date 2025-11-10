@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
 import IpActions from '@/app/(admin)/shared/IpActions';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchContactRequests } from '@/app/hooks/useContactRequests';
 
 type Request = {
   id: number;
@@ -28,12 +29,31 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
   const router = useRouter();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const { data: queryData } = useQuery({
+    queryKey: ['contactRequests', currentPage],
+    queryFn: () => fetchContactRequests(currentPage, 10),
+    initialData: { requests: initialRequests, count: totalPages * 10 },
+  });
+
+  const requests = queryData?.requests || [];
+
   const [notes, setNotes] = useState<{ [key: number]: string }>(
-    initialRequests.reduce((acc, r) => {
+    requests.reduce((acc, r) => {
       acc[r.id] = r.note;
       return acc;
     }, {} as { [key: number]: string })
   );
+
+  useEffect(() => {
+    setNotes(
+      requests.reduce((acc, r) => {
+        acc[r.id] = r.note;
+        return acc;
+      }, {} as { [key: number]: string })
+    );
+  }, [requests]);
 
   const updateRequestMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<Request> }) => {
@@ -45,26 +65,31 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
       if (!res.ok) throw new Error('업데이트 실패');
       return res.json();
     },
+    onMutate: () => setIsUpdating(true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contactRequests'] });
     },
     onError: (error) => {
       alert(error?.message ?? '업데이트 실패');
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const deleteRequestMutation = useMutation({
     mutationFn: async (id: number) => {
       const res = await fetch(`/api/supabase/contact-requests?id=${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('삭제 실패');
+      if (res.status === 204) return null;
       return res.json();
     },
+    onMutate: () => setIsUpdating(true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contactRequests'] });
     },
     onError: (error) => {
       alert(error?.message ?? '삭제 실패');
     },
+    onSettled: () => setIsUpdating(false),
   });
 
   const handleToggleChange = (id: string, value: boolean) => {
@@ -92,16 +117,16 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
 
   const filteredRequests = useMemo(() => {
     const q = searchQuery.trim();
-    if (!q) return initialRequests;
-    return initialRequests.filter((request) => request.contact.includes(q) || request.description.includes(q));
-  }, [initialRequests, searchQuery]);
+    if (!q) return requests;
+    return requests.filter((request) => request.contact.includes(q) || request.description.includes(q));
+  }, [requests, searchQuery]);
 
   const onPageChange = (page: number) => {
     router.push(`/admin/inquiries/contact-requests?page=${page}`);
   };
 
   return (
-    <div className="p-2 sm:p-4 md:p-6">
+    <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <div className="text-lg sm:text-xl font-semibold">
           의뢰수: {filteredRequests.length}건
@@ -141,6 +166,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
                     toggle={request.confirm}
                     id={`confirm${request.id}`}
                     onToggle={(checked) => handleToggleChange(String(request.id), checked)}
+                    disabled={updateRequestMutation.isPending}
                   />
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="이름">{request.author}</td>
@@ -162,7 +188,8 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
                   />
                   <button
                     onClick={() => handleSaveNote(request.id)}
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full"
+                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400"
+                    disabled={updateRequestMutation.isPending}
                   >
                     메모저장
                   </button>
@@ -170,8 +197,9 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="등록일">{request.date}</td>
                 <td className="p-2 block md:table-cell" data-label="비고">
                   <button
-                    className="p-2 bg-red-500 text-white rounded w-full"
+                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400"
                     onClick={() => handleDelete(request.id)}
+                    disabled={deleteRequestMutation.isPending}
                   >
                     삭제
                   </button>

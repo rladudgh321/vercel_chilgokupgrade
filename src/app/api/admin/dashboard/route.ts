@@ -24,8 +24,8 @@ export async function GET(req: NextRequest) {
     }
     
     const inquiryStats = {
-      buy: inquiryData?.filter(i => i.category === '매수').length || 0,
-      sell: inquiryData?.filter(i => i.category === '매도').length || 0,
+      buy: inquiryData?.filter(i => i.category === '구해요').length || 0,
+      sell: inquiryData?.filter(i => i.category === '팔아요').length || 0,
       other: inquiryData?.filter(i => i.category === '기타').length || 0,
     };
 
