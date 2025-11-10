@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
 
   // --- IP Ban Logic ---
   if (request.method === "POST") {
-    const ip = request.ip ?? "127.0.0.1";
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ?? request.ip ?? '127.0.0.1';
     try {
       const { data: bannedIp, error } = await supabase
         .from("BannedIp")

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       .eq("ipAddress", ip)
       .single();
 
-    if (error && error.code !== "PGRST116" && error.status !== 406) {
+    if (error && error.code !== "PGRST116") {
       Sentry.captureException(error);
       await notifySlack(error, request.url);
       throw error;

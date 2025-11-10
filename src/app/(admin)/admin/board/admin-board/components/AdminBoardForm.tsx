@@ -1,13 +1,14 @@
 "use client"
-import { useState, useCallback, lazy } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale/ko";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import dynamic from 'next/dynamic'
 
-const Editor = lazy(() => import('@/app/components/shared/Editor'));
-const DatePicker = lazy(() => import('react-datepicker'));
+const Editor = dynamic(() => import('@/app/components/shared/Editor'), { ssr: false });
+const DatePicker = dynamic(() => import('react-datepicker'), { ssr: false });
 
 interface Post {
   id?: number
@@ -44,7 +45,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
   const [formData, setFormData] = useState({
     representativeImage: null as File | null,
     representativeImageUrl: initialData?.representativeImage || null,
-    registrationDate: initialData?.registrationDate ? new Date(initialData.registrationDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
+    registrationDate: initialData?.createdAt ? new Date(initialData.createdAt) : new Date(),
     manager: initialData?.manager || "데모",
     title: initialData?.title || "",
     content: initialData?.content || "",
@@ -130,7 +131,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
         content: formData.content,
         popupContent: formData.popupContent,
         representativeImage: representativeImageUrl,
-        registrationDate: formData.registrationDate,
+        registrationDate: (formData.registrationDate as Date).toISOString().slice(0, 10),
         manager: formData.manager,
         categoryId: formData.categoryId ? parseInt(String(formData.categoryId)) : undefined,
         isPopup: formData.isPopup === "사용",
@@ -162,15 +163,12 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                 등록일
               </label>
               <DatePicker
-                selected={formData.registrationDate ? new Date(formData.registrationDate.replace(/-/g, '/')) : null}
+                selected={formData.registrationDate instanceof Date ? formData.registrationDate : null}
                 onChange={(date: Date | null) => {
                   if (date) {
-                    const y = date.getFullYear();
-                    const m = String(date.getMonth() + 1).padStart(2, '0');
-                    const d = String(date.getDate()).padStart(2, '0');
-                    setFormData(prev => ({ ...prev, registrationDate: `${y}-${m}-${d}` }));
+                    setFormData(prev => ({ ...prev, registrationDate: date }));
                   } else {
-                    setFormData(prev => ({ ...prev, registrationDate: '' }));
+                    setFormData(prev => ({ ...prev, registrationDate: new Date() })); // Default to new Date()
                   }
                 }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -349,7 +347,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                 팝업이미지
               </label>
               <p className="text-sm text-gray-500 mb-2">
-                가로 1100px 이상은 자동 리사이징 됩니다.
+                가로 1600px 이상은 자동 리사이징 됩니다.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <input
