@@ -1,1 +1,2 @@
-`/src/middleware.ts`에서 `request.ip`는 console을 해보니까 undefined만 뜨던데 해결해줘
+ListingCard컴포넌트를 수정해줘.
+CardItem컴포넌트처럼 `Details Grid` 주석처럼 ListingCard컴포넌트에서도 수정해줘

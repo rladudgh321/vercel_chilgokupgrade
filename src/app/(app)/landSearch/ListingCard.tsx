@@ -13,6 +13,7 @@ type Props = {
     id: number;
     title?: string;
     address?: string;
+    dong?: string; // Added
     salePrice?: number;
     isSalePriceEnabled?: boolean;
     lumpSumPrice?: number;
@@ -28,14 +29,19 @@ type Props = {
     managementFee?: number;
     isManagementFeeEnabled?: boolean;
     propertyType?: string;
+    floorType?: string; // Added
     currentFloor?: number;
     totalFloors?: number;
+    basementFloors?: number; // Added
     rooms?: number;
     bathrooms?: number;
     roomOption?: { name: string };
     bathroomOption?: { name: string };
     actualArea?: number;
     supplyArea?: number;
+    landArea?: number; // Added
+    buildingArea?: number; // Added
+    totalArea?: number; // Added
     mainImage?: string;
     label?: string;
     popularity?: string;
@@ -44,6 +50,8 @@ type Props = {
     parking?: string[];
     isAddressPublic?: string;
     visibility?: boolean;
+    yieldType?: string; // Added
+    otherYield?: string; // Added
     priceDisplay?: string;
     dealScope?: string;
   };
@@ -52,39 +60,134 @@ type Props = {
 import { numberToKoreanWithDigits } from "@/app/utility/NumberToKoreanWithDigits";
 
 const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => void }) => {
-  const formatPrice = (price: number | undefined) => {
-    if (!price) return "";
-    return numberToKoreanWithDigits(price);
-  };
-
-  const formatArea = (area: number | undefined) => {
-    if (!area) return "";
-    return `${area}`;
-  };
-
   const renderPrice = (label: string, value: number | undefined, priceDisplayStatus: string | undefined) => {
     if (priceDisplayStatus === "비공개") {
       return (
-        <div>
-          <span className="text-sm font-medium text-gray-600 mr-2">{label}</span>
-          <span className="text-lg font-bold text-gray-900">매물 금액 비공개</span>
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium text-gray-600">{label}</span>
+          <span className="text-base font-bold text-gray-900">매물 금액 비공개</span>
         </div>
       );
     }
 
-    if (!value) return null;
+    if (value === undefined || value === null) return null;
     let formattedPrice = formatPrice(value);
+    if (!formattedPrice) return null;
 
     if (priceDisplayStatus === "협의가능") {
       formattedPrice = `${formattedPrice} (협의가능)`;
     }
 
     return (
-      <div>
-        <span className="text-sm font-medium text-gray-600 mr-2">{label}</span>
-        <span className="text-lg font-bold text-gray-900">{formattedPrice}</span>
+      <div className="flex justify-between items-center">
+        <span className="text-sm font-medium text-gray-600">{label}</span>
+        <span className="text-base font-bold text-gray-900">{formattedPrice}</span>
       </div>
     );
+  };
+
+  const formatPrice = (price: number | undefined) => {
+    if (price === undefined || price === null) return "";
+    return numberToKoreanWithDigits(price);
+  };
+
+  const formatArea = (area: number | undefined) => {
+    if (!area) return "";
+    const pyeong = area / 3.305785;
+    return `${pyeong.toFixed(2)}평`;
+  };
+
+  const formatFloor = (floorType?: string, currentFloor?: number, totalFloors?: number, basementFloors?: number) => {
+    if (currentFloor === undefined || currentFloor === null) {
+      return null;
+    }
+
+    let currentFloorDisplay = `${currentFloor}`;
+    if (floorType === '지하' || currentFloor < 0) {
+      currentFloorDisplay = `B${Math.abs(currentFloor)}`;
+    }
+
+    const floorTypeDisplay = floorType ? `${floorType} ` : '';
+
+    let details = "";
+    if (totalFloors) {
+      details = `${totalFloors}F`;
+      if (basementFloors && basementFloors > 0) {
+        details += ` / B${basementFloors}`;
+      }
+    }
+
+    if (details) {
+      return `${floorTypeDisplay}${currentFloorDisplay}층(${details})`;
+    }
+
+    return `${floorTypeDisplay}${currentFloorDisplay}층`;
+  };
+
+  const getAreaString = () => {
+    const areas = [
+      { label: "실", value: listing.actualArea },
+      { label: "공급", value: listing.supplyArea },
+      { label: "대지", value: listing.landArea },
+      { label: "건축", value: listing.buildingArea },
+      { label: "연", value: listing.totalArea },
+    ];
+
+    const validAreas = areas.filter(area => area.value && area.value > 0);
+
+    if (validAreas.length === 0) {
+      return "면적 정보 없음";
+    }
+
+    return validAreas.map(area => `${area.label} ${area.value!.toLocaleString()}m²`).join(" / ");
+  };
+
+  const formatAddress = () => {
+    if (listing.isAddressPublic === 'private') {
+      return "주소 비공개";
+    }
+    if (listing.isAddressPublic === 'exclude') {
+      const fullAddress = listing.address || "";
+      if (!fullAddress) {
+        return "주소 정보 없음";
+      }
+
+      const parts = fullAddress.split(' ');
+      let sido = '';
+      let sigungu = '';
+      let eupmyeondongri = '';
+
+      // Find sido and sigungu
+      if (parts.length > 0) {
+          sido = parts[0];
+      }
+      if (parts.length > 1) {
+          sigungu = parts[1];
+      }
+
+      // Find eupmyeondongri
+      // 1. Check in parentheses for new addresses
+      const matchParentheses = fullAddress.match(/\(([^)]+(?:동|리|가))\)/);
+      if (matchParentheses && matchParentheses[1]) {
+          eupmyeondongri = matchParentheses[1];
+          // Also need to find eup/myeon if it exists
+          const eupmyeonPart = parts.find(p => p.endsWith('읍') || p.endsWith('면'));
+          if (eupmyeonPart) {
+              return `${sido} ${sigungu} ${eupmyeonPart} ${eupmyeondongri}`.trim();
+          }
+          return `${sido} ${sigungu} ${eupmyeondongri}`.trim();
+      }
+
+      // 2. Find last eup/myeon/dong/ri/ga in the address for old addresses
+      const adminParts = parts.filter(p => p.endsWith('읍') || p.endsWith('면') || p.endsWith('동') || p.endsWith('리') || p.endsWith('가'));
+      if (adminParts.length > 0) {
+          return parts.slice(0, parts.indexOf(adminParts[adminParts.length - 1]) + 1).join(' ');
+      }
+
+      // Fallback to first 2 parts if no admin parts found
+      return `${sido} ${sigungu}`.trim();
+    }
+    return listing.address || "주소 정보 없음";
   };
 
   return (
@@ -140,12 +243,12 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
           </h3>
 
           {/* Address */}
-          <p className="text-xs sm:text-sm text-gray-500 mb-3 line-clamp-1">
-            {listing.address || "주소 정보 없음"}
+          <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-1">
+            {formatAddress()}
           </p>
 
           {/* Price */}
-          <div className="mb-3 space-y-1">
+          <div className="mb-3 sm:mb-4 space-y-1 border-t pt-2 sm:pt-3">
             {listing.isSalePriceEnabled && renderPrice("매매", listing.salePrice, listing.priceDisplay)}
             {listing.isLumpSumPriceEnabled && renderPrice("전세", listing.lumpSumPrice, listing.priceDisplay)}
             {listing.isActualEntryCostEnabled && renderPrice("실입주금", listing.actualEntryCost, listing.priceDisplay)}
@@ -155,7 +258,7 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
           </div>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-2 text-xs sm:text-sm text-gray-600 border-t pt-2 sm:pt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-2 text-xs sm:text-sm text-gray-600 border-t pt-2 sm:pt-3 mt-auto">
             <div className="flex items-center gap-1.5">
               <Building2 className="w-4 h-4 text-gray-500 flex-shrink-0" />
               <span>{listing.propertyType || "타입 미정"}</span>
@@ -163,24 +266,25 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
             <div className="flex items-center gap-1.5">
               <Square className="w-4 h-4 text-gray-500 flex-shrink-0" />
               <span>
-                실 {formatArea(listing.actualArea)} / 공{" "}
-                {formatArea(listing.supplyArea)}
+                {getAreaString()}
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-gray-500 flex-shrink-0" />
-              <span>
-                {listing.currentFloor && listing.totalFloors
-                  ? `${listing.currentFloor}/${listing.totalFloors}층`
-                  : "층수 정보 없음"}
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <BedDouble className="w-4 h-4 text-gray-500 flex-shrink-0" />
-              <span>
-                방 {listing.roomOption?.name || "-"} / 욕실 {listing.bathroomOption?.name || "-"}
-              </span>
-            </div>
+            {formatFloor(listing.floorType, listing.currentFloor, listing.totalFloors, listing.basementFloors) && (
+              <div className="flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span>
+                  {formatFloor(listing.floorType, listing.currentFloor, listing.totalFloors, listing.basementFloors)}
+                </span>
+              </div>
+            )}
+            {(listing.roomOption || listing.bathroomOption) && (
+              <div className="flex items-center gap-1.5">
+                <BedDouble className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span>
+                  방 {listing.roomOption?.name || "-"} / 욕실 {listing.bathroomOption?.name || "-"}
+                </span>
+              </div>
+            )}
             {listing.parking && listing.parking.length > 0 && (
               <div className="flex items-center gap-1.5">
                 <Car className="w-4 h-4 text-gray-500 flex-shrink-0" />
@@ -192,6 +296,14 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
                 <Coins className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 <span>
                   관리비 {formatPrice(listing.managementFee)}
+                </span>
+              </div>
+            )}
+            {listing.yieldType && listing.yieldType !== "미사용" && (
+              <div className="flex items-center gap-1.5">
+                <Coins className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span>
+                  수익률 {listing.yieldType === "기타수익률" ? listing.otherYield : listing.yieldType}
                 </span>
               </div>
             )}

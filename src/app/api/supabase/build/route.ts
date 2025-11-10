@@ -267,18 +267,15 @@ export async function POST(request: NextRequest) {
     }
 
     if (buildingOptions && Array.isArray(buildingOptions)) {
-        const optionIds = [];
-        for (const optionName of buildingOptions) {
-            const { data: optionRec } = await supabase.from("BuildingOption").select("id").eq("name", optionName).single();
-            if (!optionRec) {
-                const { data: newOption } = await supabase.from("BuildingOption").insert({ name: optionName }).select("id").single();
-                if (newOption) optionIds.push(newOption.id);
-            } else {
-                optionIds.push(optionRec.id);
+        const existingOptionIds = [];
+        for (const optionId of buildingOptions) {
+            const { data: optionRec } = await supabase.from("BuildingOption").select("id").eq("id", optionId).single();
+            if (optionRec) {
+                existingOptionIds.push(optionRec.id);
             }
         }
 
-        const joinTableData = optionIds.map(optionId => ({
+        const joinTableData = existingOptionIds.map(optionId => ({
             A: newBuild.id,
             B: optionId,
         }));
