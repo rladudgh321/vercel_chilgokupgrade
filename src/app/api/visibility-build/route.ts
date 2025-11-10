@@ -45,6 +45,8 @@ export async function GET(req: NextRequest) {
       )
       .is("deletedAt", null)
       .eq("visibility", true)
+      .not("isAddressPublic", "eq", "private")
+      .not("isAddressPublic", "eq", "exclude")
 
 
       

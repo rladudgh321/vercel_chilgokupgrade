@@ -17,8 +17,11 @@ export async function GET(req: NextRequest) {
 
     let q = supabase
       .from("Build")
-      .select('id, title, address')
+      .select('id, title, address, isAddressPublic')
       .is("deletedAt", null)
+      .eq("visibility", true)
+      .not("isAddressPublic", "eq", "private")
+      .not("isAddressPublic", "eq", "exclude")
       .order("createdAt", { ascending: false });
 
     if (keyword) {
