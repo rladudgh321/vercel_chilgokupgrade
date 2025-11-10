@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     let q = supabase
       .from("Build")
-      .select('id, title, address, mapLocation')
+      .select('id, title, address')
       .is("deletedAt", null)
       .order("createdAt", { ascending: false });
 

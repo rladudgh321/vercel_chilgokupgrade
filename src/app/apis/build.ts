@@ -31,17 +31,13 @@ export async function BuildFindAll(
     ...(sortBy ? { sortBy: sortBy } : {}),
   });
 
-  const res = await fetch(`${baseURL}/api/supabase/build?${qs.toString()}`, {
-    method: "GET",
-    signal: opts?.signal,
-    next: { revalidate: 28800, tags: ['public', 'admin-listings']}
-  });
-
-  if (!res.ok) {
+  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`);
+  if(!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`GET /api/supabase/build failed (${res.status}): ${text}`);
   }
   return res.json();
+
 }
 
 export async function BuildFindAllAdmin(
