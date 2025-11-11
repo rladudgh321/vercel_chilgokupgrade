@@ -521,27 +521,29 @@ export default function LandSearchClient({
 
           <div className="flex-1 overflow-hidden">
 
-            <ListingList
+                        <ListingList
 
-              listings={displayListings}
+                          propertyTypeOptions={propertyTypeOptions}
 
-              sortBy={sortBy}
+                          listings={displayListings}
 
-              onSortChange={handleSortChange}
+                          sortBy={sortBy}
 
-              fetchNextPage={fetchNextPage}
+                          onSortChange={handleSortChange}
 
-              hasNextPage={hasNextPage}
+                          fetchNextPage={fetchNextPage}
 
-              isFetchingNextPage={isFetchingNextPage}
+                          hasNextPage={hasNextPage}
 
-              isLoading={isFetching}
+                          isFetchingNextPage={isFetchingNextPage}
 
-              onCardClick={handleCardClick}
+                          isLoading={isFetching}
 
-              view={view}
+                          onCardClick={handleCardClick}
 
-            />
+                          view={view}
+
+                        />
 
           </div>
 

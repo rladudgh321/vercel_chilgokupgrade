@@ -35,11 +35,12 @@ export async function GET(req: NextRequest) {
         `
         *,
         label:Label(name),
-        buildingOptions:BuildingOption(id, name),
+        buildingOptions:BuildingOption(id, name, imageUrl),
         listingType:ListingType(name),
         buyType:BuyType(name),
         roomOption:RoomOption(name),
-        bathroomOption:BathroomOption(name)
+        bathroomOption:BathroomOption(name),
+        floorOption:RoomOption(id, name, imageUrl)
       `,
         { count: "exact" }
       )

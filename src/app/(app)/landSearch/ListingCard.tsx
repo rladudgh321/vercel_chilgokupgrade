@@ -7,6 +7,7 @@ import {
   Car,
   Coins,
 } from "lucide-react";
+import OptionIcon from "../../components/shared/OptionIcon";
 
 type Props = {
   listing: {
@@ -37,6 +38,7 @@ type Props = {
     bathrooms?: number;
     roomOption?: { name: string };
     bathroomOption?: { name: string };
+    floorOption?: { id: number; name: string; imageUrl?: string };
     actualArea?: number;
     supplyArea?: number;
     landArea?: number; // Added
@@ -46,7 +48,7 @@ type Props = {
     label?: string;
     popularity?: string;
     themes?: string[];
-    buildingOptions?: string[];
+    buildingOptions?: { id: number; name: string; imageUrl?: string }[];
     parking?: string[];
     isAddressPublic?: string;
     visibility?: boolean;
@@ -308,6 +310,12 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
               </div>
             )}
           </div>
+          {/* <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4 pt-2">
+              {listing.buildingOptions?.map((opt, index) => (
+                <OptionIcon key={`building-${opt.id || index}`} option={opt} />
+              ))}
+              {listing.floorOption?.id && <OptionIcon key={`floor-${listing.floorOption.id}`} option={listing.floorOption} />}
+            </div> */}
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import ListingCard from "./ListingCard";
 import ListingCardSkeleton from "./ListingCardSkeleton";
 
 type Props = {
+  propertyTypeOptions: any[];
   listings: any[];
   sortBy: string;
   onSortChange: (sortBy: string) => void;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const ListingList = ({
+  propertyTypeOptions,
   listings,
   sortBy,
   onSortChange,
@@ -155,7 +157,7 @@ const ListingList = ({
                   {isSkeletonRow ? (
                     <ListingCardSkeleton />
                   ) : (
-                    <ListingCard listing={listing} onClick={onCardClick} />
+                    <ListingCard listing={listing} onClick={onCardClick} propertyTypeOptions={propertyTypeOptions}/>
                   )}
                 </div>
               );
