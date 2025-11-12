@@ -7,6 +7,7 @@ import BuildDetailModalClient from '@/app/components/root/BuildDetailModal'
 import { koreanToNumber } from '@/app/utility/koreanToNumber'
 import { useQuery } from "@tanstack/react-query";
 import CardItemSkeleton from "./CardItemSkeleton";
+import { IBuild } from "@/app/interface/build"
 
 const fetchListings = async (searchParams: URLSearchParams) => {
   const res = await fetch(`/api/listings?${searchParams.toString()}`);
@@ -127,7 +128,7 @@ const CardList = ({
       else if (buyType === "매매") priceField = "salePrice";
 
       if (priceField) {
-        filteredListings = filteredListings.filter(listing => {
+        filteredListings = filteredListings.filter((listing) => {
           const price = listing[priceField];
           if (price === undefined || price === null) return false;
 

@@ -46,7 +46,7 @@ export interface IBuild {
   listingTypeId?: number | null;
   listingType?: ListingTypeRef | null;
   buyTypeId?: number | null;
-  buyType?: string;
+  buyType?: BuyTypeRef | null;
   dealScope?: string | null;
   visibility?: boolean | null;     // default(true)
   priceDisplay?: string | null;
@@ -151,6 +151,6 @@ export interface IBuild {
   createdAt?: string | Date | null;
   updatedAt?: string | Date | null;
   deletedAt?: string | Date | null;
-  views?: number | null;                    // default(0)
+  views?: number;                    // default(0)
   confirmDate?: string | Date | null;
 }

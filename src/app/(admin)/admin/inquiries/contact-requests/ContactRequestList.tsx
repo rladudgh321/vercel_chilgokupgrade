@@ -37,7 +37,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
     initialData: { requests: initialRequests, count: totalPages * 10 },
   });
 
-  const requests = queryData?.requests || [];
+  const requests = useMemo(() => queryData?.requests || [], [queryData?.requests]);
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     requests.reduce((acc, r) => {

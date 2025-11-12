@@ -1,4 +1,1 @@
-`/`페이지에서 `옵션 정보` 부분에 이미지가 잘 나오는 반면에 `/landSearch`페이지에서는 `옵션 정보`의 이미지가 나오지 않고 있어
-
-여전히 안나오고 있어 또한 `/card`페이지에서도 안나와.
-하지만 BuildDetailModal컴포넌트에서는 잘 나오네
+`schema.prisma`를 참고하여 CardList컴포넌트의 `filteredListings = filteredListings.filter((listing) => { ... })`에 대한 interface를 `/src/app/interface/build.ts`에서 만들어줘.
