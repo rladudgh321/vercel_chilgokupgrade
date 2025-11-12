@@ -45,7 +45,7 @@
     "quill": "^2.0.2",
     "react": "^19.2.0",
     "react-advanced-cropper": "^0.20.1",
-    "react-datepicker": "^8.2.1",
+    "react-datepicker": "^8.9.0",
     "react-daum-postcode": "^3.2.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

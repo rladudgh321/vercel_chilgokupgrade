@@ -1,1 +1,2 @@
-`BuildBasic`컴포넌트에서 `<InputField label="전용면적" name="NetLeasableArea" type="number" placeholder="m² 단위 숫자" />` 이렇게 InputField을 만들었는데 관련하여 `schema.prisma`에 추가도해주고 IBuild에도 추가해주고 관련된 것에 대해 추가해줘
+`npm run analyze`를 사용하여 확인한 결과 `instrumentation.ts`파일에서 용량이 상당 부분 차지 한다는 것을 알았어
+그리고 `code-transformer/pkg/orchestrion_js.js`에서도 많은 용량을 차지하고 있네
