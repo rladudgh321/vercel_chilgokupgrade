@@ -1,1 +1,2 @@
-`schema.prisma`를 참고하여 CardList컴포넌트의 `filteredListings = filteredListings.filter((listing) => { ... })`에 대한 interface를 `/src/app/interface/build.ts`에서 만들어줘.
+CardList에 대하여 린트에 대해 오류가 있다면 수정해주고.
+any를 넣어야하는 상황이나 주석을 다는 상황을 만들지 말아줘

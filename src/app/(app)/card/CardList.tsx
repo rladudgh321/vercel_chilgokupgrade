@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import CardItemSkeleton from "./CardItemSkeleton";
 import { IBuild } from "@/app/interface/build"
 
+import { SearchBarProps } from "@/app/interface/card"
+
 const fetchListings = async (searchParams: URLSearchParams) => {
   const res = await fetch(`/api/listings?${searchParams.toString()}`);
   if (!res.ok) {
@@ -26,16 +28,7 @@ const CardList = ({
   themeOptions,
   propertyTypeOptions,
   buyTypeOptions
-}: { 
-  settings: any,
-  roomOptions: any[],
-  bathroomOptions: any[],
-  floorOptions: any[],
-  areaOptions: any[],
-  themeOptions: any[],
-  propertyTypeOptions: any[],
-  buyTypeOptions: any[]
-}) => {
+}: SearchBarProps) => {
   const [selectedBuildId, setSelectedBuildId] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,6 +41,7 @@ const CardList = ({
   const listings = useMemo(() => {
     return data?.listings || []
   },[data?.listings])
+
 
   const handleCardClick = (id: number) => {
     // Increment views
@@ -118,6 +112,7 @@ const CardList = ({
   const displayListings = useMemo(() => {
     let filteredListings = listings;
 
+
     const priceRange = queryParams.priceRange;
     const buyType = queryParams.buyType;
 
@@ -128,7 +123,7 @@ const CardList = ({
       else if (buyType === "매매") priceField = "salePrice";
 
       if (priceField) {
-        filteredListings = filteredListings.filter((listing) => {
+        filteredListings = filteredListings.filter((listing: any) => {
           const price = listing[priceField];
           if (price === undefined || price === null) return false;
 
@@ -152,7 +147,7 @@ const CardList = ({
 
     const floor = queryParams.floor;
     if (floor) {
-        filteredListings = filteredListings.filter(listing => {
+        filteredListings = filteredListings.filter((listing: IBuild) => {
             const currentFloor = listing.currentFloor;
             if (currentFloor === undefined || currentFloor === null) return false;
 
@@ -176,7 +171,7 @@ const CardList = ({
     const areaRange = queryParams.areaRange;
     if (areaRange) {
         const PYEONG_TO_M2 = 3.305785;
-        filteredListings = filteredListings.filter(listing => {
+        filteredListings = filteredListings.filter((listing: IBuild) => {
             const totalArea = listing.totalArea;
             if (totalArea === undefined || totalArea === null) return false;
 
@@ -244,7 +239,7 @@ const CardList = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading
             ? Array.from({ length: 12 }).map((_, i) => <CardItemSkeleton key={i} />)
-            : displayListings.map((listing, index) => (
+            : displayListings.map((listing: IBuild | any, index: number) => (
                 <CardItem key={listing.id} listing={listing} onClick={() => handleCardClick(listing.id)} priority={index < 3} />
               ))}
         </div>
@@ -257,7 +252,7 @@ const CardList = ({
       </div>
       {selectedBuildId && (
         <BuildDetailModalClient
-          build={listings.find((listing) => listing.id === selectedBuildId)}
+          build={listings.find((listing: any) => listing.id === selectedBuildId)}
           onClose={handleCloseModal}
         />
       )}

@@ -94,29 +94,29 @@ const InputField = ({
         render={({ field }) =>
           isDatePicker ? (
             <Suspense>
-            <DatePicker
-              id={name}
-              selected={parseValueToDate(field.value)}
-              onChange={(date: Date | null) => {
-                if (date) {
-                  // 사용자 선택한 로컬 날짜를 "YYYY-MM-DD" 형식 문자열로 저장
-                  const only = dateToDateOnlyString(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-                  field.onChange(only);
-                } else {
-                  field.onChange(null);
-                }
-              }}
-              placeholderText={placeholder || "날짜 선택"}
-              dateFormat="yyyy/MM/dd"
-              locale={ko}
-              showYearDropdown
-              showMonthDropdown
-              scrollableYearDropdown
-              className={clsx(
-                "mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-                className
-              )}
-            />
+              <DatePicker
+                id={name}
+                selected={parseValueToDate(field.value)}
+                onChange={(date: Date | null) => {
+                  if (date) {
+                    // 사용자 선택한 로컬 날짜를 "YYYY-MM-DD" 형식 문자열로 저장
+                    const only = dateToDateOnlyString(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+                    field.onChange(only);
+                  } else {
+                    field.onChange(null);
+                  }
+                }}
+                placeholderText={placeholder || "날짜 선택"}
+                dateFormat="yyyy/MM/dd"
+                locale={ko}
+                showYearDropdown
+                showMonthDropdown
+                scrollableYearDropdown
+                className={clsx(
+                  "mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
+                  className
+                )}
+              />
             </Suspense>
           ) : (
             <input
@@ -370,15 +370,17 @@ const BuildingInfo = () => {
             control={control}
             name="moveInDate" // 폼에는 'YYYY-MM-DD' 문자열로 저장
             render={({ field }) => (
-              <DatePicker
-                selected={toDate(field.value)}
-                onChange={(d) => field.onChange(toYMD(d))}
-                dateFormat="yyyy/MM/dd"
-                placeholderText="입주 가능일 선택"
-                className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                locale={ko}
-                portalId="react-datepicker-portal"
-              />
+              <Suspense>
+                <DatePicker
+                  selected={toDate(field.value)}
+                  onChange={(d) => field.onChange(toYMD(d))}
+                  dateFormat="yyyy/MM/dd"
+                  placeholderText="입주 가능일 선택"
+                  className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  locale={ko}
+                  portalId="react-datepicker-portal"
+                />
+              </Suspense>
             )}
           />
         )}
@@ -441,14 +443,16 @@ const BuildingInfo = () => {
           control={control}
           name="contractEndDate" // 폼에는 'YYYY-MM-DD' 문자열로 저장
           render={({ field }) => (
-            <DatePicker
-              selected={toDate(field.value)}
-              onChange={(d) => field.onChange(toYMD(d))}
-              dateFormat="yyyy/MM/dd"
-              placeholderText="계약만료일 선택"
-              className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              locale={ko}
-            />
+            <Suspense>
+              <DatePicker
+                selected={toDate(field.value)}
+                onChange={(d) => field.onChange(toYMD(d))}
+                dateFormat="yyyy/MM/dd"
+                placeholderText="계약만료일 선택"
+                className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                locale={ko}
+              />
+            </Suspense>
           )}
         />
       </div>

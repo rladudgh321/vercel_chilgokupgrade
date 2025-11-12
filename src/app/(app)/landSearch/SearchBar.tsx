@@ -1,31 +1,7 @@
 "use client";
 import { useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
-type OptionName = { name: string };
-type BuyType = { id: number; name: string };
-
-type Props = {
-  settings: {
-    showKeyword?: boolean;
-    showPropertyType?: boolean;
-    showbuyType?: boolean;
-    showPriceRange?: boolean;
-    showAreaRange?: boolean;
-    showTheme?: boolean;
-    showRooms?: boolean;
-    showFloor?: boolean;
-    showBathrooms?: boolean;
-    showSubwayLine?: boolean;
-  };
-  roomOptions: OptionName[];
-  bathroomOptions: OptionName[];
-  floorOptions: OptionName[];
-  areaOptions: OptionName[];
-  themeOptions: string[] | Array<{ label: string }>;
-  propertyTypeOptions: OptionName[];
-  buyTypeOptions: BuyType[];
-};
+import { SearchBarProps } from "@/app/interface/card";
 
 export default function SearchBar({
   settings,
@@ -36,7 +12,7 @@ export default function SearchBar({
   themeOptions: themeOpts0,
   propertyTypeOptions: propTypeOpts0,
   buyTypeOptions: buyTypeOpts,
-}: Props) {
+}: SearchBarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();

@@ -1,14 +1,13 @@
 "use client"
-import { useState, useCallback } from "react"
+import { useState, useCallback, lazy, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale/ko";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import dynamic from 'next/dynamic'
 
-const Editor = dynamic(() => import('@/app/components/shared/Editor'), { ssr: false });
-const DatePicker = dynamic(() => import('react-datepicker'), { ssr: false });
+const Editor = lazy(() => import('@/app/components/shared/Editor'));
+const DatePicker = lazy(() => import('react-datepicker'));
 
 interface Post {
   id?: number
@@ -162,19 +161,21 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 등록일
               </label>
-              <DatePicker
-                selected={formData.registrationDate instanceof Date ? formData.registrationDate : null}
-                onChange={(date: Date | null) => {
-                  if (date) {
-                    setFormData(prev => ({ ...prev, registrationDate: date }));
-                  } else {
-                    setFormData(prev => ({ ...prev, registrationDate: new Date() })); // Default to new Date()
-                  }
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                dateFormat="yyyy-MM-dd"
-                locale={ko}
-              />
+              <Suspense>
+                <DatePicker
+                  selected={formData.registrationDate instanceof Date ? formData.registrationDate : null}
+                  onChange={(date: Date | null) => {
+                    if (date) {
+                      setFormData(prev => ({ ...prev, registrationDate: date }));
+                    } else {
+                      setFormData(prev => ({ ...prev, registrationDate: new Date() })); // Default to new Date()
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  dateFormat="yyyy-MM-dd"
+                  locale={ko}
+                />
+              </Suspense>
             </div>
 
             <div>
@@ -240,7 +241,9 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
             <label className="block text-sm font-medium text-gray-700 mb-2">
               내용
             </label>
-            <Editor value={formData.content} onChange={handleContentChange} />
+            <Suspense>
+              <Editor value={formData.content} onChange={handleContentChange} />
+            </Suspense>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
