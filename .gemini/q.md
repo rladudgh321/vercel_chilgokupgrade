@@ -1,2 +1,1 @@
-CardList에 대하여 린트에 대해 오류가 있다면 수정해주고.
-any를 넣어야하는 상황이나 주석을 다는 상황을 만들지 말아줘
+`BuildBasic`컴포넌트에서 `<InputField label="전용면적" name="NetLeasableArea" type="number" placeholder="m² 단위 숫자" />` 이렇게 InputField을 만들었는데 관련하여 `schema.prisma`에 추가도해주고 IBuild에도 추가해주고 관련된 것에 대해 추가해줘

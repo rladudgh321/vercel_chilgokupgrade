@@ -96,6 +96,7 @@ export interface IBuild {
   landArea?: number | null;
   buildingArea?: number | null;
   totalArea?: number | null;
+  netLeasableArea?: number | null;
 
   // 날짜
   constructionYear?: string | Date | null;

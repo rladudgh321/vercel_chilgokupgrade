@@ -11,7 +11,7 @@ const DatePicker = lazy(() => import('react-datepicker'));
 /* =========================
    공통 스타일/컴포넌트
    ========================= */
-const getButtonStyle = (activeState: string | null | boolean | number, item?: string | number) => {
+const getButtonStyle = (activeState: string | null | boolean | number, item?: string | number | null) => {
   return {
     backgroundColor: activeState === item ? "#2b6cb0" : "white",
     color: activeState === item ? "white" : "gray",
@@ -237,8 +237,6 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
 
   // ✅ 폼 값 watch (오타 수정 및 값 보정)
   const watchedPopularity = useWatch({ control, name: "popularity" }) ?? "";
-  const watchedDirection = useWatch({ control, name: "direction" }) ?? "";
-  const watchedDirectionBase = useWatch({ control, name: "directionBase" }) ?? "";
   const watchedRoomOptionId = useWatch({ control, name: "roomOptionId" });
   const watchedBathroomOptionId = useWatch({ control, name: "bathroomOptionId" });
   const watchedThemes = useWatch({ control, name: "themes" }) ?? [];
@@ -460,6 +458,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
         <InputField label="대지면적" name="landArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="건축면적" name="buildingArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="연면적" name="totalArea" type="number" placeholder="m² 단위 숫자" />
+        <InputField label="전용면적" name="netLeasableArea" type="number" placeholder="m² 단위 숫자" />
       </div>
 
       {/* 담당자 및 고객 */}
