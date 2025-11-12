@@ -45,7 +45,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
     initialData: { orders: initialOrders, count: totalPages * 10 },
   });
 
-  const orders = queryData?.orders || [];
+  const orders = useMemo(() => queryData?.orders || [], [queryData?.orders]);
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     orders.reduce((acc, order) => {
