@@ -352,7 +352,7 @@ export default function EditClient({ id }: { id: number }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["build", id] });
-      router.back();
+      router.push("/admin/listings/listings");
     },
     onError: (e) => {
       console.error(e);
