@@ -38,10 +38,11 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
   const getAreaString = (build: IBuild, unit: "m2" | "pyeong"): string => {
     const areas = [
       { label: "공급", value: build.supplyArea },
-      { label: "전용", value: build.actualArea },
+      { label: "실", value: build.actualArea },
       { label: "대지", value: build.landArea },
       { label: "건축", value: build.buildingArea },
       { label: "연", value: build.totalArea },
+      { label: "전용", value: build.NetLeasableArea },
     ];
 
     const validAreas = areas.filter(area => area.value && area.value > 0);
@@ -155,7 +156,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
               {build.currentFloor && Row("해당 층수", `${build.floorType || ''} ${build.currentFloor < 0 ? `B${Math.abs(build.currentFloor)}` : build.currentFloor}층`)}
               {(build.roomOption?.name || build.bathroomOption?.name) &&
                 Row("방/화장실 수", `${build.roomOption?.name || "-"} / ${build.bathroomOption?.name || "-"}`)}
-              {(build.supplyArea || build.actualArea || build.landArea || build.buildingArea || build.totalArea) && Row(
+              {(build.supplyArea || build.actualArea || build.landArea || build.NetLeasableArea || build.buildingArea || build.totalArea) && Row(
                 "면적",
                 <div className="flex items-center gap-2">
                   <span className="text-xs sm:text-sm">

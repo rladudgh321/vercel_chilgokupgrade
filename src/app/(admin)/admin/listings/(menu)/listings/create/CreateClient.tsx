@@ -121,6 +121,7 @@ export default function CreateClient() {
       "actualArea",
       "supplyArea",
       "landArea",
+      "NetLeasableArea",
       "buildingArea",
       "totalArea",
       "elevatorCount",

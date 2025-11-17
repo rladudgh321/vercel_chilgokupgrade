@@ -7,6 +7,7 @@ const AreaInfo = ({ listing }: { listing: IBuild }) => {
     { label: "대지면적", value: listing.landArea },
     { label: "건축면적", value: listing.buildingArea },
     { label: "연면적", value: listing.totalArea },
+    { label: "전용면적", value: listing.NetLeasableArea },
   ];
 
   const validAreas = areas.filter(area => area.value && Number(area.value) > 0);

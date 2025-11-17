@@ -59,6 +59,7 @@ export interface FormData {
   actualArea: number | null;
   supplyArea: number | null;
   landArea: number | null;
+  NetLeasableArea: number | null;
   buildingArea: number | null;
   totalArea: number | null;
   themes: string[];                  // String[]
@@ -153,6 +154,7 @@ export const BASE_DEFAULTS: FormData = {
   actualArea: null,
   supplyArea: null,
   landArea: null,
+  NetLeasableArea: null,
   buildingArea: null,
   totalArea: null,
   themes: [],

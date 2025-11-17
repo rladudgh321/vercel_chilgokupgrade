@@ -43,6 +43,7 @@ type Props = {
     actualArea?: number;
     supplyArea?: number;
     landArea?: number;
+    NetLeasableArea?: number;
     buildingArea?: number;
     totalArea?: number;
     mainImage?: string;
@@ -132,6 +133,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
       { label: "대지", value: listing.landArea },
       { label: "건축", value: listing.buildingArea },
       { label: "연", value: listing.totalArea },
+      { label: "전용", value: listing.NetLeasableArea },
     ];
 
     const validAreas = areas.filter(area => area.value && area.value > 0);

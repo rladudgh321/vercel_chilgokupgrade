@@ -458,7 +458,7 @@ const BuildBasic = ({ roomOptions, bathroomOptions, themeOptions, labelOptions, 
         <InputField label="대지면적" name="landArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="건축면적" name="buildingArea" type="number" placeholder="m² 단위 숫자" />
         <InputField label="연면적" name="totalArea" type="number" placeholder="m² 단위 숫자" />
-        <InputField label="전용면적" name="netLeasableArea" type="number" placeholder="m² 단위 숫자" />
+        <InputField label="전용면적" name="NetLeasableArea" type="number" placeholder="m² 단위 숫자" />
       </div>
 
       {/* 담당자 및 고객 */}

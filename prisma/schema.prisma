@@ -58,7 +58,7 @@ model Build {
   landArea         Float?
   buildingArea     Float?
   totalArea        Float?
-  netLeasableArea  Float?
+  NetLeasableArea  Float?
   themes           String[]       @default([])
   buildingOptions  BuildingOption[]
   constructionYear DateTime?

@@ -82,8 +82,12 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
     { label: "건물 층수", value: (listing.totalFloors || listing.basementFloors) ? `지상 ${listing.totalFloors || '-'}층 / 지하 ${listing.basementFloors || '-'}층` : null },
     { label: "해당 층수", value: listing.currentFloor !== undefined && listing.currentFloor !== null ? `${listing.floorType || ''} ${listing.currentFloor < 0 ? `B${Math.abs(listing.currentFloor)}` : listing.currentFloor}층` : null },
     { label: "방/화장실 수", value: (listing.roomOption?.name || listing.bathroomOption?.name) ? `${listing.roomOption?.name || "-"} / ${listing.bathroomOption?.name || "-"}`: null },
-    listing.totalArea ? { label: "연면적", value: listing.totalArea, unit: "m²" } : { label: "실면적", value: listing.actualArea, unit: "m²" },
-    !listing.totalArea ? { label: "공급면적", value: listing.supplyArea, unit: "m²" } : null,
+    listing.actualArea ? { label: "실면적", value: listing.actualArea, unit: "m²" } : null,
+    listing.supplyArea ? { label: "공급면적", value: listing.supplyArea, unit: "m²" } : null,
+    listing.landArea ? { label: "대지면적", value: listing.landArea, unit: "m²" } : null,
+    listing.buildingArea ? { label: "건축면적", value: listing.buildingArea, unit: "m²" } : null,
+    listing.totalArea ? { label: "연면적", value: listing.totalArea, unit: "m²" } : null,
+    listing.NetLeasableArea ? { label: "전용면적", value: listing.NetLeasableArea, unit: "m²" } : null,
   ].filter(Boolean) as { label: string, value: any, unit?: string }[];
 
   const buildingInfoItems = [

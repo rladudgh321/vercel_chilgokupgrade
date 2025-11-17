@@ -129,6 +129,7 @@ function normalizeForForm(d: any, themeOptions: string[], labelOptions: Option[]
     actualArea: d.actualArea ?? null,
     supplyArea: d.supplyArea ?? null,
     landArea: d.landArea ?? null,
+    NetLeasableArea: d.NetLeasableArea ?? null,
     buildingArea: d.buildingArea ?? null,
     totalArea: d.totalArea ?? null,
 
@@ -293,6 +294,7 @@ export default function EditClient({ id }: { id: number }) {
         actualArea: payload.actualArea ?? null,
         supplyArea: payload.supplyArea ?? null,
         landArea: payload.landArea ?? null,
+        NetLeasableArea: payload.NetLeasableArea ?? null,
         buildingArea: payload.buildingArea ?? null,
         totalArea: payload.totalArea ?? null,
 
