@@ -4,7 +4,6 @@ import { BoardPost } from './NoticeClient';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function getPosts() {
-  console.log("Fetching posts from /api/board");
   const res = await fetch(`${BASE_URL}/api/board`, {
     next: { revalidate: 28800, tags: ['public', 'board'] },
   });
