@@ -228,7 +228,6 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
               {build.buildingOptions?.map((opt, index) => (
                 <OptionIcon key={`building-${opt.id || index}`} option={opt} />
               ))}
-              {build.floorOption?.id && <OptionIcon key={`floor-${build.floorOption.id}`} option={build.floorOption} />}
             </div>
           </div>
 
