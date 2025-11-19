@@ -4,13 +4,24 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   try {
-    const { tag } = await request.json();
-    if (!tag) {
-      return NextResponse.json({ ok: false, error: { message: 'Tag is required' } }, { status: 400 });
+    const body = await request.json();
+    const { tag, tags } = body;
+
+    if (!tag && !tags) {
+      return NextResponse.json({ ok: false, error: { message: 'Tag or tags are required' } }, { status: 400 });
     }
-    revalidateTag(tag);
-    revalidatePath('/')
-    return NextResponse.json({ ok: true, message: `Tag ${tag} revalidated` });
+
+    if (tag) {
+      revalidateTag(tag);
+    }
+
+    if (tags && Array.isArray(tags)) {
+      tags.forEach((t: string) => revalidateTag(t));
+    }
+
+    revalidatePath('/');
+
+    return NextResponse.json({ ok: true, message: `Revalidation successful` });
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: { message: e?.message ?? 'Unknown error' } }, { status: 500 });
   }

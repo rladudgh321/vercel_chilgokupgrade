@@ -39,7 +39,7 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ tag: 'public' }),
+      body: JSON.stringify({ tags: ['public', 'popular', 'quick-sale', 'recently'] }),
     });
 
     if (response.ok) {

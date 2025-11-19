@@ -1,1 +1,2 @@
-printPhotoVersion컴포넌트에서 `실면적, 공급면적, 대지면적, 건축면적, 연면적, 전용면적` 중에 0이 아닌 데이터가 있으면 전부 노출 해줄 수 있도록 해줘
+`Header`컴포넌트에서 `데이터 최신화`를 누르면 `/api/revalidate`를 통해서 revalidate가 되도록 작성했어. 나는 ListingSection컴포넌트의 `RecommendLand`컴포넌트와 `QuickSale`컴포넌트와 `RecentlyLand`컴포넌트가 데이터 최신화가 안되더라고 `npm run build`를 하면 해당 컴포넌트는 루트페이지에 있는데 static 으로 빌드되어 있어.
+나는 루트페이지가 revalidate 효과를 누르면서 Header컴포넌트에서 데이터 최신화를 누르면 데이터 또한 변하길 바래.
