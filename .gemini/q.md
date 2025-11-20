@@ -8,3 +8,6 @@
 [Error: An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.] {
   digest: 'DYNAMIC_SERVER_USAGE'
 }
+
+---
+여전히 루트 페이지('/')에서 위와 같은 오류 log를 vercel에서 보내주고 있어
