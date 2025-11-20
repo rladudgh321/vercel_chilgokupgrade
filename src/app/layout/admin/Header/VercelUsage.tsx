@@ -45,7 +45,7 @@ const VercelUsage = () => {
           <label className="mb-1 font-medium">시작일:</label>
           <DatePicker
             selected={fromDate}
-            onChange={(date: Date) => setFromDate(date)}
+            onChange={(date: Date | null) => date && setFromDate(date)}
             dateFormat="yyyy-MM-dd"
             className="border border-gray-300 rounded px-3 py-2"
           />
@@ -54,7 +54,7 @@ const VercelUsage = () => {
           <label className="mb-1 font-medium">종료일:</label>
           <DatePicker
             selected={toDate}
-            onChange={(date: Date) => setToDate(date)}
+            onChange={(date: Date | null) => date && setToDate(date)}
             dateFormat="yyyy-MM-dd"
             className="border border-gray-300 rounded px-3 py-2"
           />
