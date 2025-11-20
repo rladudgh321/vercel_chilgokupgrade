@@ -66,14 +66,6 @@ async function getThemeImage(): Promise<ThemeImageProps[]> {
     });
 }
 
-async function getIpStatus(): Promise<{isBanned: boolean}> {
-  const res = await fetch(`${BASE_URL}/api/ip-status`, { next: { tags: ['public', 'ip-status'], revalidate: 28800 } });
-  if(!res.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return await res.json();
-}
-
 export type ListingSectionProps = {
   currentPage: number; 
   listings: Listing[]; 
@@ -113,7 +105,6 @@ const Home = async () => {
   const banners = getBanners();
   const listingType = getListingType();
   const themeImage = getThemeImage();
-  const isBanned = getIpStatus();
   const RecommendData = getPopular();
   const QuickSaleData = getQuickSale();
   const RecentlyData = getRecently();
@@ -131,7 +122,7 @@ const Home = async () => {
       </Suspense>
       <Contact>
         <Suspense fallback={<div>로딩 중...</div>}>
-          <ContactForm isBanned={isBanned} />
+          <ContactForm />
         </Suspense>
       </Contact>
       <Institue />

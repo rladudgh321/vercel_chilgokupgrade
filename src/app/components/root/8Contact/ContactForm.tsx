@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler, SubmitErrorHandler } from "react-hook-form"
 
 export type ContactRequestInput = {
@@ -10,8 +10,17 @@ export type ContactRequestInput = {
   note?: string
 }
 
-const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => {
-  const isBannedPromise = use(isBanned);
+async function getIpStatus(): Promise<{isBanned: boolean}> {
+  const res = await fetch(`/api/ip-status`);
+  if(!res.ok) {
+    console.error('Network response was not ok');
+    return { isBanned: false };
+  }
+  return await res.json();
+}
+
+const ContactForm = () => {
+  const [isBanned, setIsBanned] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
@@ -19,8 +28,12 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
     reset,
   } = useForm<ContactRequestInput>()
 
+  useEffect(() => {
+    getIpStatus().then(status => setIsBanned(status.isBanned));
+  }, []);
+
   const onSubmit: SubmitHandler<ContactRequestInput> = async (data) => {
-    if (isBannedPromise.isBanned) {
+    if (isBanned) {
       alert('귀하는 문의를 제출할 수 없습니다.');
       return;
     }
@@ -64,6 +77,10 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
     }
   }
 
+  if (isBanned === null) {
+    return <div className="m-4 sm:m-6 text-center">로딩 중...</div>;
+  }
+
   return (
     <form className="m-4 sm:m-6 space-y-4" onSubmit={handleSubmit(onSubmit, onError)} noValidate>
       <input
@@ -97,13 +114,13 @@ const ContactForm = ({isBanned}: { isBanned: Promise<{isBanned: boolean}> }) => 
       />
 
       <div className="text-right">
-        {isBannedPromise.isBanned && (
+        {isBanned && (
             <p className="text-red-500 text-sm float-left py-2">귀하는 문의를 제출할 수 없습니다.</p>
         )}
         <button
           type="submit"
           className="inline-block p-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 w-full sm:w-auto disabled:bg-gray-400"
-          disabled={isBannedPromise.isBanned || isSubmitting}
+          disabled={isBanned || isSubmitting}
         >
           보내기
         </button>
