@@ -1,13 +1,42 @@
-`Header`컴포넌트에서 `데이터 최신화`를 누르면 `/api/revalidate`를 통해서 revalidate가 되도록 작성했어. 나는 ListingSection컴포넌트의 `RecommendLand`컴포넌트와 `QuickSale`컴포넌트와 `RecentlyLand`컴포넌트가 데이터 최신화가 안되더라고 `npm run build`를 하면 해당 컴포넌트는 루트페이지에 있는데 static 으로 빌드되어 있어.
-나는 루트페이지가 revalidate 효과를 누르면서 Header컴포넌트에서 데이터 최신화를 누르면 데이터 또한 변하길 바래.
+How do I use a Vercel API Access Token?
+An Access Token is required in order to use the Vercel API. Tokens can be created and managed at the level of your account.
 
----
-나는 vercel의 홈페이지에서 루트페이지에서 에러를 발견하고 다음과 같은 로그를 발견했어.
-나는 루트페이지는 ISR로 되었으면 좋겠어.
----
-[Error: An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.] {
-  digest: 'DYNAMIC_SERVER_USAGE'
-}
+Avatar for ismaelrumzan
+Ismael Rumzan
+DX Engineer
+Guides
+/
+API & CLI
+2 min read
+Copy page
+Last updated March 16, 2023
+Vercel Access Tokens are required to authenticate and use the Vercel API.
 
----
-여전히 루트 페이지('/')에서 위와 같은 오류 log를 vercel에서 보내주고 있어
+Tokens can be created and managed inside your account settings, and can be scoped to only allow access for specific Teams. This article covers how to create a token and use it with your account.
+
+Creating an Access Token
+Make sure that you are under Personal Account and not Teams in the dropdown at the top left in the Navigation bar. Navigate to the Account Tokens page, also found under the Settings area of your Personal Account.
+
+Click Create to open the create token modal.
+Enter a descriptive name and click Create Token.
+Choose the scope of access for the token from the dropdown.
+Make a note of the token created as it will not be shown again.
+Using the Access Token in Personal Account API Calls
+Once your token has been created, you can use it with the Vercel API. For example:
+
+Identify the Vercel API endpoint you would like to call. For example, to list the deployments in your Personal Account, the endpoint is /v6/deployments. The access token token you created would need access to your Personal Account.
+Make a request to https://api.vercel.com/v6/deployments using your access token as the Authorization header.
+curl"https://api.vercel.com/v6/deployments" -H "Authorization: Bearer TOKEN"
+Request to list the deployments of your Personal Account using curl.
+const result = await fetch(
+    'https://api.vercel.com/v6/deployments',
+    {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${process.env.VERCEL_ACCESS_TOKEN}`,
+        }
+    }
+);
+Request to list the deployments in your Personal Account.
+------
+다음의 코드를 참고하여 vercel-usage를 수정해줘

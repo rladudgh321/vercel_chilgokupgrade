@@ -1,72 +1,79 @@
 // app/api/vercel-usage/route.ts
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+type RateLimit = { limit: string | null; remaining: string | null; reset: string | null };
+
+function extractRateLimit(h: Headers): RateLimit {
+  return {
+    limit: h.get('X-RateLimit-Limit'),
+    remaining: h.get('X-RateLimit-Remaining'),
+    reset: h.get('X-RateLimit-Reset'),
+  };
+}
+
+async function fetchVercelUsage(url: string, token: string) {
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const text = await res.text().catch(() => '');
+  let json: any = null;
+  try { json = text ? JSON.parse(text) : null; } catch (e) { json = { _raw: text }; }
+  const rateLimit = extractRateLimit(res.headers);
+
+  return { res, json, rateLimit };
+}
+
+// --- Plan Limits ---
+const PLAN_LIMITS: Record<string, { bandwidth: number }> = {
+  free: { bandwidth: 100 * 1024 * 1024 * 1024 },  // 100 GB
+  pro: { bandwidth: 1 * 1024 * 1024 * 1024 * 1024 }, // 1 TB
+};
+
+export async function GET(req: Request) {
   const token = process.env.VERCEL_API_TOKEN;
-  const projectId = process.env.VERCEL_PROJECT_ID;
+  if (!token) return NextResponse.json({ error: 'VERCEL_API_TOKEN not configured' }, { status: 500 });
+
+  const urlObj = new URL(req.url);
+  const plan = (urlObj.searchParams.get('plan') || 'free').toLowerCase();
+  if (!PLAN_LIMITS[plan]) return NextResponse.json({ error: `Unknown plan '${plan}'` }, { status: 400 });
+
   const projectName = process.env.VERCEL_PROJECT_NAME;
-  const teamId = process.env.VERCEL_TEAM_ID;
-  const projectIdOrName = projectId || projectName;
+  const projectId = process.env.VERCEL_PROJECT_ID;
+  const teamId = urlObj.searchParams.get('teamId') ?? undefined;
 
-  console.log('Vercel Usage API Route Called');
-  console.log('VERCEL_API_TOKEN found:', !!token);
-  console.log('VERCEL_PROJECT_ID found:', !!projectId);
-  console.log('VERCEL_PROJECT_NAME found:', !!projectName);
-  console.log('VERCEL_TEAM_ID found:', !!teamId);
-
-  if (!token || !projectIdOrName) {
-    const missing = [];
-    if (!token) missing.push('VERCEL_API_TOKEN');
-    if (!projectIdOrName) missing.push('VERCEL_PROJECT_ID or VERCEL_PROJECT_NAME');
-    const errorMessage = `The following environment variables are not configured: ${missing.join(', ')}.`;
-    console.error(errorMessage);
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  const projectIdentifier = projectId || projectName;
+  if (!projectIdentifier) {
+    return NextResponse.json({ error: 'No project identifier configured (VERCEL_PROJECT_ID or VERCEL_PROJECT_NAME required)' }, { status: 400 });
   }
 
+  const baseUrl = `https://api.vercel.com/v9/projects/${encodeURIComponent(projectIdentifier)}/usage`;
+  const url = teamId ? `${baseUrl}?teamId=${encodeURIComponent(teamId)}` : baseUrl;
+
   try {
-    // 프로젝트 이름을 쓸 경우 안전하게 인코딩
-    const encoded = encodeURIComponent(projectIdOrName);
-    const baseUrl = `https://api.vercel.com/v9/projects/${encoded}/usage`;
-    const url = teamId ? `${baseUrl}?teamId=${encodeURIComponent(teamId)}` : baseUrl;
-    console.log(`Fetching Vercel usage from: ${url}`);
+    const { res, json, rateLimit } = await fetchVercelUsage(url, token);
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-      next: {
-        revalidate: 3600,
-      },
-    });
-
-    // response가 JSON이 아닐 가능성(오류 페이지 등)에 대비
-    const text = await response.text();
-    let parsed;
-    try {
-      parsed = text ? JSON.parse(text) : null;
-    } catch (e) {
-      console.error('Failed to parse response as JSON:', e);
-      // 디버깅용으로 원본 텍스트를 반환
+    if (!res.ok) {
       return NextResponse.json(
-        { error: 'Vercel API returned non-JSON response.', raw: text },
-        { status: 502 }
+        { error: json?.error?.message ?? 'Failed to fetch usage', details: json, rateLimit },
+        { status: res.status }
       );
     }
 
-    if (!response.ok) {
-      console.error('Vercel API Error:', parsed);
-      const errorMessage =
-        parsed?.error?.message ||
-        parsed?.message ||
-        `Failed to fetch Vercel usage data. HTTP ${response.status}`;
-      return NextResponse.json({ error: errorMessage, details: parsed }, { status: response.status });
-    }
-
-    // 정상 응답인 경우: 그대로 반환
-    return NextResponse.json(parsed);
-  } catch (error) {
-    console.error('Error fetching Vercel usage:', error);
-    return NextResponse.json({ error: 'An internal error occurred while fetching Vercel usage data.' }, { status: 500 });
+    // Plan별 한도를 포함해서 반환
+    return NextResponse.json({
+      project: projectName,
+      plan,
+      limit: PLAN_LIMITS[plan],
+      usage: json,
+      rateLimit,
+    }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: 'Internal error fetching Vercel usage', details: String(err) }, { status: 500 });
   }
 }
