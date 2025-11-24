@@ -75,7 +75,7 @@ const ManagementAPI = ({ plan = 'free' }: { plan?: 'free' | 'pro' }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
-
+  console.log('usageData', usageData);
   const currentPlanLimits = plans[plan];
 
   const fetchUsage = useCallback(async () => {

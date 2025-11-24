@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server'
 
 // Helper to parse Prometheus-style text data
@@ -7,11 +6,16 @@ const parsePrometheusText = (text: string) => {
   const lines = text.split('\n')
   lines.forEach(line => {
     if (line.startsWith('#') || line.trim() === '') return
+    
     const parts = line.split(' ')
-    const key = parts[0]
+    const key = parts[0].split('{')[0] // Strip labels
     const value = parseFloat(parts[1])
+
     if (key && !isNaN(value)) {
-      metrics[key] = value
+      // Sum values for the same key if it appears multiple times.
+      // For pg_database_size_bytes, we sum up all dbs.
+      // For other metrics, this is usually the desired behavior.
+      metrics[key] = (metrics[key] || 0) + value
     }
   })
   return metrics
@@ -19,8 +23,8 @@ const parsePrometheusText = (text: string) => {
 
 export async function GET() {
   const projectRef = process.env.SUPABASE_PROJECT_REF
-  const accessToken = process.env.SUPABASE_ACCESS_TOKEN // PAT token (sbp_...)
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY // Service Role JWT (ey...)
+  const accessToken = process.env.SUPABASE_ACCESS_TOKEN
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!projectRef || !accessToken || !serviceRoleKey) {
     return NextResponse.json(
@@ -60,21 +64,37 @@ export async function GET() {
         privilegedMetricsPromise
     ]);
 
+    console.log('metricsData', metricsData);
+
     if (managementData.result && managementData.result.length > 0) {
         apiUsage = managementData.result[0];
     }
 
+    // --- Calculate Egress ---
+    const totalEgress = 
+      (metricsData['supabase_rest_egress_bytes_total'] || 0) +
+      (metricsData['supabase_storage_egress_uncached_bytes_total'] || 0) +
+      (metricsData['supabase_realtime_egress_bytes_total'] || 0) +
+      (metricsData['supabase_auth_egress_bytes_total'] || 0) +
+      (metricsData['supabase_functions_egress_bytes_total'] || 0);
+
+    // --- Get DB size ---
+    // Use pg_database_size_bytes which is the sum of all dbs including shadow dbs
+    // The user has confirmed this value is correct.
+    const dbSizeInBytes = metricsData['pg_database_size_bytes'] || 0;
+
+
     privilegedMetrics = {
-        db_size: metricsData['pg_database_size_bytes'] || 0,
-        storage_size: metricsData['supabase_storage_size_bytes'] || 0,
-        // Note: Egress data is not available in this endpoint.
+        db_size: dbSizeInBytes,
+        storage_size: metricsData['supabase_storage_size_bytes'] || 0, // Using the most likely name
+        egress: totalEgress,
+        cached_egress: metricsData['supabase_storage_egress_cdn_bytes_total'] || 0,
     }
 
     // --- Combine and return results ---
     return NextResponse.json({ ...apiUsage, ...privilegedMetrics })
 
   } catch (err: any) {
-    // Handle potential 429 rate limiting from either API
     if (err.message.includes('429')) {
         return NextResponse.json({ error: 'Too Many Requests' }, { status: 429 })
     }
