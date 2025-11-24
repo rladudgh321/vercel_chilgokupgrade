@@ -1,0 +1,21 @@
+name: Scheduled Vercel Redeploy (KST midnight)
+
+on:
+  schedule:
+    - cron: '0 15 * * *'   # 매일 15:00 UTC = 00:00 KST
+  workflow_dispatch:       # 수동 트리거 허용
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "Missing VERCEL_DEPLOY_HOOK secret" >&2
+            exit 1
+          fi
+          # 간단 POST로 Vercel에 redeploy 요청
+          curl -fsS -X POST "$DEPLOY_HOOK"
