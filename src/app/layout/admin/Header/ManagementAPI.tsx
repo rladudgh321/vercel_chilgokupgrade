@@ -8,19 +8,10 @@ const plans = {
   free: {
     db_size: 500 * 1024 * 1024, // 500MB
     storage_size: 1 * 1024 * 1024 * 1024, // 1GB
-    // From usage.api-counts, we can use total_rest_requests as a proxy for function invocations/api calls
-    // Supabase says API requests are unlimited, but we can set a nominal high number for visualization if needed.
-    // For now, we will just display the count for metrics without a hard limit.
-    edge_functions: 500000,
-    egress: 50 * 1024 * 1024 * 1024, // 50GB
-    cached_egress: 100 * 1024 * 1024 * 1024, // 100GB
   },
   pro: {
     db_size: 8 * 1024 * 1024 * 1024, // 8GB
     storage_size: 100 * 1024 * 1024 * 1024, // 100GB
-    edge_functions: 2000000,
-    egress: 500 * 1024 * 1024 * 1024, // 500GB
-    cached_egress: 1000 * 1024 * 1024 * 1024, // 1TB
   },
 }
 
@@ -75,7 +66,7 @@ const ManagementAPI = ({ plan = 'free' }: { plan?: 'free' | 'pro' }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isRateLimited, setIsRateLimited] = useState(false)
-  console.log('usageData', usageData);
+
   const currentPlanLimits = plans[plan];
 
   const fetchUsage = useCallback(async () => {
@@ -130,24 +121,6 @@ const ManagementAPI = ({ plan = 'free' }: { plan?: 'free' | 'pro' }) => {
             usage={usageData.storage_size || 0}
             limit={currentPlanLimits.storage_size}
             period='총'
-          />
-          <UsageMetric 
-            title="Edge Function 호출"
-            usage={usageData.total_rest_requests || 0} // Using REST as a proxy
-            limit={currentPlanLimits.edge_functions}
-            period='한달'
-          />
-          <UsageMetric 
-            title="데이터 송출량/이그레스"
-            usage={usageData.egress || 0}
-            limit={currentPlanLimits.egress}
-            period='한달'
-          />
-          <UsageMetric 
-            title="캐시된 이그레스"
-            usage={usageData.cached_egress || 0}
-            limit={currentPlanLimits.cached_egress}
-            period='한달'
           />
         </div>
       )}
