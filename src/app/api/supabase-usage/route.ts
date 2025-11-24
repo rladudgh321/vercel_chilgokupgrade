@@ -47,7 +47,6 @@ export async function GET() {
     // --- Fetch 1: Management API ---
     const managementApiPromise = fetch(`https://api.supabase.com/v1/projects/${projectRef}/analytics/endpoints/usage.api-counts`, {
       headers: { 'Authorization': `Bearer ${accessToken}` },
-      next: { revalidate: 3600 },
     }).then(res => res.ok ? res.json() : Promise.reject(`Management API fetch failed: ${res.statusText}`))
 
     // --- Fetch 2: Privileged Metrics ---
@@ -55,7 +54,6 @@ export async function GET() {
     const encodedCredentials = Buffer.from(credentials).toString('base64');
     const privilegedMetricsPromise = fetch(`https://${projectRef}.supabase.co/customer/v1/privileged/metrics`, {
         headers: { 'Authorization': `Basic ${encodedCredentials}` },
-        next: { revalidate: 3600 },
     }).then(async res => {
         if (!res.ok) throw new Error(`Privileged Metrics fetch failed: ${res.statusText}`)
         return parsePrometheusText(await res.text())

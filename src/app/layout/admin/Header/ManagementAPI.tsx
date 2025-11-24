@@ -135,7 +135,7 @@ const ManagementAPI = ({ plan = 'free' }: { plan?: 'free' | 'pro' }) => {
             period='한달'
           />
           <UsageMetric 
-            title="데이터 송출량/이그레스"
+            title="이그레스"
             usage={usageData.egress || 0}
             limit={currentPlanLimits.egress}
             period='한달'
