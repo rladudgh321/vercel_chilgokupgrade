@@ -9,8 +9,8 @@ const plans = {
     db_size: 500 * 1024 * 1024, // 500MB
     storage_size: 1 * 1024 * 1024 * 1024, // 1GB
     edge_functions: 500000,
-    egress: 50 * 1024 * 1024 * 1024, // 50GB
-    cached_egress: 100 * 1024 * 1024 * 1024, // 100GB
+    egress: 5 * 1024 * 1024 * 1024, // 5GB
+    cached_egress: 5 * 1024 * 1024 * 1024, // 5GB
   },
   pro: {
     db_size: 8 * 1024 * 1024 * 1024, // 8GB

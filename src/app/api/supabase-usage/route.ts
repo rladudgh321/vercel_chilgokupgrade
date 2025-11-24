@@ -76,6 +76,7 @@ export async function GET() {
         storageQueryPromise
     ]);
 
+
     let apiUsage = {};
     if (managementData.result && managementData.result.length > 0) {
         apiUsage = managementData.result[0];
