@@ -4,16 +4,32 @@ import { Prisma } from '@prisma/client'
 
 // Helper to parse Prometheus-style text data
 const parsePrometheusText = (text: string) => {
-  const metrics: { [key: string]: number } = {}
+  const metrics: { [key: string]: { value: number, labels: any }[] } = {}
   const lines = text.split('\n')
+  
   lines.forEach(line => {
     if (line.startsWith('#') || line.trim() === '') return
-    const parts = line.split(' ')
-    const key = parts[0].split('{')[0]
-    const value = parseFloat(parts[1])
-    if (key && !isNaN(value)) {
-      metrics[key] = (metrics[key] || 0) + value
+    
+    const valuePart = line.lastIndexOf(' ')
+    const keyPart = line.substring(0, valuePart)
+    const value = parseFloat(line.substring(valuePart + 1))
+
+    const labelStart = keyPart.indexOf('{')
+    const key = labelStart === -1 ? keyPart : keyPart.substring(0, labelStart)
+    
+    let labels = {}
+    if (labelStart !== -1) {
+        const labelString = keyPart.substring(labelStart + 1, keyPart.length - 1)
+        labels = Object.fromEntries(labelString.split(',').map(part => {
+            const [key, value] = part.split('=')
+            return [key, value.substring(1, value.length - 1)] // remove quotes
+        }))
     }
+
+    if (!metrics[key]) {
+      metrics[key] = []
+    }
+    metrics[key].push({ value, labels })
   })
   return metrics
 }
@@ -28,13 +44,13 @@ export async function GET() {
   }
 
   try {
-    // --- Fetch 1: Management API (for egress, api counts) ---
+    // --- Fetch 1: Management API ---
     const managementApiPromise = fetch(`https://api.supabase.com/v1/projects/${projectRef}/analytics/endpoints/usage.api-counts`, {
       headers: { 'Authorization': `Bearer ${accessToken}` },
       next: { revalidate: 3600 },
     }).then(res => res.ok ? res.json() : Promise.reject(`Management API fetch failed: ${res.statusText}`))
 
-    // --- Fetch 2: Privileged Metrics (for DB size) ---
+    // --- Fetch 2: Privileged Metrics ---
     const credentials = `service_role:${serviceRoleKey}`;
     const encodedCredentials = Buffer.from(credentials).toString('base64');
     const privilegedMetricsPromise = fetch(`https://${projectRef}.supabase.co/customer/v1/privileged/metrics`, {
@@ -46,20 +62,11 @@ export async function GET() {
     })
     
     // --- Fetch 3: Storage Size via SQL ---
-    // The column name 'metadata' is a guess based on common Supabase patterns.
-    // The user needs to confirm this by inspecting the schema.
     const storageQueryPromise = prisma.$queryRaw(
       Prisma.sql`SELECT metadata FROM storage.objects;`
     ).then(results => {
         if (!Array.isArray(results)) return 0;
-        
-        let totalSize = 0;
-        for (const obj of results) {
-            if (obj.metadata && typeof obj.metadata.size === 'number') {
-                totalSize += obj.metadata.size;
-            }
-        }
-        return totalSize;
+        return results.reduce((acc, obj) => acc + (obj.metadata?.size || 0), 0)
     });
 
     // --- Execute fetches in parallel ---
@@ -73,22 +80,30 @@ export async function GET() {
     if (managementData.result && managementData.result.length > 0) {
         apiUsage = managementData.result[0];
     }
+    
+    // --- Calculate Egress from metricsData ---
+    const totalEgress = (metricsData['http_server_response_size_bytes_total'] || [])
+      .reduce((acc, metric) => acc + metric.value, 0);
+
+    const cachedEgress = (metricsData['supabase_storage_egress_cdn_bytes_total'] || [])
+      .reduce((acc, metric) => acc + metric.value, 0);
+      
+    const dbSize = (metricsData['pg_database_size_bytes'] || [])
+      .reduce((acc, metric) => acc + metric.value, 0);
 
     // --- Consolidate data ---
     const combinedUsage = {
         ...apiUsage,
-        db_size: metricsData['pg_database_size_bytes'] || 0,
+        db_size: dbSize,
         storage_size: storageSizeData || 0,
-        // Egress data from management API is often more accurate for billing
-        egress: apiUsage.egress || 0,
-        cached_egress: apiUsage.cached_egress || 0,
+        egress: totalEgress,
+        cached_egress: cachedEgress,
     };
 
     return NextResponse.json(combinedUsage)
 
   } catch (err: any) {
     console.error("Error fetching Supabase usage:", err);
-    
     if (err.message.includes('429')) {
         return NextResponse.json({ error: 'Too Many Requests' }, { status: 429 })
     }
