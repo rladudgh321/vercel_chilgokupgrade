@@ -3,19 +3,29 @@ name: Scheduled Vercel Redeploy (KST midnight)
 on:
   schedule:
     - cron: '0 15 * * *'   # 매일 15:00 UTC = 00:00 KST
-  workflow_dispatch:       # 수동 트리거 허용
+  workflow_dispatch:
 
 jobs:
   redeploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel Deploy Hook
+      - name: Ensure Deploy Hook Secret
+        run: |
+          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            echo "VERCEL_DEPLOY_HOOK secret is missing" >&2
+            exit 1
+          fi
+          echo "VERCEL_DEPLOY_HOOK is set."
+
+      - name: Trigger Vercel Deploy Hook (with HTTP check)
         env:
           DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          if [ -z "$DEPLOY_HOOK" ]; then
-            echo "Missing VERCEL_DEPLOY_HOOK secret" >&2
+          set -euo pipefail
+          http_code=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "$DEPLOY_HOOK" || echo "000")
+          echo "HTTP status: $http_code"
+          if [[ ! "$http_code" =~ ^2|3 ]]; then
+            echo "Deploy hook failed with HTTP $http_code" >&2
             exit 1
           fi
-          # 간단 POST로 Vercel에 redeploy 요청
-          curl -fsS -X POST "$DEPLOY_HOOK"
+          echo "Deploy hook called successfully."
