@@ -36,20 +36,14 @@ const parsePrometheusText = (text: string) => {
 
 export async function GET() {
   const projectRef = process.env.SUPABASE_PROJECT_REF
-  const accessToken = process.env.SUPABASE_ACCESS_TOKEN
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!projectRef || !accessToken || !serviceRoleKey) {
+  if (!projectRef || !serviceRoleKey) {
     return NextResponse.json({ error: 'Supabase environment variables are not fully configured.' }, { status: 500 })
   }
 
   try {
-    // --- Fetch 1: Management API ---
-    const managementApiPromise = fetch(`https://api.supabase.com/v1/projects/${projectRef}/analytics/endpoints/usage.api-counts`, {
-      headers: { 'Authorization': `Bearer ${accessToken}` },
-    }).then(res => res.ok ? res.json() : Promise.reject(`Management API fetch failed: ${res.statusText}`))
-
-    // --- Fetch 2: Privileged Metrics ---
+    // --- Fetch Privileged Metrics (for db_size) ---
     const credentials = `service_role:${serviceRoleKey}`;
     const encodedCredentials = Buffer.from(credentials).toString('base64');
     const privilegedMetricsPromise = fetch(`https://${projectRef}.supabase.co/customer/v1/privileged/metrics`, {
@@ -59,7 +53,7 @@ export async function GET() {
         return parsePrometheusText(await res.text())
     })
     
-    // --- Fetch 3: Storage Size via SQL ---
+    // --- Fetch Storage Size via SQL ---
     const storageQueryPromise = prisma.$queryRaw(
       Prisma.sql`SELECT metadata FROM storage.objects;`
     ).then(results => {
@@ -68,35 +62,18 @@ export async function GET() {
     });
 
     // --- Execute fetches in parallel ---
-    const [managementData, metricsData, storageSizeData] = await Promise.all([
-        managementApiPromise,
+    const [metricsData, storageSizeData] = await Promise.all([
         privilegedMetricsPromise,
         storageQueryPromise
     ]);
-
-
-    let apiUsage = {};
-    if (managementData.result && managementData.result.length > 0) {
-        apiUsage = managementData.result[0];
-    }
     
-    // --- Calculate Egress from metricsData ---
-    const totalEgress = (metricsData['http_server_response_size_bytes_total'] || [])
-      .reduce((acc, metric) => acc + metric.value, 0);
-
-    const cachedEgress = (metricsData['supabase_storage_egress_cdn_bytes_total'] || [])
-      .reduce((acc, metric) => acc + metric.value, 0);
-      
     const dbSize = (metricsData['pg_database_size_bytes'] || [])
       .reduce((acc, metric) => acc + metric.value, 0);
 
     // --- Consolidate data ---
     const combinedUsage = {
-        ...apiUsage,
         db_size: dbSize,
         storage_size: storageSizeData || 0,
-        egress: totalEgress,
-        cached_egress: cachedEgress,
     };
 
     return NextResponse.json(combinedUsage)

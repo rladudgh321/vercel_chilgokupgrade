@@ -41,22 +41,22 @@ const VercelUsage = () => {
     <div className="max-w-md mx-auto p-4 bg-white shadow rounded-lg">
       <h3 className="text-lg font-semibold mb-4">Vercel Usage 확인</h3>
       <div className="flex gap-4 mb-4">
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <label className="mb-1 font-medium">시작일:</label>
           <DatePicker
             selected={fromDate}
             onChange={(date: Date | null) => date && setFromDate(date)}
             dateFormat="yyyy-MM-dd"
-            className="border border-gray-300 rounded px-3 py-2"
+            className="border border-gray-300 rounded px-3 py-2 w-full"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <label className="mb-1 font-medium">종료일:</label>
           <DatePicker
             selected={toDate}
             onChange={(date: Date | null) => date && setToDate(date)}
             dateFormat="yyyy-MM-dd"
-            className="border border-gray-300 rounded px-3 py-2"
+            className="border border-gray-300 rounded px-3 py-2 w-full"
           />
         </div>
       </div>
