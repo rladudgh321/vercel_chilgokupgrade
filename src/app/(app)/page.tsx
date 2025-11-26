@@ -9,6 +9,17 @@ import ContactForm from "../components/root/8Contact/ContactForm";
 import Institue from "../components/root/9Institue";
 import Popup from "../components/root/Popup";
 import { PopupPost } from "../components/root/Popup";
+import type { Metadata } from 'next';
+import { generatePageMetadata } from '@/app/utils/metadata';
+
+export async function generateMetadata(): Promise<Metadata> {
+  // Homepage specific metadata
+  return generatePageMetadata({
+    title: '칠곡군 대표 부동산, 빠르고 정확한 실매물 정보',
+    description: '칠곡군 전역의 아파트, 상가, 원룸, 토지 등 모든 종류의 부동산 매물을 찾아보세요. 급매, 인기 매물, 최신 매물을 한눈에 확인할 수 있습니다.',
+    keywords: ['칠곡군 부동산', '칠곡 아파트', '칠곡 상가', '왜관 부동산', '석적 부동산', '북삼 부동산', '칠곡 원룸', '칠곡 토지'],
+  });
+}
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!

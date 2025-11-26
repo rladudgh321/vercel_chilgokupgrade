@@ -20,10 +20,12 @@ export async function getSnsSettings(): Promise<SnsSetting[]> {
   return data.data;
 }
 
-export const metadata: Metadata = {
-  title: "부동산",
-  description: "수정 사항 있을시 편히 말씀해주세요",
-};
+import { generatePageMetadata } from '@/app/utils/metadata';
+
+export const metadata: Metadata = generatePageMetadata({
+  title: '칠곡군 부동산 정보',
+  description: '칠곡군의 최신 부동산 매물, 아파트, 상가, 원룸 정보를 확인하세요.',
+});
 
 export default async function AppLayout({
   children, modal,

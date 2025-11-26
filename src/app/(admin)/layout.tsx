@@ -1,6 +1,13 @@
 import AdminLayoutClient from "./AdminLayoutClient";
 import { createClient } from "@/app/utils/supabase/server";
 import { cookies } from "next/headers";
+import type { Metadata } from 'next';
+import { generatePageMetadata } from '@/app/utils/metadata';
+
+export const metadata: Metadata = generatePageMetadata({
+  title: '관리자 페이지',
+  description: '콘텐츠 및 설정을 관리하는 페이지입니다.',
+});
 
 async function getLogoUrl() {
   const cookieStore = await cookies();
