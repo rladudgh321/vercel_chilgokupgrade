@@ -38,7 +38,7 @@ export function generatePageMetadata(props: GenerateMetadataProps): Metadata {
     openGraph: {
       title: props.openGraph?.title || title,
       description: props.openGraph?.description || description,
-      url: props.openGraph?.url || process.env.NEXT_PUBLIC_SITE_URL || 'https://your-site-url.com',
+      url: props.openGraph?.url || process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:3000',
       siteName: props.openGraph?.siteName || defaultTitle,
       images: props.openGraph?.images || '/logo.png', // 기본 이미지 경로
       type: props.openGraph?.type || 'website',
