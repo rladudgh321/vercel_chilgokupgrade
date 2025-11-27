@@ -79,8 +79,6 @@ const ManagementAPI = () => {
     fetchUsage()
   }, [fetchUsage])
 
-  const SUPABASE_PROJECT_REF = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF;
-
   return (
     <div className="bg-gray-50 rounded-lg p-4 shadow-md max-w-sm m-4 font-sans">
       <div className="flex justify-between items-center mb-4">
@@ -112,7 +110,7 @@ const ManagementAPI = () => {
           />
           <div className="mt-5 text-center">
             <a 
-              href={`https://supabase.com/dashboard/org/zsnwfomrrcqueeucsnfl/usage?projectRef=${SUPABASE_PROJECT_REF}`}
+              href={`https://supabase.com/dashboard/org/zsnwfomrrcqueeucsnfl/usage`}
               target="_blank" 
               rel="noopener noreferrer"
               className="text-blue-600 no-underline font-medium text-base transition-colors duration-200 hover:text-blue-800 hover:underline"
