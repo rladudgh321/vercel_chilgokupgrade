@@ -16,7 +16,7 @@ import ToggleSwitch from "@/app/components/admin/listings/ToggleSwitch";
 import AddressVisibility from "@/app/components/admin/listings/AddressVisibility";
 import SearchIcon from "@svg/Search";
 
-import { BuildDeleteSome, BuildFindAll, toggleBuild, updateConfirmDate, patchConfirmDateToToday } from "@/app/apis/build";
+import { BuildDeleteSome, BuildFindAllAdmin, toggleBuild, updateConfirmDate, patchConfirmDateToToday } from "@/app/apis/build";
 import { WorkInfoFindOne } from "@/app/apis/workinfo";
 import { IBuild } from "@/app/interface/build";
 import formatFullKoreanMoney from "@/app/utility/NumberToKoreanMoney";
@@ -85,15 +85,16 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
 
   // Query Key
   const qk = useMemo(
-    () => ["builds", page, LIMIT, (searchKeyword ?? "").trim()],
-    [page, searchKeyword]
+    () => ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey],
+    [page, searchKeyword, sortKey]
   );
 
   const shouldUseInitial = useMemo(
     () =>
       (ListingsData?.currentPage ?? 1) === page &&
-      (searchKeyword ?? "") === "",
-    [ListingsData?.currentPage, page, searchKeyword]
+      (searchKeyword ?? "") === "" &&
+      sortKey === "recent",
+    [ListingsData?.currentPage, page, searchKeyword, sortKey]
   );
 
   const { data: workInfoData } = useQuery({
@@ -105,7 +106,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   // 목록 조회
   const { data, isLoading, isError } = useQuery({
     queryKey: qk,
-    queryFn: () => BuildFindAll(page, LIMIT, searchKeyword),
+    queryFn: () => BuildFindAllAdmin(page, LIMIT, searchKeyword, undefined, sortKey),
     placeholderData: keepPreviousData,
     initialData: shouldUseInitial ? ListingsData : undefined,
     staleTime: 10_000,
@@ -116,36 +117,10 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     return data.data as IBuild[];
   }, [data?.data]);
 
-  // ✅ 표시용 정렬 (API는 그대로, 프론트에서만 정렬)
-  const sortedRows = useMemo(() => {
-    const arr = [...rows];
-    switch (sortKey) {
-      case "recent":
-        return arr.sort(
-          (a, b) =>
-            new Date(String(b.createdAt)).getTime() -
-            new Date(String(a.createdAt)).getTime()
-        );
-      case "views": // 🔸 ListingsShell과 키 통일
-        return arr.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
-      case "price": {
-        const price = (x: any) =>
-          Math.max(Number(x.salePrice ?? 0), Number(x.actualEntryCost ?? 0));
-        return arr.sort((a, b) => price(b) - price(a));
-      }
-      case "totalArea":
-        return arr.sort(
-          (a, b) => Number(b.totalArea ?? 0) - Number(a.totalArea ?? 0)
-        );
-      default:
-        return arr;
-    }
-  }, [rows, sortKey]);
-
   // 선택 체크박스 계산은 정렬된 결과 기준
   const allIdsOnPage = useMemo(
-    () => sortedRows.map((it) => Number(it.id)).filter(Number.isFinite),
-    [sortedRows]
+    () => rows.map((it) => Number(it.id)).filter(Number.isFinite),
+    [rows]
   );
   const allOnThisPageChecked =
     allIdsOnPage.length > 0 && allIdsOnPage.every((id) => selectedIds.includes(id));
@@ -377,7 +352,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
           </thead>
 
           <tbody className="divide-y divide-gray-200 md:table-row-group">
-            {sortedRows.map((listing: IBuild, index: number) => {
+            {rows.map((listing: IBuild, index: number) => {
               const id = Number(listing.id);
               const confirmDate = (listing as any).confirmDate;
               const createdAtDate = new Date(String(listing.createdAt));

@@ -4,7 +4,13 @@ import { useState } from "react";
 import Selected from "./Selected";
 import ListingsMain from "./ListingsMain";
 
-export type SortKey = "recent" | "views" | "price" | "totalArea";
+export type SortKey =
+  | "recent"
+  | "views"
+  | "price-desc"
+  | "price-asc"
+  | "totalArea-desc"
+  | "totalArea-asc";
 
 export default function ListingsShell({
   ListingsData,

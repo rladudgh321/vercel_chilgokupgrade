@@ -3,7 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 
-type SortKey = "recent" | "views" | "price" | "totalArea";
+import { type SortKey } from "./ListingsShell";
 
 interface SelectedProps {
   totalCount: number;
@@ -48,19 +48,25 @@ const Selected = ({ totalCount, sortKey, onChangeSort }: SelectedProps) => {
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey === "price")}
-            onClick={() => onChangeSort("price")}
-            aria-pressed={sortKey === "price"}
+            className={tabBtn(sortKey.startsWith("price"))}
+            onClick={() =>
+              onChangeSort(sortKey === "price-desc" ? "price-asc" : "price-desc")
+            }
+            aria-pressed={sortKey.startsWith("price")}
           >
-            금액순
+            {sortKey === "price-asc" ? "금액순↑" : "금액순↓"}
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey === "totalArea")}
-            onClick={() => onChangeSort("totalArea")}
-            aria-pressed={sortKey === "totalArea"}
+            className={tabBtn(sortKey.startsWith("totalArea"))}
+            onClick={() =>
+              onChangeSort(
+                sortKey === "totalArea-desc" ? "totalArea-asc" : "totalArea-desc"
+              )
+            }
+            aria-pressed={sortKey.startsWith("totalArea")}
           >
-            면적순
+            {sortKey === "totalArea-asc" ? "면적순↑" : "면적순↓"}
           </button>
         </div>
 

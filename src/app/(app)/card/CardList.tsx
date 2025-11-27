@@ -5,21 +5,13 @@ import SearchBar from "../landSearch/SearchBar"
 import { useRouter, useSearchParams } from "next/navigation"
 import BuildDetailModalClient from '@/app/components/root/BuildDetailModal'
 import { koreanToNumber } from '@/app/utility/koreanToNumber'
-import { useQuery } from "@tanstack/react-query";
 import CardItemSkeleton from "./CardItemSkeleton";
 import { IBuild } from "@/app/interface/build"
 
 import { SearchBarProps } from "@/app/interface/card"
 
-const fetchListings = async (searchParams: URLSearchParams) => {
-  const res = await fetch(`/api/listings?${searchParams.toString()}`);
-  if (!res.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return res.json();
-};
-
 const CardList = ({ 
+  listings,
   settings,
   roomOptions,
   bathroomOptions,
@@ -28,19 +20,12 @@ const CardList = ({
   themeOptions,
   propertyTypeOptions,
   buyTypeOptions
-}: SearchBarProps) => {
+}: SearchBarProps & { listings: IBuild[] }) => {
   const [selectedBuildId, setSelectedBuildId] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["listings", searchParams.toString()],
-    queryFn: () => fetchListings(searchParams),
-  });
-
-  const listings = useMemo(() => {
-    return data?.listings || []
-  },[data?.listings])
+  const isLoading = false; // Or pass this as a prop if needed
 
 
   const handleCardClick = (id: number) => {

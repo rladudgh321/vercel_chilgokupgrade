@@ -59,6 +59,9 @@ export async function GET(req: NextRequest) {
       case 'price-desc':
         q = q.order('max_price', { ascending: false, nullsFirst: true });
         break;
+      case 'price-asc':
+        q = q.order('max_price', { ascending: true, nullsFirst: true });
+        break;
       case 'area-desc':
         q = q.order('totalArea', { ascending: false, nullsFirst: true });
         break;
