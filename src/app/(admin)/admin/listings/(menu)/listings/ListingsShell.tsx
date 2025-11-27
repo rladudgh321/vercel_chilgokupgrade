@@ -9,8 +9,8 @@ export type SortKey =
   | "views"
   | "price-desc"
   | "price-asc"
-  | "totalArea-desc"
-  | "totalArea-asc";
+  | "area-desc"
+  | "area-asc";
 
 export default function ListingsShell({
   ListingsData,

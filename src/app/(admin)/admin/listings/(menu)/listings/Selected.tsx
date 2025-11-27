@@ -58,15 +58,15 @@ const Selected = ({ totalCount, sortKey, onChangeSort }: SelectedProps) => {
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey.startsWith("totalArea"))}
+            className={tabBtn(sortKey.startsWith("area"))}
             onClick={() =>
               onChangeSort(
-                sortKey === "totalArea-desc" ? "totalArea-asc" : "totalArea-desc"
+                sortKey === "area-desc" ? "area-asc" : "area-desc"
               )
             }
-            aria-pressed={sortKey.startsWith("totalArea")}
+            aria-pressed={sortKey.startsWith("area")}
           >
-            {sortKey === "totalArea-asc" ? "면적순↑" : "면적순↓"}
+            {sortKey === "area-asc" ? "면적순↑" : "면적순↓"}
           </button>
         </div>
 
