@@ -45,7 +45,7 @@ const CardList = ({
     setSelectedBuildId(null);
   };
 
-  const sortBy = searchParams.get("sortBy") || "recommended"
+  const sortBy = searchParams.get("sortBy") || "latest"
 
   const queryParams = useMemo(() => {
     const params: { [key: string]: string } = {};
