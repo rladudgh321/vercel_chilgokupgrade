@@ -12,6 +12,6 @@ const Contact = ({children}: {children: React.ReactNode}) => {
       </div>
     </div>
   );
-};
+}; 
 
 export default Contact;
