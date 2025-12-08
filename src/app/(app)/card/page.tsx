@@ -4,7 +4,7 @@ import CardPageClient from "./CardPageClient";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function fetchJson(url: string) {
-  const res = await fetch(url, { next: { revalidate: 28800, tags: ['public', 'list'] } });
+  const res = await fetch(url, { next: { tags: ['public', 'list'] } });
   if (!res.ok) {
     return { data: [] };
   }
@@ -28,7 +28,7 @@ export default async function CardPage(props: { searchParams: Promise<{ [key: st
   const params = new URLSearchParams(query);
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/listings?${params.toString()}`, {
-    next: { revalidate: 28800, tags: ['public', 'card'] }
+    next: { tags: ['public', 'card'] }
   });
   if (!res.ok) {
     throw new Error('Network response was not ok');

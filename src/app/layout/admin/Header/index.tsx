@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react'; // Added useState and useEffect
 import ManagementAPI from './ManagementAPI';
+import Link from 'next/link';
 
 interface HeaderProps {
   isOpen: boolean;
@@ -34,14 +35,7 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
   };
 
   const handleRevalidate = async () => {
-    const response = await fetch('/api/revalidate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ tags: ['public', 'popular', 'quick-sale', 'recently'] }),
-    });
-
+    const response = await fetch('/api/revalidate', { cache:'no-store' });
     if (response.ok) {
       alert('데이터가 최신화되었습니다.');
     } else {
@@ -67,6 +61,7 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
       </div>
       <div>
         <button onClick={handleRevalidate} className="px-4 py-2 hover:bg-gray-700 rounded">데이터 최신화</button>
+        <Link href="/">dd</Link>
         <button onClick={handleLogout} className="px-4 py-2 hover:bg-gray-700 rounded">
           로그아웃
         </button>

@@ -116,7 +116,7 @@ export async function BuildFindOne(id: number) {
   console.log(`Fetching build data from: ${url}`);
   try {
     const res = await fetch(url, { method: "GET", next: {
-      revalidate: 28800, tags: ['public', 'admin-build-id']
+      tags: ['public', 'admin-build-id']
     } });
     if (!res.ok) {
       const errorText = await res.text();

@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
 async function getPopupPosts(): Promise<PopupPost[]> {
-  const res = await fetch(`${BASE_URL}/api/popup`, { next: { tags: ['public', 'popup'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/popup`, { next: { tags: ['public', 'popup'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -34,7 +34,7 @@ async function getPopupPosts(): Promise<PopupPost[]> {
 }
 
 async function getBanners(): Promise<Banner[]> {
-    const res = await fetch(`${BASE_URL}/api/admin/webView/banner`, { next: { tags: ['public', 'banner'], revalidate: 28800 }});
+    const res = await fetch(`${BASE_URL}/api/admin/webView/banner`, { next: { tags: ['public', 'banner'] }});
     if(!res.ok) {
       throw new Error('Network response was not ok');
     }
@@ -44,7 +44,7 @@ async function getBanners(): Promise<Banner[]> {
 
 async function getListingType(): Promise<ListingTypeProps[]> {
     const res = await fetch(`${BASE_URL}/api/listing-type`, { next: {
-      tags: ['public', 'listing-type'], revalidate: 28800
+      tags: ['public', 'listing-type']
     }});
     if(!res.ok) {
       throw new Error('Network response was not ok');
@@ -58,7 +58,7 @@ async function getListingType(): Promise<ListingTypeProps[]> {
 
 async function getThemeImage(): Promise<ThemeImageProps[]> {
     const res = await fetch(`${BASE_URL}/api/theme-images`, {
-      next: { tags: ['public', 'theme-image'], revalidate: 28800 }
+      next: { tags: ['public', 'theme-image'] }
     });
     if(!res.ok) {
       throw new Error('Network response was not ok');
@@ -84,7 +84,7 @@ export type ListingSectionProps = {
 }
 
 async function getPopular(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?popularity=인기&limit=10`, { next: { tags: ['public', 'popular'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=인기&limit=10`, { next: { tags: ['public', 'popular'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -93,7 +93,7 @@ async function getPopular(): Promise<ListingSectionProps> {
 }
 
 async function getQuickSale(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?popularity=급매&limit=10`, { next: { tags: ['public', 'quick-sale'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=급매&limit=10`, { next: { tags: ['public', 'quick-sale'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -102,7 +102,7 @@ async function getQuickSale(): Promise<ListingSectionProps> {
 }
 
 async function getRecently(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?sortBy=latest&limit=10`, { next: { tags: ['public', 'recently'], revalidate: 28800 } });
+  const res = await fetch(`${BASE_URL}/api/listings?sortBy=latest&limit=10`, { next: { tags: ['public', 'recently'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
