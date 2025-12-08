@@ -1,24 +1,2 @@
-Console Error
-
-
-Functions are not valid as a React child. This may happen if you return PostView[displayDate] instead of <PostView[displayDate] /> from render. Or maybe you meant to call this function rather than return it.
-  <span>{PostView[displayDate]}</span>
-src\app\(app)\notice\[id]\page.tsx (55:10) @ NoticeDetailPage
-
-
-  53 |   const post = await getPost(id);
-  54 |
-> 55 |   return <PostView post={post} />;
-     |          ^
-  56 | }
-  57 |
-Call Stack
-21
-
-Show 18 ignore-listed frame(s)
-span
-<anonymous>
-PostView
-file:///C:/project/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_(app)_notice_%5Bid%5D_PostView_tsx_78b889d0._.js (65:225)
-NoticeDetailPage
-src\app\(app)\notice\[id]\page.tsx (55:10)
+`/landSearch`페이지에서 searchBar컴포넌트 때문에 page.tsx에서의 searchParams의 함수가 동적함수라서 url이 바뀔때마다 데이터가 바뀌고 있어.
+나는 데이터가 바뀜에 따라 UI구조가 바뀌는 것이 마음에 들지만, 이를 static으로 하여 ISR로 줄 수 없을까 고민이야

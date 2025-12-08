@@ -31,13 +31,12 @@ export async function BuildFindAll(
     ...(sortBy ? { sortBy: sortBy } : {}),
   });
 
-  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`);
+  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { next: { tags: ['public'] } });
   if(!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`GET /api/supabase/build failed (${res.status}): ${text}`);
   }
   return res.json();
-
 }
 
 export async function BuildFindAllAdmin(
