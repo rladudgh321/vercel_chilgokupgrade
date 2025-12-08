@@ -187,7 +187,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">매물 종류</option>
-            {propertyTypeOptions.map((opt) => (
+            {propertyTypeOptions().map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -233,7 +233,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">면적</option>
-            {areaOptions.map((opt) => (
+            {areaOptions().map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -248,7 +248,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">테마</option>
-            {themeOptions.map((label) => (
+            {themeOptions().map((label) => (
               <option key={label} value={label}>
                 {label}
               </option>
@@ -263,7 +263,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">방</option>
-            {roomOptions.map((opt) => (
+            {roomOptions().map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -278,7 +278,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">층수</option>
-            {floorOptions.map((opt) => (
+            {floorOptions().map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -293,7 +293,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">화장실</option>
-            {bathroomOptions.map((opt) => (
+            {bathroomOptions().map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>

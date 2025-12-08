@@ -98,8 +98,8 @@ const CardList = ({
     let filteredListings = listings;
 
 
-    const priceRange = queryParams.priceRange;
-    const buyType = queryParams.buyType;
+    const priceRange = queryParams().priceRange;
+    const buyType = queryParams().buyType;
 
     if (priceRange && buyType) {
       let priceField = "";
@@ -130,7 +130,7 @@ const CardList = ({
       }
     }
 
-    const floor = queryParams.floor;
+    const floor = queryParams().floor;
     if (floor) {
         filteredListings = filteredListings.filter((listing: IBuild) => {
             const currentFloor = listing.currentFloor;
@@ -153,7 +153,7 @@ const CardList = ({
         });
     }
 
-    const areaRange = queryParams.areaRange;
+    const areaRange = queryParams().areaRange;
     if (areaRange) {
         const PYEONG_TO_M2 = 3.305785;
         filteredListings = filteredListings.filter((listing: IBuild) => {
@@ -224,12 +224,12 @@ const CardList = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading
             ? Array.from({ length: 12 }).map((_, i) => <CardItemSkeleton key={i} />)
-            : displayListings.map((listing: IBuild | any, index: number) => (
+            : displayListings().map((listing: IBuild | any, index: number) => (
                 <CardItem key={listing.id} listing={listing} onClick={() => handleCardClick(listing.id)} priority={index < 3} />
               ))}
         </div>
 
-        {displayListings.length === 0 && !isLoading && (
+        {displayListings().length === 0 && !isLoading && (
           <div className="flex items-center justify-center h-64 text-gray-500">
             <p>표시할 매물이 없습니다.</p>
           </div>

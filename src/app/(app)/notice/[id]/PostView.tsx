@@ -25,7 +25,7 @@ export default function PostView({ post }: { post: BoardPost }) {
           <h1 className="text-2xl sm:text-3xl font-bold mb-4">{post.title}</h1>
 
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-gray-600 mb-6">
-            <span>등록일: {displayDate}</span>
+            <span>등록일: {displayDate()}</span>
           </div>
 
           <div
