@@ -114,8 +114,8 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   };
 
   // 선택 체크박스 계산은 정렬된 결과 기준
-  const allIdsOnPage = 
-    () => rows.map((it) => Number(it.id)).filter(Number.isFinite);
+  const allIdsOnPage =
+    rows().map((it) => Number(it.id)).filter(Number.isFinite);
 
   const allOnThisPageChecked =
     allIdsOnPage.length > 0 && allIdsOnPage.every((id) => selectedIds.includes(id));
@@ -347,7 +347,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
           </thead>
 
           <tbody className="divide-y divide-gray-200 md:table-row-group">
-            {rows.map((listing: IBuild, index: number) => {
+            {rows().map((listing: IBuild, index: number) => {
               const id = Number(listing.id);
               const confirmDate = (listing as any).confirmDate;
               const createdAtDate = new Date(String(listing.createdAt));

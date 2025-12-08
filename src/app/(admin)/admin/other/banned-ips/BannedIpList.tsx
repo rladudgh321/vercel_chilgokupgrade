@@ -55,7 +55,7 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
     <div className="p-2 sm:p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <div className="text-lg sm:text-xl font-semibold">
-          차단된 IP 수: {filteredBannedIps.length}건
+          차단된 IP 수: {filteredBannedIps().length}건
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
           <input
@@ -81,7 +81,7 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
             </tr>
           </thead>
           <tbody>
-            {filteredBannedIps.map((ip, index) => (
+            {filteredBannedIps().map((ip, index) => (
               <tr key={ip.id} className={index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}>
                 <td className="p-2 text-xs sm:text-sm">{ip.id}</td>
                 <td className="p-2 text-xs sm:text-sm">{ip.ipAddress}</td>

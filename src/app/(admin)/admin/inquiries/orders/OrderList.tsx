@@ -48,7 +48,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   const orders = () => queryData?.orders || []
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
-    orders.reduce((acc, order) => {
+    orders().reduce((acc, order) => {
       if (order.note) {
         acc[order.id] = order.note;
       }
@@ -58,7 +58,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
 
   useEffect(() => {
     setNotes(
-      orders.reduce((acc, order) => {
+      orders().reduce((acc, order) => {
         if (order.note) {
           acc[order.id] = order.note;
         }
@@ -148,7 +148,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   };
 
   const filteredOrders = () => {
-    return orders.filter((order) => {
+    return orders().filter((order) => {
       const matchesCategory = categoryFilter === '전체' || order.category === categoryFilter;
       const matchesSearch = order.contact.includes(searchQuery) || order.title.includes(searchQuery);
       return matchesCategory && matchesSearch;
@@ -159,7 +159,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
     <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <div className="text-lg sm:text-xl font-semibold">
-          의뢰수: {filteredOrders.length}건
+          의뢰수: {filteredOrders().length}건
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <select
@@ -208,7 +208,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 md:table-row-group">
-            {filteredOrders.map((order, index) => (
+            {filteredOrders().map((order, index) => (
               <tr key={order.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}`}>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="번호">{order.id}</td>
                 <td className="p-2 block md:table-cell" data-label="확인여부">

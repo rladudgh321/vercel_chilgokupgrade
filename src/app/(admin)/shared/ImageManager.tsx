@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import DraggableItem from './DraggableItem';
 import imageCompression from "browser-image-compression";
 
@@ -51,7 +51,7 @@ const ImageManager = ({ title, apiEndpoint = '', imageMaxWidthOrHeight = 1920 }:
 
 
   // 데이터 로드
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(apiEndpoint);
@@ -74,7 +74,7 @@ const ImageManager = ({ title, apiEndpoint = '', imageMaxWidthOrHeight = 1920 }:
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiEndpoint]);
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {

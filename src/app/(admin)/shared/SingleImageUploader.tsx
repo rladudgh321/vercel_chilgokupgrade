@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import imageCompression from "browser-image-compression";
@@ -18,7 +18,7 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchImage = async () => {
+  const fetchImage = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(getApiEndpoint);
@@ -30,7 +30,7 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
       setError('데이터를 불러오는 데 실패했습니다.');
     }
     setLoading(false);
-  };
+  }, [getApiEndpoint]);
 
   useEffect(() => {
     fetchImage();

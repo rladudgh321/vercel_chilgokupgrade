@@ -58,7 +58,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
 
   // 🔹 프론트 정렬 (현재 페이지 내에서만)
   const sortedRows = () => {
-    const arr = [...rows];
+    const arr = [...rows()];
     switch (sortKey) {
       case "recent":
         return arr.sort(
@@ -171,7 +171,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
           </thead>
 
           <tbody className="divide-y divide-gray-200 md:table-row-group">
-            {sortedRows.map((listing: IBuild, index: number) => {
+            {sortedRows().map((listing: IBuild, index: number) => {
               const id = Number(listing.id);
               const createdAt = new Date(String(listing.createdAt));
               const updatedAt = listing.updatedAt ? new Date(String(listing.updatedAt)) : null;
@@ -305,11 +305,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
 
                       {/* hover card */}
                       <div
-                        className="
-                          absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20
-                          w-64 rounded-md border border-slate-200 bg-white p-3 text-left text-xs text-slate-700 shadow-xl
-                          opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                        "
+                        className="absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20 w-64 rounded-md border border-slate-200 bg-white p-3 text-left text-xs text-slate-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible"
                         role="tooltip"
                       >
                         <div className="font-semibold mb-1">비밀 메모</div>

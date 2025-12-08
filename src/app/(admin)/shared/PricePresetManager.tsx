@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import DraggableItem from './DraggableItem';
 import InputWithButton from './InputWithButton';
 
@@ -52,7 +52,7 @@ const PricePresetManager = ({ buyTypeId }: PricePresetManagerProps) => {
   };
 
 
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     if (!buyTypeId) return;
     try {
       setLoading(true);
@@ -70,7 +70,7 @@ const PricePresetManager = ({ buyTypeId }: PricePresetManagerProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiEndpoint, buyTypeId]);
 
   useEffect(() => {
     loadItems();

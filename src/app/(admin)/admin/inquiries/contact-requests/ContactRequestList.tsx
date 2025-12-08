@@ -40,7 +40,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
   const requests = () => queryData?.requests || [];
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
-    requests.reduce((acc, r) => {
+    requests().reduce((acc, r) => {
       acc[r.id] = r.note;
       return acc;
     }, {} as { [key: number]: string })
@@ -48,7 +48,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
 
   useEffect(() => {
     setNotes(
-      requests.reduce((acc, r) => {
+      requests().reduce((acc, r) => {
         acc[r.id] = r.note;
         return acc;
       }, {} as { [key: number]: string })
@@ -117,8 +117,8 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
 
   const filteredRequests = () => {
     const q = searchQuery.trim();
-    if (!q) return requests;
-    return requests.filter((request) => request.contact.includes(q) || request.description.includes(q));
+    if (!q) return requests();
+    return requests().filter((request) => request.contact.includes(q) || request.description.includes(q));
   }
 
   const onPageChange = (page: number) => {
@@ -129,7 +129,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
     <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <div className="text-lg sm:text-xl font-semibold">
-          의뢰수: {filteredRequests.length}건
+          의뢰수: {filteredRequests().length}건
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
           <input
@@ -158,7 +158,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 md:table-row-group">
-            {filteredRequests.map((request, index) => (
+            {filteredRequests().map((request, index) => (
               <tr key={request.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}`}>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="번호">{request.id}</td>
                 <td className="p-2 block md:table-cell" data-label="확인여부">
