@@ -1,5 +1,6 @@
 "use client"
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { useQuery } from "@tanstack/react-query"
 import CardItem from "./CardItem"
 import SearchBar from "../landSearch/SearchBar"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -7,37 +8,63 @@ import BuildDetailModalClient from '@/app/components/root/BuildDetailModal'
 import { koreanToNumber } from '@/app/utility/koreanToNumber'
 import CardItemSkeleton from "./CardItemSkeleton";
 import { IBuild } from "@/app/interface/build"
+import Pagination from "@/app/components/shared/Pagination"
 
-import { SearchBarProps } from "@/app/interface/card"
+const fetchJson = async (url: string) => {
+  const res = await fetch(url, { next: { tags: ['public'] } });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}`);
+  }
+  const json = await res.json();
+  return json.data;
+};
 
-const CardList = ({ 
-  listings,
-  settings,
-  roomOptions,
-  bathroomOptions,
-  floorOptions,
-  areaOptions,
-  themeOptions,
-  propertyTypeOptions,
-  buyTypeOptions
-}: SearchBarProps & { listings: IBuild[] }) => {
+const fetchListings = async (queryParams: Record<string, string>) => {
+  const params = new URLSearchParams(queryParams);
+  params.set('limit', '12');
+  const res = await fetch(`/api/listings?${params.toString()}`, { next: { tags: ['public'] } });
+  if (!res.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return res.json();
+}
+
+const CardList = () => {
   const [selectedBuildId, setSelectedBuildId] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const isLoading = false; // Or pass this as a prop if needed
+  // --- Data Fetching ---
+  const { data: settings, isLoading: isLoadingSettings } = useQuery({ queryKey: ['search-bar-settings'], queryFn: () => fetchJson('/api/admin/search-bar-settings') });
+  const { data: roomOptions = [] } = useQuery({ queryKey: ['room-options'], queryFn: () => fetchJson('/api/room-options') });
+  const { data: bathroomOptions = [] } = useQuery({ queryKey: ['bathroom-options'], queryFn: () => fetchJson('/api/bathroom-options') });
+  const { data: floorOptions = [] } = useQuery({ queryKey: ['floor-options'], queryFn: () => fetchJson('/api/floor-options') });
+  const { data: areaOptions = [] } = useQuery({ queryKey: ['area'], queryFn: () => fetchJson('/api/area') });
+  const { data: themeOptions = [] } = useQuery({ queryKey: ['theme-images'], queryFn: () => fetchJson('/api/theme-images') });
+  const { data: propertyTypeOptions = [] } = useQuery({ queryKey: ['listing-type'], queryFn: () => fetchJson('/api/listing-type') });
+  const { data: buyTypeOptions = [] } = useQuery({ queryKey: ['buy-types'], queryFn: () => fetchJson('/api/buy-types') });
 
+  const queryParams = useMemo(() => {
+    const params: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  }, [searchParams]);
 
+  const { data: listingsData, isLoading: isLoadingListings } = useQuery({
+    queryKey: ['listings', queryParams],
+    queryFn: () => fetchListings(queryParams),
+    enabled: !isLoadingSettings,
+  });
+
+  const listings = listingsData?.listings || [];
+  const totalPages = listingsData?.totalPages || 1;
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+
+  // --- Event Handlers ---
   const handleCardClick = (id: number) => {
-    // Increment views
-    fetch(`/api/build/${id}/increment-views`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) {
-          console.error('Failed to increment views');
-        }
-      })
-      .catch(error => console.error('Error incrementing views:', error));
-
+    fetch(`/api/build/${id}/increment-views`, { method: 'POST' });
     setSelectedBuildId(id);
   };
 
@@ -45,15 +72,13 @@ const CardList = ({
     setSelectedBuildId(null);
   };
 
-  const sortBy = searchParams.get("sortBy") || "latest"
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`/card?${params.toString()}`);
+  };
 
-  const queryParams = () => {
-    const params: { [key: string]: string } = {};
-    searchParams.forEach((value, key) => {
-      params[key] = value;
-    });
-    return params;
-  }
+  const sortBy = searchParams.get("sortBy") || "latest"
 
   const handleSortChange = (newSortBy: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -72,114 +97,22 @@ const CardList = ({
       handleSortChange(sortKey);
     }
   };
-
+  
+  // --- Derived Data ---
   const getSortOptions = () => [
     { key: "latest", label: "최신순" },
     { key: "popular", label: "인기순" },
-    {
-      key: "price",
-      label: sortBy.startsWith("price-")
-        ? sortBy === "price-asc"
-          ? "금액순↑"
-          : "금액순↓"
-        : "금액순↓",
-    },
-    {
-      key: "area",
-      label: sortBy.startsWith("area-")
-        ? sortBy === "area-asc"
-          ? "면적순↑"
-          : "면적순↓"
-        : "면적순↓",
-    },
+    { key: "price", label: sortBy.startsWith("price-") ? (sortBy === "price-asc" ? "금액순↑" : "금액순↓") : "금액순↓" },
+    { key: "area", label: sortBy.startsWith("area-") ? (sortBy === "area-asc" ? "면적순↑" : "면적순↓") : "면적순↓" },
   ];
 
-  const displayListings = () => {
-    let filteredListings = listings;
+  // The filtering logic in `displayListings` is already handled by the backend API call with queryParams.
+  // If additional client-side filtering is needed, it can be done here.
+  // For now, we just use the fetched listings.
+  const displayListings = listings;
 
-
-    const priceRange = queryParams().priceRange;
-    const buyType = queryParams().buyType;
-
-    if (priceRange && buyType) {
-      let priceField = "";
-      if (buyType === "전세") priceField = "lumpSumPrice";
-      else if (buyType === "월세") priceField = "rentalPrice";
-      else if (buyType === "매매") priceField = "salePrice";
-
-      if (priceField) {
-        filteredListings = filteredListings.filter((listing: any) => {
-          const price = listing[priceField];
-          if (price === undefined || price === null) return false;
-
-          if (priceRange.includes("~")) {
-            const [minStr, maxStr] = priceRange.split("~");
-            const min = koreanToNumber(minStr);
-            const max = koreanToNumber(maxStr);
-            if (min !== null && price < min) return false;
-            if (max !== null && price > max) return false;
-          } else if (priceRange.includes("이상")) {
-            const min = koreanToNumber(priceRange.replace("이상", ""));
-            if (min !== null && price < min) return false;
-          } else if (priceRange.includes("이하")) {
-            const max = koreanToNumber(priceRange.replace("이하", ""));
-            if (max !== null && price > max) return false;
-          }
-          return true;
-        });
-      }
-    }
-
-    const floor = queryParams().floor;
-    if (floor) {
-        filteredListings = filteredListings.filter((listing: IBuild) => {
-            const currentFloor = listing.currentFloor;
-            if (currentFloor === undefined || currentFloor === null) return false;
-
-            if (floor.includes("~")) {
-                const [minStr, maxStr] = floor.replace(/층/g, "").split("~");
-                const min = Number(minStr);
-                const max = Number(maxStr);
-                if (!isNaN(min) && currentFloor < min) return false;
-                if (maxStr && !isNaN(Number(maxStr)) && currentFloor > Number(maxStr)) return false;
-            } else if (floor.includes("이상")) {
-                const min = Number(floor.replace("층이상", ""));
-                if (!isNaN(min) && currentFloor < min) return false;
-            } else {
-                const singleFloor = Number(floor.replace("층", ""));
-                if (!isNaN(singleFloor) && currentFloor !== singleFloor) return false;
-            }
-            return true;
-        });
-    }
-
-    const areaRange = queryParams().areaRange;
-    if (areaRange) {
-        const PYEONG_TO_M2 = 3.305785;
-        filteredListings = filteredListings.filter((listing: IBuild) => {
-            const totalArea = listing.totalArea;
-            if (totalArea === undefined || totalArea === null) return false;
-
-            if (areaRange.includes("~")) {
-                const [minStr, maxStr] = areaRange.replace(/평/g, "").split("~");
-                const minPyeong = Number(minStr);
-                const maxPyeong = Number(maxStr);
-                if (!isNaN(minPyeong) && totalArea < minPyeong * PYEONG_TO_M2) return false;
-                if (maxStr && !isNaN(Number(maxStr)) && totalArea > maxPyeong * PYEONG_TO_M2) return false;
-            }
-            else if (areaRange.includes("이상")) {
-                const minPyeong = Number(areaRange.replace("평이상", ""));
-                if (!isNaN(minPyeong) && totalArea < minPyeong * PYEONG_TO_M2) return false;
-            }
-            else if (areaRange.includes("이하")) {
-                const maxPyeong = Number(areaRange.replace("평이하", ""));
-                if (!isNaN(maxPyeong) && totalArea > maxPyeong * PYEONG_TO_M2) return false;
-            }
-            return true;
-        });
-    }
-
-    return filteredListings;
+  if (isLoadingSettings) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
   }
   
   return (
@@ -222,19 +155,24 @@ const CardList = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading
+          {isLoadingListings
             ? Array.from({ length: 12 }).map((_, i) => <CardItemSkeleton key={i} />)
-            : displayListings().map((listing: IBuild | any, index: number) => (
+            : displayListings.map((listing: IBuild | any, index: number) => (
                 <CardItem key={listing.id} listing={listing} onClick={() => handleCardClick(listing.id)} priority={index < 3} />
               ))}
         </div>
 
-        {displayListings().length === 0 && !isLoading && (
+        {displayListings.length === 0 && !isLoadingListings && (
           <div className="flex items-center justify-center h-64 text-gray-500">
             <p>표시할 매물이 없습니다.</p>
           </div>
         )}
       </div>
+       <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
       {selectedBuildId && (
         <BuildDetailModalClient
           build={listings.find((listing: any) => listing.id === selectedBuildId)}

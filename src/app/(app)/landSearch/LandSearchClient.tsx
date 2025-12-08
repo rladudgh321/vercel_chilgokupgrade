@@ -8,7 +8,6 @@ import MapView from "./MapView";
 import ListingList from "./ListingList";
 import SearchBar from "./SearchBar";
 import BuildDetailModal from "../../components/root/BuildDetailModal";
-import next from 'next';
 
 type Listing = {
   id: number;
