@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useQuery, keepPreviousData, useQueryClient, useMutation } from "@tanstack/react-query";
 import Pagination from "@/app/components/shared/Pagination";
@@ -40,10 +40,8 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
   const [page, setPage] = useState(DeletedData?.currentPage ?? 1);
   const [keyword, setKeyword] = useState("");
 
-  const qk = useMemo(
-    () => ["builds-deleted", page, LIMIT, (keyword ?? "").trim()],
-    [page, keyword]
-  );
+  const qk = 
+    () => ["builds-deleted", page, LIMIT, (keyword ?? "").trim()];
 
   const shouldUseInitial =
     (DeletedData?.currentPage ?? 1) === page && (keyword ?? "") === "";
@@ -56,13 +54,10 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
     staleTime: 10_000,
   });
 
-  const rows = useMemo<IBuild[]>(
-    () => (Array.isArray(data?.data) ? (data!.data as IBuild[]) : []),
-    [data]
-  );
+  const rows = () => (Array.isArray(data?.data) ? (data!.data as IBuild[]) : [])
 
   // 🔹 프론트 정렬 (현재 페이지 내에서만)
-  const sortedRows = useMemo(() => {
+  const sortedRows = () => {
     const arr = [...rows];
     switch (sortKey) {
       case "recent":
@@ -85,7 +80,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
       default:
         return arr;
     }
-  }, [rows, sortKey]);
+  };
 
   const onSubmit = handleSubmit((formData) => {
     setKeyword(formData.keyword);

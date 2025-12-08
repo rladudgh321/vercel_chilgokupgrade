@@ -1,7 +1,7 @@
 "use client";
 
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useInfiniteQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
 import MapView from "./MapView";
@@ -94,14 +94,14 @@ export default function LandSearchClient({
   const router = useRouter();
   const currentSearchParams = useSearchParams();
   const sortBy = currentSearchParams.get("sortBy") ?? "latest";
-  const queryParams = useMemo(() => {
+  const queryParams = () => {
     const params: { [key: string]: string } = {};
     currentSearchParams.forEach((value, key) => {
       params[key] = value;
     });
     console.log("Current Query Params:", params);
     return params;
-  }, [currentSearchParams]);
+  }
     const {
       data: paginatedData,
       fetchNextPage,
@@ -127,13 +127,13 @@ export default function LandSearchClient({
     initialData: initialListings,
   });
 
-  const allListings = useMemo(() => (paginatedData ? paginatedData.pages.flatMap((page) => page.listings) : []), [paginatedData]);
+  const allListings = () => (paginatedData ? paginatedData.pages.flatMap((page) => page.listings) : [])
 
   const [filteredIds, setFilteredIds] = useState<number[] | null>(null);
 
 
 
-  const displayListings = useMemo(() => {
+  const displayListings = () => {
 
     let listings = allListings;
 
@@ -397,7 +397,7 @@ export default function LandSearchClient({
 
     return listings.filter((listing) => filteredIds.includes(listing.id));
 
-  }, [allListings, filteredIds, queryParams]);
+  }
 
 
 

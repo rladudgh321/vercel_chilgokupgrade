@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import KakaoMapMarker from "@/app/components/shared/KakaoMapMarker";
 import OptionIcon from "@/app/components/shared/OptionIcon";
@@ -27,13 +27,11 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
     return formatted;
   };
 
-  const allImages = useMemo(
+  const allImages = 
     () =>
       build?.mainImage
         ? [build.mainImage, ...(Array.isArray(build.subImage) ? build.subImage : [])]
-        : [],
-    [build?.mainImage, build?.subImage]
-  );
+        : [];
 
   const getAreaString = (build: IBuild, unit: "m2" | "pyeong"): string => {
     const areas = [

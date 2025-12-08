@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
@@ -45,7 +45,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
     initialData: { orders: initialOrders, count: totalPages * 10 },
   });
 
-  const orders = useMemo(() => queryData?.orders || [], [queryData?.orders]);
+  const orders = () => queryData?.orders || []
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     orders.reduce((acc, order) => {
@@ -147,13 +147,13 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
     router.push(`/admin/inquiries/orders?page=${page}`);
   };
 
-  const filteredOrders = useMemo(() => {
+  const filteredOrders = () => {
     return orders.filter((order) => {
       const matchesCategory = categoryFilter === '전체' || order.category === categoryFilter;
       const matchesSearch = order.contact.includes(searchQuery) || order.title.includes(searchQuery);
       return matchesCategory && matchesSearch;
     });
-  }, [orders, categoryFilter, searchQuery]);
+  }
 
   return (
     <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>

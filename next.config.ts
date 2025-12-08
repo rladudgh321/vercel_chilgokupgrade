@@ -9,6 +9,7 @@ const withBundleAnalyzer = (bundleAnalyzer as any)({
 });
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   async headers() {
     return [
       {
@@ -25,7 +26,7 @@ const nextConfig: NextConfig = {
   },
   /* config options here */
   experimental: {
-    middlewareClientMaxBodySize: '50mb',
+    proxyClientMaxBodySize: '50mb',
   },
   typescript: {
     // !! WARN !!

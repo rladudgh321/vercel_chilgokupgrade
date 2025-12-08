@@ -1,5 +1,5 @@
 "use client"
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import CardItem from "./CardItem"
 import SearchBar from "../landSearch/SearchBar"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -47,13 +47,13 @@ const CardList = ({
 
   const sortBy = searchParams.get("sortBy") || "latest"
 
-  const queryParams = useMemo(() => {
+  const queryParams = () => {
     const params: { [key: string]: string } = {};
     searchParams.forEach((value, key) => {
       params[key] = value;
     });
     return params;
-  }, [searchParams]);
+  }
 
   const handleSortChange = (newSortBy: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -94,7 +94,7 @@ const CardList = ({
     },
   ];
 
-  const displayListings = useMemo(() => {
+  const displayListings = () => {
     let filteredListings = listings;
 
 
@@ -180,8 +180,8 @@ const CardList = ({
     }
 
     return filteredListings;
-  }, [listings, queryParams]);
-
+  }
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm border-b">

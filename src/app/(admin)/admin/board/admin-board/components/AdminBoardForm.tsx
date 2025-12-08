@@ -1,5 +1,5 @@
 "use client"
-import { useState, useCallback, lazy, Suspense } from "react"
+import { useState, lazy, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import "react-datepicker/dist/react-datepicker.css";
@@ -58,13 +58,13 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
     isAnnouncement: initialData?.isAnnouncement || false,
   });
 
-  const handleContentChange = useCallback((value: string) => {
+  const handleContentChange = (value: string) => {
     setFormData(prev => ({ ...prev, content: value }))
-  }, []);
+  };
 
-  const handlePopupContentChange = useCallback((value: string) => {
+  const handlePopupContentChange = (value: string) => {
     setFormData(prev => ({ ...prev, popupContent: value }))
-  }, []);
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

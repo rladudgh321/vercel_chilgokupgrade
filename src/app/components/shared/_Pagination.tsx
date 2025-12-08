@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 
 const Pagination = ({ currentPage, totalPages }: { currentPage: number; totalPages: number }) => {
@@ -9,7 +9,7 @@ const Pagination = ({ currentPage, totalPages }: { currentPage: number; totalPag
 
   const [pageLimit, setPageLimit] = useState(10);
 
-  const updatePageLimit = useCallback(() => {
+  const updatePageLimit = () => {
     const width = window.innerWidth;
 
     if (width >= 1024) {
@@ -19,7 +19,7 @@ const Pagination = ({ currentPage, totalPages }: { currentPage: number; totalPag
     } else {
       setPageLimit(3);
     }
-  }, []);
+  }
 
   useEffect(() => {
     updatePageLimit();

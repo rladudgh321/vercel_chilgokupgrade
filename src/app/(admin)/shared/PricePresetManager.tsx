@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DraggableItem from './DraggableItem';
 import InputWithButton from './InputWithButton';
 
@@ -22,7 +22,7 @@ const PricePresetManager = ({ buyTypeId }: PricePresetManagerProps) => {
 
   const apiEndpoint = `/api/price-presets`;
 
-  const handleSaveOrder = useCallback(async (orderedItems: Preset[]) => {
+  const handleSaveOrder = async (orderedItems: Preset[]) => {
     try {
       const response = await fetch(`${apiEndpoint}/reorder`, {
         method: 'POST',
@@ -40,19 +40,19 @@ const PricePresetManager = ({ buyTypeId }: PricePresetManagerProps) => {
     } catch {
       setError('네트워크 오류가 발생했습니다.');
     }
-  }, [apiEndpoint]);
+  };
 
-  const debouncedSaveOrder = useCallback((orderedItems: Preset[]) => {
+  const debouncedSaveOrder = (orderedItems: Preset[]) => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = setTimeout(() => {
       handleSaveOrder(orderedItems);
     }, 500);
-  }, [handleSaveOrder]);
+  };
 
 
-  const loadItems = useCallback(async () => {
+  const loadItems = async () => {
     if (!buyTypeId) return;
     try {
       setLoading(true);
@@ -70,7 +70,7 @@ const PricePresetManager = ({ buyTypeId }: PricePresetManagerProps) => {
     } finally {
       setLoading(false);
     }
-  }, [buyTypeId, apiEndpoint]);
+  };
 
   useEffect(() => {
     loadItems();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import DraggableItem from "./DraggableItem";
 import InputWithButton from "./InputWithButton";
@@ -77,10 +77,6 @@ const ListManager = ({
     staleTime: 60_000,
   });
 
-  // 빈 배열 기본값의 참조를 고정 (무한 setState 방지용)
-  const EMPTY: ListItem[] = useMemo(() => [], []);
-  const fetchedItems: ListItem[] = q.data ?? EMPTY;
-
   // 서버 데이터 -> 로컬 상태 동기화 (실제 변화시에만)
   useEffect(() => {
     if (!q.isSuccess || !q.data) return;
@@ -128,15 +124,13 @@ const ListManager = ({
     },
   });
 
-  const debouncedSaveOrder = useCallback(
+  const debouncedSaveOrder = 
     (orderedItems: ListItem[]) => {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
       debounceTimer.current = setTimeout(() => {
         saveOrderMutation.mutate(orderedItems.map((i) => i.id));
       }, 500);
-    },
-    [saveOrderMutation]
-  );
+    };
 
   // =========================
   // 3) 추가 (이미지 업로드 → POST)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -227,10 +227,8 @@ export default function EditClient({ id }: { id: number }) {
   const methods = useForm<FormData>({ defaultValues: BASE_DEFAULTS });
   const [formKey, setFormKey] = useState(0);
 
-  const allLoaded = useMemo(
-    () => !isLoading && !isLoadingRoomOptions && !isLoadingBathroomOptions && !isLoadingThemeOptions && !isLoadingLabelOptions && !isLoadingBuildingOptions,
-    [isLoading, isLoadingRoomOptions, isLoadingBathroomOptions, isLoadingThemeOptions, isLoadingLabelOptions, isLoadingBuildingOptions]
-  );
+  const allLoaded = 
+    () => !isLoading && !isLoadingRoomOptions && !isLoadingBathroomOptions && !isLoadingThemeOptions && !isLoadingLabelOptions && !isLoadingBuildingOptions;
 
   // 데이터 → 폼 reset
   useEffect(() => {

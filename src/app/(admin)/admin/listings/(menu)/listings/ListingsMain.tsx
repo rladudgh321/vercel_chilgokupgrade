@@ -1,6 +1,6 @@
 "use client";
 import type { SortKey } from "./ListingsShell";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   keepPreviousData,
@@ -65,12 +65,12 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   // 메뉴 상태
   const [menuRowId, setMenuRowId] = useState<number | null>(null); // 확인일 드롭다운
   const [printMenuRowId, setPrintMenuRowId] = useState<number | null>(null); // 프린트 드롭다운
-  const today = useMemo(() => {
+  const today = () => {
     // 한국 시간대 기준으로 오늘 날짜를 YYYY-MM-DD 형식으로 생성
     const now = new Date();
     const koreanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
     return koreanTime.toISOString().split('T')[0];
-  }, []);
+  }
 
   const formatPriceWithDisplay = (price: number | undefined | null, priceDisplay: string | undefined | null) => {
     if (price === undefined || price === null) return "";
@@ -84,18 +84,14 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   };
 
   // Query Key
-  const qk = useMemo(
-    () => ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey],
-    [page, searchKeyword, sortKey]
-  );
-
-  const shouldUseInitial = useMemo(
+  const qk = 
+    () => ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey]
+  const shouldUseInitial = 
     () =>
       (ListingsData?.currentPage ?? 1) === page &&
       (searchKeyword ?? "") === "" &&
       sortKey === "recent",
-    [ListingsData?.currentPage, page, searchKeyword, sortKey]
-  );
+
 
   const { data: workInfoData } = useQuery({
     queryKey: ["workinfo"],
@@ -112,16 +108,15 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     staleTime: 10_000,
   });
 
-  const rows = useMemo<IBuild[]>(() => {
+  const rows = () => {
     if (!Array.isArray(data?.data)) return [];
     return data.data as IBuild[];
-  }, [data?.data]);
+  };
 
   // 선택 체크박스 계산은 정렬된 결과 기준
-  const allIdsOnPage = useMemo(
-    () => rows.map((it) => Number(it.id)).filter(Number.isFinite),
-    [rows]
-  );
+  const allIdsOnPage = 
+    () => rows.map((it) => Number(it.id)).filter(Number.isFinite);
+    
   const allOnThisPageChecked =
     allIdsOnPage.length > 0 && allIdsOnPage.every((id) => selectedIds.includes(id));
   const someOnThisPageChecked = allIdsOnPage.some((id) => selectedIds.includes(id));

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DraggableItem from './DraggableItem';
 import imageCompression from "browser-image-compression";
 
@@ -17,7 +17,7 @@ const ImageManager = ({ title, apiEndpoint = '', imageMaxWidthOrHeight = 1920 }:
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const handleSaveOrder = useCallback(async (orderedItems: typeof items) => {
+  const handleSaveOrder = async (orderedItems: typeof items) => {
     try {
       const orderedIds = orderedItems.map(item => item.id);
       const response = await fetch(`${apiEndpoint}/reorder`, {
@@ -38,20 +38,20 @@ const ImageManager = ({ title, apiEndpoint = '', imageMaxWidthOrHeight = 1920 }:
     } catch {
       setError('네트워크 오류가 발생했습니다.');
     }
-  }, [apiEndpoint]);
+  };
 
-  const debouncedSaveOrder = useCallback((orderedItems: typeof items) => {
+  const debouncedSaveOrder = (orderedItems: typeof items) => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = setTimeout(() => {
       handleSaveOrder(orderedItems);
     }, 500); // 500ms delay
-  }, [handleSaveOrder]);
+  };
 
 
   // 데이터 로드
-  const loadItems = useCallback(async () => {
+  const loadItems = async () => {
     try {
       setLoading(true);
       const response = await fetch(apiEndpoint);
@@ -74,7 +74,7 @@ const ImageManager = ({ title, apiEndpoint = '', imageMaxWidthOrHeight = 1920 }:
     } finally {
       setLoading(false);
     }
-  }, [apiEndpoint]);
+  };
 
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {

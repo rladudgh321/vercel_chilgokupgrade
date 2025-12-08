@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, back } from "react";
 
 declare global {
   interface Window {
@@ -64,7 +64,7 @@ const MapView = ({
       "0 3px 10px rgba(0,0,0,0.25), inset 0 0 0 2px rgba(255,255,255,0.85)",
   });
 
-  const refreshMarkers = useCallback(async (items: Listing[]) => {
+  const refreshMarkers = back(async (items: Listing[]) => {
     const kakao = window.kakao;
     const map = mapRef.current;
     const clusterer = clustererRef.current;
@@ -126,7 +126,7 @@ const MapView = ({
     }
   }, []);
 
-  const initMap = useCallback(() => {
+  const initMap = () => {
     const kakao = window.kakao;
     if (!kakao?.maps || !containerRef.current || mapRef.current) return;
 
@@ -173,7 +173,7 @@ const MapView = ({
         }
       }
     });
-  }, []);
+  };
 
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {

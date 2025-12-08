@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import Link from 'next/link';
 
 export type BoardPost = {
@@ -14,10 +13,10 @@ export type BoardPost = {
 const dateFmt = new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
 export default function PostView({ post }: { post: BoardPost }) {
-  const displayDate = useMemo(() => {
+  const displayDate = () => {
     const iso = post.registrationDate || post.createdAt;
     return dateFmt.format(new Date(iso));
-  }, [post.registrationDate, post.createdAt]);
+  }
 
   return (
     <div className="p-4 sm:p-6 mt-16">

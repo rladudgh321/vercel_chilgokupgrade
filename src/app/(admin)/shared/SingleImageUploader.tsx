@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import imageCompression from "browser-image-compression";
@@ -18,7 +18,7 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchImage = useCallback(async () => {
+  const fetchImage = async () => {
     setLoading(true);
     try {
       const response = await fetch(getApiEndpoint);
@@ -30,13 +30,13 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
       setError('데이터를 불러오는 데 실패했습니다.');
     }
     setLoading(false);
-  }, [getApiEndpoint]);
+  };
 
   useEffect(() => {
     fetchImage();
   }, [fetchImage]);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  const onDrop = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
 
@@ -83,7 +83,7 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
     } catch (e: any) {
       setError(e.message || '로고 변경 중 오류가 발생했습니다.');
     }
-  }, [uploadApiEndpoint, updateApiEndpoint, imageMaxWidthOrHeight]);
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
     onDrop, 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type BannedIp = {
@@ -41,7 +41,7 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
     }
   };
 
-  const filteredBannedIps = useMemo(() => {
+  const filteredBannedIps = () => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return bannedIps;
     return bannedIps.filter((ip) => 
@@ -49,7 +49,7 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
       ip.contact?.toLowerCase().includes(q) ||
       ip.details?.toLowerCase().includes(q)
     );
-  }, [bannedIps, searchQuery]);
+  }
 
   return (
     <div className="p-2 sm:p-4 md:p-6">

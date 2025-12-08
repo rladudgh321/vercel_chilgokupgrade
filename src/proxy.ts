@@ -1,7 +1,7 @@
 import { createClient } from "@/app/utils/supabase/middlewareClient";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { supabase, response } = createClient(request);
 
   // Refresh session cookies. This is the primary purpose of the Supabase middleware.

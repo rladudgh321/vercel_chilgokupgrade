@@ -1,6 +1,6 @@
 "use client";
 
-import React, { lazy, MouseEventHandler, Suspense, useCallback } from "react";
+import React, { lazy, MouseEventHandler, Suspense } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { ko } from "date-fns/locale";
 import { clsx } from "clsx";
@@ -271,7 +271,7 @@ const BuildingInfo = () => {
   const watchedDirectionBase = watch("directionBase");
 
   // 라디오 클릭 핸들러 (필요 시 의존 필드 정리)
-  const pick = useCallback((field: string, value: string | null) => {
+  const pick = (field: string, value: string | null) => {
     setValue(field as any, value, { shouldDirty: true });
 
     // 의존 필드 초기화 규칙
@@ -284,7 +284,7 @@ const BuildingInfo = () => {
     if (field === "yieldType" && value !== "기타수익률") {
       setValue("otherYield", "", { shouldDirty: true });
     }
-  }, [setValue]);
+  };
 
   const handleRadioChange = (
     item: string | null,

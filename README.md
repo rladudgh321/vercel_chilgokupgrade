@@ -25,6 +25,8 @@ select Element에는 기본값설정을 컴포넌트 인자로 설정해두었�
 
 2. KST기준으로 DB가 저장됨. 만일 다른나라를 만들경우 UTC 기준으로 만들어서 배포할것
 
+3. utils폴더에 metadata.ts파일에 있는 부분을 수정해야한다.
+
 ## sentry & slack
 npx @sentry/wizard@latest -i nextjs --saas --org chilgok --project javascript-nextjs
 npm i @slack/webhook

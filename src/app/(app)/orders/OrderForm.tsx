@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type PropertyType = { id: number; name: string };
 type BuyType = { id: number; name: string };
@@ -24,10 +24,6 @@ export default function OrderForm({ propertyTypes, buyTypes, isBanned }: OrderFo
     title: "",
     description: "",
   });
-
-  // 옵션 파생값: 메모만(불필요 상태 X)
-  const propertyTypeOptions = useMemo(() => propertyTypes, [propertyTypes]);
-  const buyTypeOptions = useMemo(() => buyTypes, [buyTypes]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -159,7 +155,7 @@ export default function OrderForm({ propertyTypes, buyTypes, isBanned }: OrderFo
           name="propertyType"
           value={formData.propertyType}
           onChange={handleChange}
-          options={propertyTypeOptions.map(t => ({ value: t.name, label: t.name, key: String(t.id) }))}
+          options={propertyTypes.map(t => ({ value: t.name, label: t.name, key: String(t.id) }))}
           required
         />
         <Select
@@ -168,7 +164,7 @@ export default function OrderForm({ propertyTypes, buyTypes, isBanned }: OrderFo
           name="transactionType"
           value={formData.transactionType}
           onChange={handleChange}
-          options={buyTypeOptions.map(t => ({ value: t.name, label: t.name, key: String(t.id) }))}
+          options={buyTypes.map(t => ({ value: t.name, label: t.name, key: String(t.id) }))}
           required
         />
       </div>

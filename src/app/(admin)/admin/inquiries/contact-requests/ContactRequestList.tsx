@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
@@ -37,7 +37,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
     initialData: { requests: initialRequests, count: totalPages * 10 },
   });
 
-  const requests = useMemo(() => queryData?.requests || [], [queryData?.requests]);
+  const requests = () => queryData?.requests || [];
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     requests.reduce((acc, r) => {
@@ -115,11 +115,11 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
     deleteRequestMutation.mutate(id);
   };
 
-  const filteredRequests = useMemo(() => {
+  const filteredRequests = () => {
     const q = searchQuery.trim();
     if (!q) return requests;
     return requests.filter((request) => request.contact.includes(q) || request.description.includes(q));
-  }, [requests, searchQuery]);
+  }
 
   const onPageChange = (page: number) => {
     router.push(`/admin/inquiries/contact-requests?page=${page}`);

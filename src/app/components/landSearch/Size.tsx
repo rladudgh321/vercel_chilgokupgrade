@@ -1,33 +1,33 @@
 "use client"
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 
 const Size = () => {
   const [openModal, setOpenModal] = useState(false);
   const [inputValueLeft, setInputValueLeft] = useState(0);
   const [inputValueRight, setInputValueRight] = useState(10000);
 
-  const onChangeOpenModel = useCallback(() => {
+  const onChangeOpenModel = () => {
     setOpenModal(true);
-  }, []);
+  };
 
-  const onChangeCloseModel = useCallback(() => {
+  const onChangeCloseModel = () => {
     setOpenModal(false);
-  }, []);
+  };
 
-  const onChangeLeft = useCallback((value: number) => {
+  const onChangeLeft = (value: number) => {
     setInputValueLeft(value);
-  }, []);
+  }
 
-  const onChangeRight = useCallback((value: number) => {
+  const onChangeRight = (value: number) => {
     setInputValueRight(value);
-  }, []);
+  }
 
-  const onSliderChange = useCallback((values: [number, number]) => {
+  const onSliderChange = (values: [number, number]) => {
     const [left, right] = values;
     setInputValueLeft(left);
     setInputValueRight(right);
-  }, []);
+  }
 
   return (
     <>

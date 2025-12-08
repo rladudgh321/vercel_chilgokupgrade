@@ -1,5 +1,5 @@
 "use client";
-import { useDeferredValue, useEffect, useMemo, useRef, useState, startTransition } from "react";
+import { useDeferredValue, useEffect, useRef, useState, startTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SearchBarProps } from "@/app/interface/card";
 
@@ -19,32 +19,22 @@ export default function SearchBar({
   const isInitial = useRef(true);
 
   // ── 옵션 파생값: 메모이즈로 고정 (렌더마다 새 배열 생성 방지)
-  const roomOptions = useMemo(
-    () => roomOpts0.map((x) => x.name),
-    [roomOpts0]
-  );
-  const bathroomOptions = useMemo(
-    () => bathOpts0.map((x) => x.name),
-    [bathOpts0]
-  );
-  const floorOptions = useMemo(
-    () => floorOpts0.map((x) => x.name),
-    [floorOpts0]
-  );
-  const areaOptions = useMemo(
-    () => areaOpts0.map((x) => x.name),
-    [areaOpts0]
-  );
-  const themeOptions = useMemo(() => {
+  const roomOptions = 
+    () => roomOpts0.map((x) => x.name)
+  const bathroomOptions = 
+    () => bathOpts0.map((x) => x.name)
+  const floorOptions = 
+    () => floorOpts0.map((x) => x.name)
+  const areaOptions = 
+    () => areaOpts0.map((x) => x.name)
+  const themeOptions = () => {
     if (Array.isArray(themeOpts0) && typeof themeOpts0[0] === "string") {
       return themeOpts0 as string[];
     }
     return (themeOpts0 as Array<{ label: string }>).map((x) => x.label);
-  }, [themeOpts0]);
-  const propertyTypeOptions = useMemo(
-    () => propTypeOpts0.map((x) => x.name),
-    [propTypeOpts0]
-  );
+  }
+  const propertyTypeOptions = 
+    () => propTypeOpts0.map((x) => x.name)
 
   // ── URL 동기화가 필요한 필터 상태만 state로 관리
   const [searchTerm, setSearchTerm] = useState(sp.get("keyword") ?? "");
