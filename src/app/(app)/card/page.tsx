@@ -1,10 +1,11 @@
 import CardList from "./CardList";
 
 const getBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_BASE_URL) {
-    return `https://${process.env.NEXT_PUBLIC_BASE_URL}`;
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
   }
-  return "http://localhost:3000";
+  // Use NEXT_PUBLIC_BASE_URL if available, otherwise fallback to localhost
+  return process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 };
 
 const fetchJson = async (url: string) => {
@@ -17,8 +18,16 @@ const fetchJson = async (url: string) => {
 };
 
 const fetchListings = async (queryParams: Record<string, any>) => {
-  const params = new URLSearchParams(queryParams);
+  const params = new URLSearchParams();
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (value && typeof value === 'string') {
+      params.set(key, value);
+    } else if (Array.isArray(value)) {
+      value.forEach(v => params.append(key, v));
+    }
+  });
   params.set("limit", "12");
+
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/listings?${params.toString()}`, {
     next: { tags: ["public"] },
@@ -35,7 +44,6 @@ export default async function CardPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const baseUrl = getBaseUrl();
-
   const [
     settings,
     roomOptions,

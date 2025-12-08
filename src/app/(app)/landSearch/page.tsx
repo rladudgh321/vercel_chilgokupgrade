@@ -4,7 +4,8 @@ const getBaseUrl = () => {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return "http://localhost:3000";
+  // Use NEXT_PUBLIC_BASE_URL if available, otherwise fallback to localhost
+  return process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 };
 
 const fetchJson = async (url: string) => {
@@ -21,6 +22,8 @@ const fetchListings = async (searchParams: any) => {
   Object.entries(searchParams).forEach(([key, value]) => {
     if (value && typeof value === "string") {
       params.set(key, value);
+    } else if (Array.isArray(value)) {
+        value.forEach(v => params.append(key, v));
     }
   });
 
@@ -39,6 +42,8 @@ const fetchMapListings = async (searchParams: any) => {
   Object.entries(searchParams).forEach(([key, value]) => {
     if (value && typeof value === "string") {
       params.set(key, value);
+    } else if (Array.isArray(value)) {
+        value.forEach(v => params.append(key, v));
     }
   });
   const baseUrl = getBaseUrl();
