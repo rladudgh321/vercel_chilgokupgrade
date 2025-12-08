@@ -90,7 +90,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     () =>
       (ListingsData?.currentPage ?? 1) === page &&
       (searchKeyword ?? "") === "" &&
-      sortKey === "recent",
+      sortKey === "recent";
 
 
   const { data: workInfoData } = useQuery({
@@ -116,7 +116,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   // 선택 체크박스 계산은 정렬된 결과 기준
   const allIdsOnPage = 
     () => rows.map((it) => Number(it.id)).filter(Number.isFinite);
-    
+
   const allOnThisPageChecked =
     allIdsOnPage.length > 0 && allIdsOnPage.every((id) => selectedIds.includes(id));
   const someOnThisPageChecked = allIdsOnPage.some((id) => selectedIds.includes(id));
