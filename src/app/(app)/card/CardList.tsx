@@ -1,48 +1,91 @@
-"use client"
-import { useState, useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
-import CardItem from "./CardItem"
-import SearchBar from "../landSearch/SearchBar"
-import { useRouter, useSearchParams } from "next/navigation"
-import BuildDetailModalClient from '@/app/components/root/BuildDetailModal'
-import { koreanToNumber } from '@/app/utility/koreanToNumber'
+"use client";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import CardItem from "./CardItem";
+import SearchBar from "../landSearch/SearchBar";
+import { useRouter, useSearchParams } from "next/navigation";
+import BuildDetailModalClient from "@/app/components/root/BuildDetailModal";
+import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import CardItemSkeleton from "./CardItemSkeleton";
-import { IBuild } from "@/app/interface/build"
-import Pagination from "@/app/components/shared/Pagination"
-
-const fetchJson = async (url: string) => {
-  const res = await fetch(url, { next: { tags: ['public'] } });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${url}`);
-  }
-  const json = await res.json();
-  return json.data;
-};
+import { IBuild } from "@/app/interface/build";
+import Pagination from "@/app/components/shared/Pagination";
 
 const fetchListings = async (queryParams: Record<string, string>) => {
   const params = new URLSearchParams(queryParams);
-  params.set('limit', '12');
-  const res = await fetch(`/api/listings?${params.toString()}`, { next: { tags: ['public'] } });
+  params.set("limit", "12");
+  const res = await fetch(`/api/listings?${params.toString()}`);
   if (!res.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
   return res.json();
-}
+};
 
-const CardList = () => {
+const CardList = ({
+  initialSettings,
+  initialRoomOptions,
+  initialBathroomOptions,
+  initialFloorOptions,
+  initialAreaOptions,
+  initialThemeOptions,
+  initialPropertyTypeOptions,
+  initialBuyTypeOptions,
+  initialListingsData,
+}: {
+  initialSettings: any;
+  initialRoomOptions: any[];
+  initialBathroomOptions: any[];
+  initialFloorOptions: any[];
+  initialAreaOptions: any[];
+  initialThemeOptions: any[];
+  initialPropertyTypeOptions: any[];
+  initialBuyTypeOptions: any[];
+  initialListingsData: any;
+}) => {
   const [selectedBuildId, setSelectedBuildId] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // --- Data Fetching ---
-  const { data: settings, isLoading: isLoadingSettings } = useQuery({ queryKey: ['search-bar-settings'], queryFn: () => fetchJson('/api/admin/search-bar-settings') });
-  const { data: roomOptions = [] } = useQuery({ queryKey: ['room-options'], queryFn: () => fetchJson('/api/room-options') });
-  const { data: bathroomOptions = [] } = useQuery({ queryKey: ['bathroom-options'], queryFn: () => fetchJson('/api/bathroom-options') });
-  const { data: floorOptions = [] } = useQuery({ queryKey: ['floor-options'], queryFn: () => fetchJson('/api/floor-options') });
-  const { data: areaOptions = [] } = useQuery({ queryKey: ['area'], queryFn: () => fetchJson('/api/area') });
-  const { data: themeOptions = [] } = useQuery({ queryKey: ['theme-images'], queryFn: () => fetchJson('/api/theme-images') });
-  const { data: propertyTypeOptions = [] } = useQuery({ queryKey: ['listing-type'], queryFn: () => fetchJson('/api/listing-type') });
-  const { data: buyTypeOptions = [] } = useQuery({ queryKey: ['buy-types'], queryFn: () => fetchJson('/api/buy-types') });
+  const { data: settings } = useQuery({
+    queryKey: ["search-bar-settings"],
+    queryFn: () => initialSettings,
+    initialData: initialSettings,
+  });
+  const { data: roomOptions = [] } = useQuery({
+    queryKey: ["room-options"],
+    queryFn: () => initialRoomOptions,
+    initialData: initialRoomOptions,
+  });
+  const { data: bathroomOptions = [] } = useQuery({
+    queryKey: ["bathroom-options"],
+    queryFn: () => initialBathroomOptions,
+    initialData: initialBathroomOptions,
+  });
+  const { data: floorOptions = [] } = useQuery({
+    queryKey: ["floor-options"],
+    queryFn: () => initialFloorOptions,
+    initialData: initialFloorOptions,
+  });
+  const { data: areaOptions = [] } = useQuery({
+    queryKey: ["area"],
+    queryFn: () => initialAreaOptions,
+    initialData: initialAreaOptions,
+  });
+  const { data: themeOptions = [] } = useQuery({
+    queryKey: ["theme-images"],
+    queryFn: () => initialThemeOptions,
+    initialData: initialThemeOptions,
+  });
+  const { data: propertyTypeOptions = [] } = useQuery({
+    queryKey: ["listing-type"],
+    queryFn: () => initialPropertyTypeOptions,
+    initialData: initialPropertyTypeOptions,
+  });
+  const { data: buyTypeOptions = [] } = useQuery({
+    queryKey: ["buy-types"],
+    queryFn: () => initialBuyTypeOptions,
+    initialData: initialBuyTypeOptions,
+  });
 
   const queryParams = useMemo(() => {
     const params: { [key: string]: string } = {};
@@ -53,18 +96,18 @@ const CardList = () => {
   }, [searchParams]);
 
   const { data: listingsData, isLoading: isLoadingListings } = useQuery({
-    queryKey: ['listings', queryParams],
+    queryKey: ["listings", queryParams],
     queryFn: () => fetchListings(queryParams),
-    enabled: !isLoadingSettings,
+    initialData: initialListingsData,
   });
 
   const listings = listingsData?.listings || [];
   const totalPages = listingsData?.totalPages || 1;
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   // --- Event Handlers ---
   const handleCardClick = (id: number) => {
-    fetch(`/api/build/${id}/increment-views`, { method: 'POST' });
+    fetch(`/api/build/${id}/increment-views`, { method: "POST" });
     setSelectedBuildId(id);
   };
 
@@ -74,11 +117,11 @@ const CardList = () => {
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
+    params.set("page", page.toString());
     router.push(`/card?${params.toString()}`);
   };
 
-  const sortBy = searchParams.get("sortBy") || "latest"
+  const sortBy = searchParams.get("sortBy") || "latest";
 
   const handleSortChange = (newSortBy: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -97,28 +140,35 @@ const CardList = () => {
       handleSortChange(sortKey);
     }
   };
-  
+
   // --- Derived Data ---
   const getSortOptions = () => [
     { key: "latest", label: "최신순" },
     { key: "popular", label: "인기순" },
-    { key: "price", label: sortBy.startsWith("price-") ? (sortBy === "price-asc" ? "금액순↑" : "금액순↓") : "금액순↓" },
-    { key: "area", label: sortBy.startsWith("area-") ? (sortBy === "area-asc" ? "면적순↑" : "면적순↓") : "면적순↓" },
+    {
+      key: "price",
+      label: sortBy.startsWith("price-")
+        ? sortBy === "price-asc"
+          ? "금액순↑"
+          : "금액순↓"
+        : "금액순↓",
+    },
+    {
+      key: "area",
+      label: sortBy.startsWith("area-")
+        ? sortBy === "area-asc"
+          ? "면적순↑"
+          : "면적순↓"
+        : "면적순↓",
+    },
   ];
 
-  // The filtering logic in `displayListings` is already handled by the backend API call with queryParams.
-  // If additional client-side filtering is needed, it can be done here.
-  // For now, we just use the fetched listings.
   const displayListings = listings;
 
-  if (isLoadingSettings) {
-    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
-  }
-  
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm border-b">
-        <SearchBar 
+        <SearchBar
           settings={settings}
           roomOptions={roomOptions}
           bathroomOptions={bathroomOptions}
@@ -156,9 +206,16 @@ const CardList = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoadingListings
-            ? Array.from({ length: 12 }).map((_, i) => <CardItemSkeleton key={i} />)
+            ? Array.from({ length: 12 }).map((_, i) => (
+                <CardItemSkeleton key={i} />
+              ))
             : displayListings.map((listing: IBuild | any, index: number) => (
-                <CardItem key={listing.id} listing={listing} onClick={() => handleCardClick(listing.id)} priority={index < 3} />
+                <CardItem
+                  key={listing.id}
+                  listing={listing}
+                  onClick={() => handleCardClick(listing.id)}
+                  priority={index < 3}
+                />
               ))}
         </div>
 
@@ -168,7 +225,7 @@ const CardList = () => {
           </div>
         )}
       </div>
-       <Pagination
+      <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={handlePageChange}
@@ -180,7 +237,7 @@ const CardList = () => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CardList
+export default CardList;

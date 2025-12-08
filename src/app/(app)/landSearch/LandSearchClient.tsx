@@ -3,7 +3,11 @@
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useInfiniteQuery, useQuery, keepPreviousData } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import MapView from "./MapView";
 import ListingList from "./ListingList";
 import SearchBar from "./SearchBar";
@@ -12,15 +16,6 @@ import BuildDetailModal from "../../components/root/BuildDetailModal";
 type Listing = {
   id: number;
   [key: string]: any;
-};
-
-const fetchJson = async (url: string) => {
-  const res = await fetch(url, { next: { tags: ['public'] } });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${url}`);
-  }
-  const json = await res.json();
-  return json.data;
 };
 
 const fetchListings = async ({ pageParam = 1, queryKey }: any) => {
@@ -34,9 +29,9 @@ const fetchListings = async ({ pageParam = 1, queryKey }: any) => {
   });
 
   params.set("page", pageParam.toString());
-  const res = await fetch(`/api/listings?${params.toString()}`, { next: { tags: ['public'] } });
+  const res = await fetch(`/api/listings?${params.toString()}`);
   if (!res.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
   return res.json();
 };
@@ -49,29 +44,82 @@ const fetchMapListings = async ({ queryKey }: any) => {
       params.set(key, value);
     }
   });
-  const res = await fetch(`/api/listings/map?${params.toString()}`, { next: { tags: ['public'] } });
+  const res = await fetch(`/api/listings/map?${params.toString()}`);
   if (!res.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
   const data = await res.json();
   return data.data;
 };
 
-export default function LandSearchClient() {
+export default function LandSearchClient({
+  initialSettings,
+  initialRoomOptions,
+  initialBathroomOptions,
+  initialFloorOptions,
+  initialAreaOptions,
+  initialThemeOptions,
+  initialPropertyTypeOptions,
+  initialBuyTypeOptions,
+  initialPaginatedData,
+  initialMapListings,
+}: {
+  initialSettings: any;
+  initialRoomOptions: any[];
+  initialBathroomOptions: any[];
+  initialFloorOptions: any[];
+  initialAreaOptions: any[];
+  initialThemeOptions: any[];
+  initialPropertyTypeOptions: any[];
+  initialBuyTypeOptions: any[];
+  initialPaginatedData: any;
+  initialMapListings: any[];
+}) {
   const [selectedBuild, setSelectedBuild] = useState<Listing | null>(null);
   const router = useRouter();
   const currentSearchParams = useSearchParams();
   const sortBy = currentSearchParams.get("sortBy") ?? "latest";
 
-  // Fetch all options data
-  const { data: settings, isLoading: isLoadingSettings } = useQuery({ queryKey: ['search-bar-settings'], queryFn: () => fetchJson('/api/admin/search-bar-settings') });
-  const { data: roomOptions = [], isLoading: isLoadingRoomOptions } = useQuery({ queryKey: ['room-options'], queryFn: () => fetchJson('/api/room-options') });
-  const { data: bathroomOptions = [], isLoading: isLoadingBathroomOptions } = useQuery({ queryKey: ['bathroom-options'], queryFn: () => fetchJson('/api/bathroom-options') });
-  const { data: floorOptions = [], isLoading: isLoadingFloorOptions } = useQuery({ queryKey: ['floor-options'], queryFn: () => fetchJson('/api/floor-options') });
-  const { data: areaOptions = [], isLoading: isLoadingAreaOptions } = useQuery({ queryKey: ['area'], queryFn: () => fetchJson('/api/area') });
-  const { data: themeOptions = [], isLoading: isLoadingThemeOptions } = useQuery({ queryKey: ['theme-images'], queryFn: () => fetchJson('/api/theme-images') });
-  const { data: propertyTypeOptions = [], isLoading: isLoadingPropertyTypeOptions } = useQuery({ queryKey: ['listing-type'], queryFn: () => fetchJson('/api/listing-type') });
-  const { data: buyTypeOptions = [], isLoading: isLoadingBuyTypeOptions } = useQuery({ queryKey: ['buy-types'], queryFn: () => fetchJson('/api/buy-types') });
+  const { data: settings } = useQuery({
+    queryKey: ["search-bar-settings"],
+    queryFn: () => initialSettings,
+    initialData: initialSettings,
+  });
+  const { data: roomOptions = [] } = useQuery({
+    queryKey: ["room-options"],
+    queryFn: () => initialRoomOptions,
+    initialData: initialRoomOptions,
+  });
+  const { data: bathroomOptions = [] } = useQuery({
+    queryKey: ["bathroom-options"],
+    queryFn: () => initialBathroomOptions,
+    initialData: initialBathroomOptions,
+  });
+  const { data: floorOptions = [] } = useQuery({
+    queryKey: ["floor-options"],
+    queryFn: () => initialFloorOptions,
+    initialData: initialFloorOptions,
+  });
+  const { data: areaOptions = [] } = useQuery({
+    queryKey: ["area"],
+    queryFn: () => initialAreaOptions,
+    initialData: initialAreaOptions,
+  });
+  const { data: themeOptions = [] } = useQuery({
+    queryKey: ["theme-images"],
+    queryFn: () => initialThemeOptions,
+    initialData: initialThemeOptions,
+  });
+  const { data: propertyTypeOptions = [] } = useQuery({
+    queryKey: ["listing-type"],
+    queryFn: () => initialPropertyTypeOptions,
+    initialData: initialPropertyTypeOptions,
+  });
+  const { data: buyTypeOptions = [] } = useQuery({
+    queryKey: ["buy-types"],
+    queryFn: () => initialBuyTypeOptions,
+    initialData: initialBuyTypeOptions,
+  });
 
   const queryParams = useMemo(() => {
     const params: { [key: string]: string } = {};
@@ -99,28 +147,29 @@ export default function LandSearchClient() {
     },
     initialPageParam: 1,
     placeholderData: keepPreviousData,
-    enabled: !isLoadingSettings, // Don't fetch listings until settings are loaded
+    initialData: initialPaginatedData,
   });
-  
+
   const { data: mapListings = [] } = useQuery({
     queryKey: ["map-listings", queryParams],
     queryFn: fetchMapListings,
-    enabled: !isLoadingSettings, // Don't fetch map listings until settings are loaded
+    initialData: initialMapListings,
   });
 
-  const allListings = () => (paginatedData ? paginatedData.pages.flatMap((page) => page.listings) : []);
+  const allListings = () =>
+    paginatedData ? paginatedData.pages.flatMap((page: any) => page.listings) : [];
   const [filteredIds, setFilteredIds] = useState<number[] | null>(null);
 
   const handleCardClick = (id: number) => {
-    fetch(`/api/build/${id}/increment-views`, { method: 'POST' });
-    const build = allListings().find(l => l.id === id);
+    fetch(`/api/build/${id}/increment-views`, { method: "POST" });
+    const build = allListings().find((l) => l.id === id);
     setSelectedBuild(build || null);
   };
 
   const handleCloseModal = () => {
     setSelectedBuild(null);
   };
-  
+
   const displayListings = () => {
     let listings = allListings();
     const priceRange = queryParams.priceRange;
@@ -137,16 +186,13 @@ export default function LandSearchClient() {
       }
 
       if (priceField) {
-        listings = listings.filter(listing => {
+        listings = listings.filter((listing) => {
           const price = listing[priceField];
           if (price === undefined || price === null) return false;
-          // Filtering logic...
           return true;
         });
       }
     }
-    
-    // ... other filters (floor, areaRange) ...
 
     if (filteredIds === null) {
       return listings;
@@ -165,7 +211,7 @@ export default function LandSearchClient() {
     setFilteredIds(listingIds);
     const isMobile = window.innerWidth < 640;
     if (isMobile) {
-      setView('list');
+      setView("list");
     }
   };
 
@@ -173,18 +219,12 @@ export default function LandSearchClient() {
     setFilteredIds(null);
   };
 
-  const [view, setView] = useState('list');
-
-  const areOptionsLoading = isLoadingSettings || isLoadingRoomOptions || isLoadingBathroomOptions || isLoadingFloorOptions || isLoadingAreaOptions || isLoadingThemeOptions || isLoadingPropertyTypeOptions || isLoadingBuyTypeOptions;
-
-  if (areOptionsLoading) {
-    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
-  }
+  const [view, setView] = useState("list");
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm border-b">
-        <SearchBar 
+        <SearchBar
           settings={settings}
           roomOptions={roomOptions}
           bathroomOptions={bathroomOptions}
@@ -196,20 +236,37 @@ export default function LandSearchClient() {
         />
       </div>
 
-      {/* Mobile view toggle */}
       <div className="sm:hidden p-2 bg-white border-b">
         <div className="flex justify-center gap-4">
-          <button onClick={() => setView('list')} className={`px-4 py-2 rounded-lg ${view === 'list' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>목록</button>
-          <button onClick={() => setView('map')} className={`px-4 py-2 rounded-lg ${view === 'map' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>지도</button>
+          <button
+            onClick={() => setView("list")}
+            className={`px-4 py-2 rounded-lg ${
+              view === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            목록
+          </button>
+          <button
+            onClick={() => setView("map")}
+            className={`px-4 py-2 rounded-lg ${
+              view === "map" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            지도
+          </button>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row h-[calc(100vh-120px)]">
-        <div className={`flex-1 min-w-0 ${view === 'list' && 'hidden sm:block'}`}>
+        <div className={`flex-1 min-w-0 ${view === "list" && "hidden sm:block"}`}>
           <MapView listings={mapListings} onClusterClick={handleClusterClick} view={view} />
         </div>
 
-        <div className={`w-full sm:w-[480px] flex-shrink-0 bg-white border-l flex flex-col h-full ${view === 'map' && 'hidden sm:block'}`}>
+        <div
+          className={`w-full sm:w-[480px] flex-shrink-0 bg-white border-l flex flex-col h-full ${
+            view === "map" && "hidden sm:block"
+          }`}
+        >
           {filteredIds !== null && (
             <div className="p-2 text-center border-b">
               <button
@@ -243,5 +300,3 @@ export default function LandSearchClient() {
     </div>
   );
 }
-
-
