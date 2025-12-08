@@ -4,7 +4,7 @@ import LandSearchClient from "./LandSearchClient";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 
 async function fetchJson(url: string) {
-  const res = await fetch(url);
+  const res = await fetch(url, { next: { tags: ['public'] } });
   if (!res.ok) {
     return { data: [] };
   }
