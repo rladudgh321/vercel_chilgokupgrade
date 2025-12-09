@@ -1,23 +1,12 @@
-
 import { NextRequest, NextResponse } from "next/server";
-import { getMapListings } from "@/lib/data"; // Import the cached function
+import { getThemeImages } from "@/lib/data";
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const params: { [key: string]: string | string[] | undefined } = {};
-    searchParams.forEach((value, key) => {
-      params[key] = value;
-    });
-
-    const data = await getMapListings(params);
-
-    return NextResponse.json({
-      ok: true,
-      data: data ?? [],
-    });
+    const data = await getThemeImages();
+    return NextResponse.json({ ok: true, data: data });
   } catch (e: any) {
     Sentry.captureException(e);
     await notifySlack(e, req.url);

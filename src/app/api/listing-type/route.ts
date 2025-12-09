@@ -1,25 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/app/utils/supabase/server";
-import { cookies } from "next/headers";
+import { getListingTypes } from "@/lib/data"; // Import the cached function
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 
 // GET: 모든 매물 유형 조회
 export async function GET(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
-
-    const { data, error } = await supabase
-      .from("ListingType")
-      .select("*")
-      .order("order", { ascending: true, nullsFirst: false });
-
-    if (error) {
-      Sentry.captureException(error);
-      await notifySlack(error, req.url);
-      return NextResponse.json({ ok: false, error }, { status: 400 });
-    }
+    const data = await getListingTypes(); // Call the cached function
 
     return NextResponse.json({ ok: true, data }, { status: 200 });
   } catch (e: any) {

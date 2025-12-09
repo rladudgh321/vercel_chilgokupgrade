@@ -226,4 +226,4 @@ export const getMapListings = cache(async (searchParams: { [key: string]: string
         throw new Error("Could not fetch map listings.");
     }
     return data ?? [];
-}, ['map-listings'], { tags: ['public'] });
+}, ['map-listings', JSON.stringify(searchParams)], { tags: ['public'] });  

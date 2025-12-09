@@ -52,29 +52,7 @@ const fetchMapListings = async ({ queryKey }: any) => {
   return data.data;
 };
 
-export default function LandSearchClient({
-  initialSettings,
-  initialRoomOptions,
-  initialBathroomOptions,
-  initialFloorOptions,
-  initialAreaOptions,
-  initialThemeOptions,
-  initialPropertyTypeOptions,
-  initialBuyTypeOptions,
-  initialPaginatedData,
-  initialMapListings,
-}: {
-  initialSettings: any;
-  initialRoomOptions: any[];
-  initialBathroomOptions: any[];
-  initialFloorOptions: any[];
-  initialAreaOptions: any[];
-  initialThemeOptions: any[];
-  initialPropertyTypeOptions: any[];
-  initialBuyTypeOptions: any[];
-  initialPaginatedData: any;
-  initialMapListings: any[];
-}) {
+export default function LandSearchClient() {
   const [selectedBuild, setSelectedBuild] = useState<Listing | null>(null);
   const router = useRouter();
   const currentSearchParams = useSearchParams();
@@ -82,43 +60,75 @@ export default function LandSearchClient({
 
   const { data: settings } = useQuery({
     queryKey: ["search-bar-settings"],
-    queryFn: () => initialSettings,
-    initialData: initialSettings,
+    queryFn: async () => {
+      const res = await fetch("/api/search-bar-settings");
+      if (!res.ok) throw new Error("Failed to fetch search bar settings");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: roomOptions = [] } = useQuery({
     queryKey: ["room-options"],
-    queryFn: () => initialRoomOptions,
-    initialData: initialRoomOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/room-options");
+      if (!res.ok) throw new Error("Failed to fetch room options");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: bathroomOptions = [] } = useQuery({
     queryKey: ["bathroom-options"],
-    queryFn: () => initialBathroomOptions,
-    initialData: initialBathroomOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/bathroom-options");
+      if (!res.ok) throw new Error("Failed to fetch bathroom options");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: floorOptions = [] } = useQuery({
     queryKey: ["floor-options"],
-    queryFn: () => initialFloorOptions,
-    initialData: initialFloorOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/floor-options");
+      if (!res.ok) throw new Error("Failed to fetch floor options");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: areaOptions = [] } = useQuery({
     queryKey: ["area"],
-    queryFn: () => initialAreaOptions,
-    initialData: initialAreaOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/area");
+      if (!res.ok) throw new Error("Failed to fetch area presets");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: themeOptions = [] } = useQuery({
     queryKey: ["theme-images"],
-    queryFn: () => initialThemeOptions,
-    initialData: initialThemeOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/theme-images-public");
+      if (!res.ok) throw new Error("Failed to fetch theme images");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: propertyTypeOptions = [] } = useQuery({
     queryKey: ["listing-type"],
-    queryFn: () => initialPropertyTypeOptions,
-    initialData: initialPropertyTypeOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/listing-type");
+      if (!res.ok) throw new Error("Failed to fetch listing types");
+      const json = await res.json();
+      return json.data;
+    },
   });
   const { data: buyTypeOptions = [] } = useQuery({
     queryKey: ["buy-types"],
-    queryFn: () => initialBuyTypeOptions,
-    initialData: initialBuyTypeOptions,
+    queryFn: async () => {
+      const res = await fetch("/api/buy-types-public");
+      if (!res.ok) throw new Error("Failed to fetch buy types");
+      const json = await res.json();
+      return json.data;
+    },
   });
 
   const queryParams = useMemo(() => {
@@ -147,13 +157,11 @@ export default function LandSearchClient({
     },
     initialPageParam: 1,
     placeholderData: keepPreviousData,
-    initialData: initialPaginatedData,
   });
 
   const { data: mapListings = [] } = useQuery({
     queryKey: ["map-listings", queryParams],
     queryFn: fetchMapListings,
-    initialData: initialMapListings,
   });
 
   const allListings = () =>
