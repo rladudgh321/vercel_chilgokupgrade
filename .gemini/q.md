@@ -11,28 +11,28 @@ $ npm run build
 
    Creating an optimized production build ...
  ✓ Compiled successfully in 11.4s
- ✓ Completed runAfterProductionCompile in 14485ms
+ ✓ Completed runAfterProductionCompile in 10030ms
    Skipping validation of types
- ✓ Collecting page data using 15 workers in 3.4s    
+ ✓ Collecting page data using 15 workers in 3.3s
  ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
  ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
 API route /api/board received a GET request
-C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
 API route /api/board received a GET request
-C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\node_modules_58fbdd87._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-TypeError: a.getAll is not a function
-    at Object.getAll (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:5051)
-    at e (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:1322)
-    at Object.getItem (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:2947)
 C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\node_modules_58fbdd87._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-TypeError: a.getAll is not a function
-    at Object.getAll (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:5051)
-    at e (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:1322)
-    at Object.getItem (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:2947)
 C:\proj\vercel_chilgokupgrade\.next\server\chunks\[root-of-the-server]__3262d597._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\node_modules_58fbdd87._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
 C:\proj\vercel_chilgokupgrade\.next\server\chunks\_02bbc63e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+TypeError: a.getAll is not a function
+    at Object.getAll (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:5051)
+    at e (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:1322)
+    at Object.getItem (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:2947)
 C:\proj\vercel_chilgokupgrade\.next\server\chunks\[root-of-the-server]__2a8c9f12._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\node_modules_58fbdd87._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+TypeError: a.getAll is not a function
+    at Object.getAll (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:5051)
+    at e (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:1322)
+    at Object.getItem (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:2947)
 C:\proj\vercel_chilgokupgrade\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.prod.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
 Catch block error in /api/board: Error: During prerendering, `cookies()` rejects when the prerender is complete. Typically these errors are handled by React but if you move `cookies()` to a different context by using `setTimeout`, `after`, or similar functions you may observe this error and you should handle it in that context. This occurred at route "/api/board".
     at <unknown> (C:\proj\vercel_chilgokupgrade\.next\server\chunks\[root-of-the-server]__3262d597._.js:17:25693)
@@ -54,8 +54,8 @@ Error: Route "/notice/[id]" used `Math.random()` before accessing either uncache
     at String.replace (<anonymous>)
     at <unknown> (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:4358)
     at r (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\_3d0bb092._.js:6:5023)
-    at g (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__fe40aa56._.js:2:11171)
-    at h (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__fe40aa56._.js:2:11470)
+    at h (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__fe40aa56._.js:2:11185)
+    at i (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__fe40aa56._.js:2:11472)
     at stringify (<anonymous>)
 To get a more detailed stack trace and pinpoint the issue, try one of the following:
   - Start the app in development mode by running `next dev`, then open "/notice/[id]" in your browser to investigate the error.
@@ -63,3 +63,7 @@ To get a more detailed stack trace and pinpoint the issue, try one of the follow
 Error occurred prerendering page "/notice/[id]". Read more: https://nextjs.org/docs/messages/prerender-error
 Export encountered an error on /(app)/notice/[id]/page: /notice/[id], exiting the build.
  ⨯ Next.js build worker exited with code: 1 and signal: null
+
+ ---
+
+ `cacheComponents: true` 나는 반드시 이 옵션을 사용해야해

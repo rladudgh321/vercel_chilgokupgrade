@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { use } from 'react';
 
 export type BoardPost = {
   id: number;
@@ -12,7 +13,9 @@ export type BoardPost = {
 
 const dateFmt = new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
-export default function PostView({ post }: { post: BoardPost }) {
+export default function PostView({ postPromise }: { postPromise: Promise<BoardPost> }) {
+  const post = use(postPromise);
+
   const displayDate = () => {
     const iso = post.registrationDate || post.createdAt;
     return dateFmt.format(new Date(iso));

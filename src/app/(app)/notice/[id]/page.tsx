@@ -3,8 +3,7 @@ import PostView, { BoardPost } from './PostView';
 
 import { createClient } from '@/app/utils/supabase/server';
 import { cookies } from 'next/headers';
-
-export const dynamic = 'force-dynamic';
+import { Suspense } from 'react';
 
 // -------------------------
 // 2. 서버 컴포넌트: 게시글 상세
@@ -33,13 +32,17 @@ async function getPost(id: string): Promise<BoardPost> {
 // -------------------------
 // 3. 페이지 컴포넌트
 // -------------------------
-export default async function NoticeDetailPage({
+export default function NoticeDetailPage({
   params,
 }: {
   params: { id: string }; 
 }) {
   const { id } = params;
-  const post = await getPost(id);
+  const postPromise = getPost(id);
 
-  return <PostView post={post} />;
+  return (
+    <Suspense fallback={<div>Loading post...</div>}>
+      <PostView postPromise={postPromise} />
+    </Suspense>
+  );
 }
