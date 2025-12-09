@@ -227,16 +227,16 @@ export default function EditClient({ id }: { id: number }) {
   const methods = useForm<FormData>({ defaultValues: BASE_DEFAULTS });
   const [formKey, setFormKey] = useState(0);
 
-  const allLoaded = 
-    () => !isLoading && !isLoadingRoomOptions && !isLoadingBathroomOptions && !isLoadingThemeOptions && !isLoadingLabelOptions && !isLoadingBuildingOptions;
+  const allQueriesLoaded = 
+    !isLoading && !isLoadingRoomOptions && !isLoadingBathroomOptions && !isLoadingThemeOptions && !isLoadingLabelOptions && !isLoadingBuildingOptions;
 
   // 데이터 → 폼 reset
   useEffect(() => {
-    if (allLoaded && data) {
+    if (allQueriesLoaded && data) {
       methods.reset(normalizeForForm(data, themeOptions, labelOptions));
       setFormKey(prev => prev + 1);
     }
-  }, [allLoaded, data, themeOptions, labelOptions, methods]);
+  }, [allQueriesLoaded, data, themeOptions, labelOptions, methods]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: FormData) => {
@@ -360,7 +360,7 @@ export default function EditClient({ id }: { id: number }) {
     },
   });
 
-  if (!allLoaded) return <p>로딩 중...</p>;
+  if (!allQueriesLoaded) return <p>로딩 중...</p>;
   if (isError) return <p>불러오기 실패</p>;
 
   return (

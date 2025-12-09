@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
@@ -37,7 +37,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
     initialData: { requests: initialRequests, count: totalPages * 10 },
   });
 
-  const requests = () => queryData?.requests || [];
+  const requests = useCallback(() => queryData?.requests || [], [queryData]);
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     requests().reduce((acc, r) => {

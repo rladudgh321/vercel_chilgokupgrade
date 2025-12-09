@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import ToggleSwitch from '@/app/components/admin/listings/ToggleSwitch';
 import Pagination from '@/app/components/shared/Pagination';
@@ -45,7 +45,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
     initialData: { orders: initialOrders, count: totalPages * 10 },
   });
 
-  const orders = () => queryData?.orders || []
+  const orders = useCallback(() => queryData?.orders || [], [queryData]);
 
   const [notes, setNotes] = useState<{ [key: number]: string }>(
     orders().reduce((acc, order) => {

@@ -126,7 +126,7 @@ const MapView = ({
     }
   }, []);
 
-  const initMap = () => {
+  const initMap = useCallback(() => {
     const kakao = window.kakao;
     if (!kakao?.maps || !containerRef.current || mapRef.current) return;
 
@@ -173,7 +173,7 @@ const MapView = ({
         }
       }
     });
-  };
+  }, []);
 
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {

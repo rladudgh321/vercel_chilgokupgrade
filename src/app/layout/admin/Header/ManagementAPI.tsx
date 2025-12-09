@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // --- Helper Components & Functions ---
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -53,7 +53,7 @@ const ManagementAPI = () => {
   const [isRateLimited, setIsRateLimited] = useState(false)
 
 
-  const fetchUsage = async () => {
+  const fetchUsage = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -73,7 +73,7 @@ const ManagementAPI = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, []);
 
   useEffect(() => {
     fetchUsage()
