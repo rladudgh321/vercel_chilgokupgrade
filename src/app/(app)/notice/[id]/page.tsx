@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 // 2. 서버 컴포넌트: 게시글 상세
 // -------------------------
 async function getPost(id: string): Promise<BoardPost> {
-  const cookieStore = cookies(); // Re-add cookies for dynamic rendering
+  const cookieStore = await cookies(); // Re-add cookies for dynamic rendering
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase

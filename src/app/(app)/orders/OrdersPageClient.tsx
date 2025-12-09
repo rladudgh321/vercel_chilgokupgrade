@@ -3,23 +3,52 @@
 import { useEffect, useState } from "react";
 import OrderForm from "./OrderForm";
 
-async function fetchIpStatus(): Promise<{ isBanned: boolean }> {
-  const res = await fetch("/api/ip-status"); // 클라이언트 전용 API
-  if (!res.ok) return { isBanned: false };
-  return res.json();
+type SelectOption = { id: number; name: string };
+
+async function fetchInitialData(): Promise<{
+  isBanned: boolean;
+  propertyTypes: SelectOption[];
+  buyTypes: SelectOption[];
+}> {
+  const [ipRes, propTypeRes, buyTypeRes] = await Promise.all([
+    fetch("/api/ip-status"),
+    fetch("/api/listing-type"),
+    fetch("/api/buy-types-public"),
+  ]);
+
+  const ipStatus = ipRes.ok ? await ipRes.json() : { isBanned: false };
+  const propertyTypes = propTypeRes.ok ? await propTypeRes.json() : [];
+  const buyTypes = buyTypeRes.ok ? await buyTypeRes.json() : [];
+
+  return {
+    isBanned: ipStatus.isBanned,
+    propertyTypes: propertyTypes.data,
+    buyTypes: buyTypes.data,
+  };
 }
 
-interface OrdersPageProps {
-  propertyTypes: Array<{ id: number; name: string }>;
-  buyTypes: Array<{ id: number; name: string }>;
-}
-
-export default function OrdersPageClient({ propertyTypes, buyTypes }: OrdersPageProps) {
+export default function OrdersPageClient() {
   const [isBanned, setIsBanned] = useState(false);
+  const [propertyTypes, setPropertyTypes] = useState<SelectOption[]>([]);
+  const [buyTypes, setBuyTypes] = useState<SelectOption[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchIpStatus().then((res) => setIsBanned(res.isBanned));
+    fetchInitialData().then((data) => {
+      setIsBanned(data.isBanned);
+      setPropertyTypes(data.propertyTypes || []);
+      setBuyTypes(data.buyTypes || []);
+      setLoading(false);
+    });
   }, []);
+
+  if (loading) {
+    return (
+      <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14 flex justify-center items-center">
+        <div>Loading...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14">
