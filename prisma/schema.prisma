@@ -97,6 +97,8 @@ model Build {
   mainImage        String?
   subImage         Json?
   adminImage       Json?
+  lat              Float?
+  lng              Float?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @default(now()) @updatedAt
   deletedAt        DateTime?

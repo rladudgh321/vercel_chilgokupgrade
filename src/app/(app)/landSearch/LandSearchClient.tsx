@@ -1,7 +1,7 @@
 "use client";
 
 import { koreanToNumber } from "@/app/utility/koreanToNumber";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   useInfiniteQuery,
@@ -267,7 +267,9 @@ export default function LandSearchClient() {
 
       <div className="flex flex-col sm:flex-row h-[calc(100vh-120px)]">
         <div className={`flex-1 min-w-0 ${view === "list" && "hidden sm:block"}`}>
-          <MapView listings={mapListings} onClusterClick={handleClusterClick} view={view} />
+          <Suspense>
+            <MapView listings={mapListings} onClusterClick={handleClusterClick} view={view} />
+          </Suspense>
         </div>
 
         <div

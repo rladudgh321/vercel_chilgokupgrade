@@ -4,6 +4,8 @@ import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 import { createClient } from '@/app/utils/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   console.log("API route /api/board received a GET request");
   try {

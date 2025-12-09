@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getSnsSettings } from '../(app)/layout';
 
 export type SnsSetting = {
   id: number;
@@ -8,10 +9,11 @@ export type SnsSetting = {
 };
 
 export type SnsIconProps = {
-  snsSettings: SnsSetting[];
+  snsSettingsPromise: ReturnType<typeof getSnsSettings>
 };
 
-const SnsIcon = ({ snsSettings }: SnsIconProps) => {
+const SnsIcon = async ({ snsSettingsPromise }: SnsIconProps) => {
+  const snsSettings = await snsSettingsPromise;
   if (!snsSettings || snsSettings.length === 0) {
     return null;
   }

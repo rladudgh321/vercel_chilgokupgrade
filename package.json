@@ -42,7 +42,7 @@
     "date-fns-tz": "^3.2.0",
     "kor-to-number": "^1.1.5",
     "lucide-react": "^0.487.0",
-    "next": "16.0.7",
+    "next": "16.0.8",
     "quill": "^2.0.2",
     "react": "19.2.1",
     "react-advanced-cropper": "^0.20.1",

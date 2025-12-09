@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 import { formatInTimeZone } from 'date-fns-tz';
 
-export const runtime = 'nodejs';
+
 
 export async function POST(req: NextRequest) {
   try {

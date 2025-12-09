@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/app/utils/supabase/server";
 
-export const runtime = "nodejs";
+
 const TABLE = "ContactRequest";
 
 export async function GET(req: NextRequest) {

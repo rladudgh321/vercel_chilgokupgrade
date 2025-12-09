@@ -3,6 +3,7 @@ import { createClient } from "@/app/utils/supabase/server";
 import { cookies } from "next/headers";
 import type { Metadata } from 'next';
 import { generatePageMetadata } from '@/app/utils/metadata';
+import { Suspense } from "react";
 
 export const metadata: Metadata = generatePageMetadata({
   title: '관리자 페이지',
@@ -20,14 +21,16 @@ async function getLogoUrl() {
   return data?.logoUrl || null;
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const logoUrl = await getLogoUrl();
+  const logoUrlPromise = getLogoUrl();
 
   return (
-    <AdminLayoutClient logoUrl={logoUrl}>{children}</AdminLayoutClient>
+    <Suspense>
+      <AdminLayoutClient logoUrlPromise={logoUrlPromise}>{children}</AdminLayoutClient>
+    </Suspense>
   );
 }

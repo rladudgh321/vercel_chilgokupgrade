@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from "next";
 import Header, { HeaderProps } from "../layout/app/Header";
 import Footer from "../layout/app/Footer";
@@ -27,19 +28,26 @@ export const metadata: Metadata = generatePageMetadata({
   description: '칠곡군의 최신 부동산 매물, 아파트, 상가, 원룸 정보를 확인하세요.',
 });
 
-export default async function AppLayout({
+export default function AppLayout({
   children, modal,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
-   const [headerPromise, snsSettings] = await Promise.all([getWorkInfo(), getSnsSettings()]);
+   const headerPromise = getWorkInfo();
+   const snsSettingsPromise = getSnsSettings();
   return (
     <>
-      <Header headerPromise={headerPromise.data!} />
+      <Suspense>
+        <Header headerPromise={headerPromise} />
+      </Suspense>
       <main className="flex-grow">{children}</main>
-       {Boolean(snsSettings?.length) && <SnsIcon snsSettings={snsSettings} />}
-      <Footer headerPromise={headerPromise.data!} />
+      <Suspense>
+       <SnsIcon snsSettingsPromise={snsSettingsPromise} />
+      </Suspense>
+      <Suspense>
+        <Footer headerPromise={headerPromise} />
+      </Suspense>
       {modal}
     </>
   );

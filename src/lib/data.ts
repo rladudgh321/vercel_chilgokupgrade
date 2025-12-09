@@ -130,12 +130,8 @@ export const getBuyTypes = cache(async () => {
     return data;
 }, ['buy-types'], { tags: ['public'] });
 
-export const getListings = cache(async (searchParams: { [key: string]: string | string[] | undefined }) => {
-    // This function uses BuildFindAll which likely uses the cookie-based supabase client.
-    // To make this work with ISR, BuildFindAll would also need to be refactored
-    // to not rely on cookies for public data.
-    // For now, I'm assuming BuildFindAll can be called on the server at build time.
-    // If it can't, this will also need to be refactored to use the public supabase client.
+export const getListings = async (searchParams: { [key: string]: string | string[] | undefined }) => {
+  return cache(async () => {
     const page = parseInt(searchParams.page as string || "1", 10);
     const limit = parseInt(searchParams.limit as string || "12", 10);
     const keyword = searchParams.keyword as string || undefined;
@@ -148,34 +144,36 @@ export const getListings = cache(async (searchParams: { [key: string]: string | 
     const popularity = searchParams.popularity as string || undefined;
 
     try {
-        const { data: processedListings, totalPages } = await BuildFindAll(
-          page,
-          limit,
-          keyword,
-          {
-            theme,
-            propertyType,
-            buyType,
-            rooms,
-            bathrooms,
-            popularity,
-          },
-          sortBy
-        );
-    
-        return {
-          listings: processedListings,
-          totalPages,
-          currentPage: page,
-        };
-      } catch (error) {
-        console.error("Failed to fetch listings", error);
-        throw new Error("Failed to fetch listings");
-      }
-}, ['listings'], { tags: ['public'] });
+      const { data: processedListings, totalPages } = await BuildFindAll(
+        page,
+        limit,
+        keyword,
+        {
+          theme,
+          propertyType,
+          buyType,
+          rooms,
+          bathrooms,
+          popularity,
+        },
+        sortBy
+      );
+  
+      return {
+        listings: processedListings,
+        totalPages,
+        currentPage: page,
+      };
+    } catch (error) {
+      console.error("Failed to fetch listings", error);
+      throw new Error("Failed to fetch listings");
+    }
+  }, ['listings', JSON.stringify(searchParams)], { tags: ['public'] })();
+};
 
 
-export const getMapListings = cache(async (searchParams: { [key: string]: string | string[] | undefined }) => {
+export const getMapListings = async (searchParams: { [key: string]: string | string[] | undefined }) => {
+  return cache(async () => {
     const keywordRaw = (searchParams.keyword as string)?.trim() ?? "";
     const keyword = keywordRaw.length ? keywordRaw : undefined;
     const theme = (searchParams.theme as string)?.trim();
@@ -226,4 +224,5 @@ export const getMapListings = cache(async (searchParams: { [key: string]: string
         throw new Error("Could not fetch map listings.");
     }
     return data ?? [];
-}, ['map-listings', JSON.stringify(searchParams)], { tags: ['public'] });  
+  }, ['map-listings', JSON.stringify(searchParams)], { tags: ['public'] })();
+};

@@ -4,7 +4,7 @@ import { notifySlack } from "@/app/utils/sentry/slack";
 import { createClient } from "@/app/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export const runtime = "nodejs";
+
 
 const SLACK_WEBHOOK_CONTACT = process.env.SLACK_WEBHOOK_CONTACT!;
 

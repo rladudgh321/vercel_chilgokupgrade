@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Header from '../layout/admin/Header';
 import AdminNav from '../components/admin/nav';
 import { clsx } from 'clsx';
 
-export default function AdminLayoutClient({ children, logoUrl }: { children: React.ReactNode, logoUrl: string | null }) {
+export default function AdminLayoutClient({ children, logoUrlPromise }: { children: React.ReactNode, logoUrlPromise: Promise<string | null> }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const logoUrl = use(logoUrlPromise);
 
 
   return (

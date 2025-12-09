@@ -9,6 +9,7 @@ const withBundleAnalyzer = (bundleAnalyzer as any)({
 });
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   async headers() {
     return [
       {
