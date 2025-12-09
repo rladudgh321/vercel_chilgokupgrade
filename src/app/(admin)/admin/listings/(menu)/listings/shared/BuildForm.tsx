@@ -126,19 +126,19 @@ export const BASE_DEFAULTS: FormData = {
   priceDisplay: "공개",
 
   salePrice: null,
-  isSalePriceEnabled: false,
+  isSalePriceEnabled: false, // Reverted from true to false
   lumpSumPrice: null,
-  isLumpSumPriceEnabled: false,
+  isLumpSumPriceEnabled: false, // Reverted from true to false
   actualEntryCost: null,
-  isActualEntryCostEnabled: false,
+  isActualEntryCostEnabled: false, // Reverted from true to false
   rentalPrice: null,
-  isRentalPriceEnabled: false,
+  isRentalPriceEnabled: false, // Reverted from true to false
   halfLumpSumMonthlyRent: null,
-  isHalfLumpSumMonthlyRentEnabled: false,
+  isHalfLumpSumMonthlyRentEnabled: false, // Reverted from true to false
   deposit: null,
-  isDepositEnabled: false,
+  isDepositEnabled: false, // Reverted from true to false
   managementFee: null,
-  isManagementFeeEnabled: false,
+  isManagementFeeEnabled: false, // Reverted from true to false
   managementEtc: "",
 
   // BuildBasic

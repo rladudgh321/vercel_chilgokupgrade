@@ -6,8 +6,8 @@ import { numberToKoreanWithDigits } from "@/app/utility/NumberToKoreanWithDigits
 import { FormData } from "@/app/(admin)/admin/listings/(menu)/listings/shared/BuildForm";
 
 const PriceInput = ({ name, label, enabledName }) => {
-  const { register, watch } = useFormContext();
-  const isEnabled = watch(enabledName);
+  const { register, control, watch } = useFormContext();
+  const isEnabled = useWatch({ control, name: enabledName });
   const value = watch(name);
 
   return (

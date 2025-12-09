@@ -84,9 +84,8 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   };
 
   // Query Key
-  const qk = 
-    () => ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey]
-  const shouldUseInitial = 
+  const qk = ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey]
+  const shouldUseInitial =
     () =>
       (ListingsData?.currentPage ?? 1) === page &&
       (searchKeyword ?? "") === "" &&
@@ -104,7 +103,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     queryKey: qk,
     queryFn: () => BuildFindAllAdmin(page, LIMIT, searchKeyword, undefined, sortKey),
     placeholderData: keepPreviousData,
-    initialData: shouldUseInitial ? ListingsData : undefined,
+    initialData: shouldUseInitial() ? ListingsData : undefined,
     staleTime: 10_000,
   });
 
@@ -139,8 +138,9 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     mutationFn: (ids: number[]) => BuildDeleteSome(ids),
     onMutate: async (ids) => {
       setIsDeleting(true);
-      await queryClient.cancelQueries({ queryKey: qk });
-      const prev = queryClient.getQueryData<typeof ListingsData>(qk);
+      const queryKey = ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey];
+      await queryClient.cancelQueries({ queryKey });
+      const prev = queryClient.getQueryData<typeof ListingsData>(queryKey);
       if (prev) {
         const nextTotalItems = Math.max(0, (prev.totalItems ?? 0) - ids.length);
         const next = {
@@ -150,13 +150,13 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
           totalPages: Math.max(1, Math.ceil(nextTotalItems / LIMIT)),
           currentPage: page,
         };
-        queryClient.setQueryData(qk, next);
+        queryClient.setQueryData(queryKey, next);
       }
       setSelectedIds((prevSel) => prevSel.filter((id) => !ids.includes(id)));
-      return { prev };
+      return { prev, queryKey };
     },
     onError: (_err, _ids, ctx) => {
-      if (ctx?.prev) queryClient.setQueryData(qk, ctx.prev);
+      if (ctx?.prev) queryClient.setQueryData(ctx.queryKey, ctx.prev);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["builds"] });

@@ -1,30 +1,13 @@
-`/notice/[id]`페이지에서 generateStaticParams를 사용하여 SSG를 만들 수 있도록 해줘
+`/admin/listings/listings/create`페이지에서 매물정보에서 매매가 전세가 실입주금 보증금 월세 반전세의 월세 관리비의 Input을 사용할 수가 없어. 체크가 되면 사용할 수 있도록 해줘
 
 ---
-bok@DESKTOP-R2LOA8R MINGW64 /c/proj/vercel_chilgokupgrade (main)
-$ npm run build
+`/admin/listings/listings/[id]/edit`페이지에서 input창에서 수정은 잘 되더라고 왜 create페이지에서만 안되는 것인지 `/admin/listings/listings/[id]/edit`페이지를 참고하여 수정해줘
 
-> chilgok@0.1.0 build
-> next build
+---
+좋아 이제 input창을 이용할 수 있게 되었어. 하지만 체크박스는 기본값으로 체크가 해제되도록 해줘
 
-   ▲ Next.js 16.0.8 (Turbopack)
-   - Environments: .env
-   - Experiments (use with caution):
-     · clientTraceMetadata
+---
+입력 필드는 기본적으로 비활성화된 상태로 두고, 체크박스를 직접 체크해야만 사용할 수 있도록 하고 싶어
 
-   Creating an optimized production build ...
- ✓ Compiled successfully in 11.7s
- ✓ Completed runAfterProductionCompile in 14231ms
-   Skipping validation of types
- ✓ Collecting page data using 15 workers in 3.5s
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
- ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
-Error occurred prerendering page "/notice/1". Read more: https://nextjs.org/docs/messages/prerender-error
-Error: Supabase environment variables are not set.
-    at g (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__97922b9f._.js:2:11284)
-    at h (C:\proj\vercel_chilgokupgrade\.next\server\chunks\ssr\[root-of-the-server]__97922b9f._.js:2:11760)
-    at stringify (<anonymous>) {
-  digest: '1746375811'
-}
-Export encountered an error on /(app)/notice/[id]/page: /notice/1, exiting the build.
- ⨯ Next.js build worker exited with code: 1 and signal: null
+---
+체크박스를 체크해도 사용할 수 없어
