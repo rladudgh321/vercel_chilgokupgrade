@@ -8,7 +8,6 @@ import { IBuild } from "@/app/interface/build";
 export default function BuildDetailModalClient({ build, onClose }: { build: IBuild, onClose: () => void }) {
   const [areaUnit, setAreaUnit] = useState<"m2" | "pyeong">("m2");
   const [isExtraInfoVisible, setIsExtraInfoVisible] = useState(false);
-  console.log('build', build);
 
   const convertToPyeong = (m2: number) => (m2 / 3.305785);
   const formatPrice = (price?: number | string | null) =>
