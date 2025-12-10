@@ -21,7 +21,7 @@ const fetchListings = async (queryParams: Record<string, string>) => {
 };
 
 const CardPageClient = () => {
-  const [selectedBuildId, setSelectedBuildId] = useState<number | null>(null);
+  const [selectedBuild, setSelectedBuild] = useState<IBuild | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -117,13 +117,13 @@ const CardPageClient = () => {
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   // --- Event Handlers ---
-  const handleCardClick = (id: number) => {
-    fetch(`/api/build/${id}/increment-views`, { method: "POST" });
-    setSelectedBuildId(id);
+  const handleCardClick = (listing: IBuild) => {
+    fetch(`/api/build/${listing.id}/increment-views`, { method: "POST" });
+    setSelectedBuild(listing);
   };
 
   const handleCloseModal = () => {
-    setSelectedBuildId(null);
+    setSelectedBuild(null);
   };
 
   const handlePageChange = (page: number) => {
@@ -175,7 +175,6 @@ const CardPageClient = () => {
   ];
 
   const displayListings = listings;
-  const selectedBuild = useMemo(() => listings.find((listing: any) => listing.id === selectedBuildId), [listings, selectedBuildId])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -225,7 +224,7 @@ const CardPageClient = () => {
                 <CardItem
                   key={listing.id}
                   listing={listing}
-                  onClick={() => handleCardClick(listing.id)}
+                  onClick={() => handleCardClick(listing)}
                   priority={index < 3}
                 />
               ))}
@@ -242,7 +241,7 @@ const CardPageClient = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
-      {selectedBuildId && (
+      {selectedBuild && (
         <BuildDetailModalClient
           build={selectedBuild}
           onClose={handleCloseModal}

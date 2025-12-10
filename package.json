@@ -11,10 +11,10 @@
   ],
   "scripts": {
     "seed": "prisma db seed",
-    "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 next dev",
+    "dev": "cross-env next dev",
     "build": "next build",
     "build:webpack": "next build --webpack",
-    "start": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 next start",
+    "start": "cross-env next start",
     "lint": "next lint",
     "dev:no": "next dev",
     "prisma": "prisma generate",

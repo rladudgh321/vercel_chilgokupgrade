@@ -1,3 +1,3 @@
-`/card`페이지를 수정하고자해.
-나는 `/card`페이지가 정적으로 만들고 싶어
-너는 `/landSearch`페이지를 참고하여 `searchParams`를 사용하지 않고 useSearchParams를 사용하여 url을 조작해줘. 그리고 fetch옵션에는 cache로는 `force-cache`를 사용하고 tags로는 `public`을 사용하고 싶어
+`/src/app/(app)/@modal/(.)build/[id]/page.tsx` 컴포넌트에서 루트 경로에 modal을 실행하면 404페이지를 보여주는데 dev모드에서는 잘 작동되지만 프로덕션환경에서는 404페이지를 보여주네? 왜그런걸까
+---
+나는 루트경로에서 ListingSection에 있는 리스트를 클릭하여 모달을 띄울 때, `/landSearch`페이지에서처럼 URL변경 없고 `/landSearch`처럼 기존 UI 위에 모달이 띄워져있게끔 하고 싶어

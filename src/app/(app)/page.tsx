@@ -3,7 +3,7 @@ import MainPicture, { Banner } from "../components/root/1MainPicture";
 import SearchMapList from "../components/root/2SearchMapList";
 import WhatTypeLand, { ListingTypeProps } from "../components/root/3WhatTypeLand";
 import IfLandType, { ThemeImageProps } from "../components/root/4IfLandType";
-import ListingSection, { Listing } from "../components/root/ListingSection";
+import HomePageClient from "./HomePageClient";
 import Contact from "../components/root/8Contact";
 import ContactForm from "../components/root/8Contact/ContactForm";
 import Institue from "../components/root/9Institue";
@@ -129,7 +129,7 @@ const Home = async () => {
       <WhatTypeLand listingType={listingType} />
       <IfLandType themeImage={themeImage} />
       <Suspense fallback={<div>로딩 중...</div>}>
-        <ListingSection RecommendData={RecommendData!} QuickSaleData={QuickSaleData!} RecentlyData={RecentlyData!} />
+        <HomePageClient RecommendData={RecommendData!} QuickSaleData={QuickSaleData!} RecentlyData={RecentlyData!} />
       </Suspense>
       <Contact>
         <Suspense fallback={<div>로딩 중...</div>}>
