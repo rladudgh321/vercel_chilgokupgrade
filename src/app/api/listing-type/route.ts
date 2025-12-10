@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getListingTypes } from "@/lib/data"; // Import the cached function
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
+import { cookies } from "next/headers";
+import { createClient } from "@/app/utils/supabase/server";
 
 // GET: 모든 매물 유형 조회
 export async function GET(req: NextRequest) {
