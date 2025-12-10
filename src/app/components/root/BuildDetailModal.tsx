@@ -31,7 +31,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
       build?.mainImage
         ? [build.mainImage, ...(Array.isArray(build.subImage) ? build.subImage : [])]
         : [];
-
+  console.log('allImages', build);
   const getAreaString = (build: IBuild, unit: "m2" | "pyeong"): string => {
     const areas = [
       { label: "공급", value: build.supplyArea },
@@ -129,7 +129,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
         </div>
 
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6" style={{ maxHeight: "85vh", overflowY: "auto" }}>
-          <ImageSlider images={allImages as string[]} />
+          <ImageSlider images={allImages() as string[]} />
 
           <div className="pb-4 border-b">
             <h3 className="text-xl sm:text-2xl font-bold">{build.title}</h3>

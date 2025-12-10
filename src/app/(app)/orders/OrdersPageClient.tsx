@@ -11,9 +11,9 @@ async function fetchInitialData(): Promise<{
   buyTypes: SelectOption[];
 }> {
   const [ipRes, propTypeRes, buyTypeRes] = await Promise.all([
-    fetch("/api/ip-status"),
-    fetch("/api/listing-type"),
-    fetch("/api/buy-types-public"),
+    fetch("/api/ip-status", { cache: 'force-cache', next: { tags: ['public'] } }),
+    fetch("/api/listing-type", { cache: 'force-cache', next: { tags: ['public'] } }),
+    fetch("/api/buy-types-public", { cache: 'force-cache', next: { tags: ['public'] } }),
   ]);
 
   const ipStatus = ipRes.ok ? await ipRes.json() : { isBanned: false };

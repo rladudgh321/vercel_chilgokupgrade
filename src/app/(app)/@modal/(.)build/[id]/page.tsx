@@ -6,6 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
 // 기존 getBuild 재사용
 async function getBuild(id: number): Promise<IBuild> {
   const res = await fetch(`${BASE_URL}/api/supabase/build/${id}`, {
+    cache: 'force-cache',
     next: { tags: ["public", "build", `build:${id}`] }
   });
   if (!res.ok) throw new Error("Build fetch failed");
@@ -18,6 +19,7 @@ export async function generateStaticParams(): Promise<Array<{ id: string }>> {
     // 빌드 시점에 가져올 목록 엔드포인트 (주의: 자기 배포 URL 사용시 Vercel 빌드에서 실패할 수 있음)
     const res = await fetch(`${BASE_URL}/api/supabase/build?onlyIds=true`, {
       // 빌드에서 캐시/재검증 정도를 제어하려면 next 옵션 사용 가능
+      cache: 'force-cache',
       next: { tags: ['public']} // (선택) 1시간 재검증
     });
 
@@ -49,8 +51,8 @@ export async function generateStaticParams(): Promise<Array<{ id: string }>> {
 }
 
 // 페이지 컴포넌트: 이제 SSG로 사전생성됩니다.
-export default async function ModalPage({ params }: { params: { id: string } }) {
-  const buildId = Number(params.id);
+export default async function ModalPage({ params }: { params: Promise<{ id: string }> }) {
+  const buildId = Number((await params).id);
   const build = await getBuild(buildId);
   return <BuildDetailModalWithRouting build={build} />;
 }

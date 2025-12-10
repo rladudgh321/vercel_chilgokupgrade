@@ -32,6 +32,7 @@ async function getPost(id: string): Promise<BoardPost> {
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
     },
+    cache: 'force-cache',
     next: { tags: ['public'] },
   });
 
