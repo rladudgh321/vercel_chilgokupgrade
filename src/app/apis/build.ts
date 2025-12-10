@@ -31,7 +31,7 @@ export async function BuildFindAll(
     ...(sortBy ? { sortBy: sortBy } : {}),
   });
 
-  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { next: { tags: ['public'] } });
+  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'force-cache', next: { tags: ['public'] } });
   if(!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`GET /api/supabase/build failed (${res.status}): ${text}`);
@@ -116,7 +116,8 @@ export async function BuildFindOne(id: number) {
   try {
     const res = await fetch(url, { method: "GET", next: {
       tags: ['public', 'admin-build-id']
-    } });
+    }, cache: 'force-cache'
+   });
     if (!res.ok) {
       const errorText = await res.text();
       console.error(`API Error: ${res.status} ${res.statusText}`, errorText);
