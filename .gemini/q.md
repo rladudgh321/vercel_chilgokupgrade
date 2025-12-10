@@ -1,3 +1,2 @@
-`/src/app/(app)/@modal/(.)build/[id]/page.tsx` 컴포넌트에서 루트 경로에 modal을 실행하면 404페이지를 보여주는데 dev모드에서는 잘 작동되지만 프로덕션환경에서는 404페이지를 보여주네? 왜그런걸까
----
-나는 루트경로에서 ListingSection에 있는 리스트를 클릭하여 모달을 띄울 때, `/landSearch`페이지에서처럼 URL변경 없고 `/landSearch`처럼 기존 UI 위에 모달이 띄워져있게끔 하고 싶어
+`/admin/listings/listings`를 참고하여 `/admin/listings/deleted-listings`페이지를 수정해줘.
+`/admin/listings/deleted-listings`페이지는 현재 페이지네이션이 동작하고 있으나 SearchParams때문에 dynamic렌더링이 되고 있어 `/admin/listings/listings` 페이지처럼 static 렌더링이 될 수 있도록 해줘

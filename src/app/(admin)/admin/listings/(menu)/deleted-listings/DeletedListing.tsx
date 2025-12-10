@@ -47,7 +47,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
     (DeletedData?.currentPage ?? 1) === page && (keyword ?? "") === "";
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: qk,
+    queryKey: qk(),
     queryFn: () => BuildFindAllDeleted(page, LIMIT, keyword),
     placeholderData: keepPreviousData,
     initialData: shouldUseInitial ? DeletedData : undefined,
@@ -90,7 +90,8 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
   type PageData = Paginated<IBuild>;
 
   const optimisticallyRemove = (id: number) => {
-    const prev = queryClient.getQueryData<PageData>(qk);
+    const queryKey = qk();
+    const prev = queryClient.getQueryData<PageData>(queryKey);
     if (!prev) return prev;
     const nextTotal = Math.max(0, (prev.totalItems ?? 0) - 1);
     const next: PageData = {
@@ -100,29 +101,29 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
       totalPages: Math.max(1, Math.ceil(nextTotal / LIMIT)),
       currentPage: prev.currentPage,
     };
-    queryClient.setQueryData(qk, next);
+    queryClient.setQueryData(queryKey, next);
     return prev;
   };
 
   const restoreMutation = useMutation({
     mutationFn: (id: number) => BuildRestore(id),
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: qk });
+      await queryClient.cancelQueries({ queryKey: qk() });
       const backup = optimisticallyRemove(id);
       return { backup };
     },
-    onError: (_e, _id, ctx) => { if (ctx?.backup) queryClient.setQueryData(qk, ctx.backup); },
+    onError: (_e, _id, ctx) => { if (ctx?.backup) queryClient.setQueryData(qk(), ctx.backup); },
     onSettled: () => { queryClient.invalidateQueries({ queryKey: ["builds-deleted"] }); },
   });
 
   const hardDeleteMutation = useMutation({
     mutationFn: (id: number) => BuildHardDelete(id),
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: qk });
+      await queryClient.cancelQueries({ queryKey: qk() });
       const backup = optimisticallyRemove(id);
       return { backup };
     },
-    onError: (_e, _id, ctx) => { if (ctx?.backup) queryClient.setQueryData(qk, ctx.backup); },
+    onError: (_e, _id, ctx) => { if (ctx?.backup) queryClient.setQueryData(qk(), ctx.backup); },
     onSettled: () => { queryClient.invalidateQueries({ queryKey: ["builds-deleted"] }); },
   });
 
@@ -329,7 +330,7 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
         <div className="my-4 flex justify-center">
           <Pagination
             totalPages={data?.totalPages ?? 1}
-            currentPage={page}
+            currentPage={data?.currentPage ?? page}
             onPageChange={setPage}
           />
         </div>
