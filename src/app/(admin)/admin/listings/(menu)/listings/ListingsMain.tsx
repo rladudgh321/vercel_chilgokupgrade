@@ -198,7 +198,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   // 확인일 조작 (서버 동기화)
   const addConfirmDate = (id: number) => {
     // PUT API를 사용하여 오늘 날짜로 추가
-    updateConfirmDate(id, { confirmDate: today })
+    updateConfirmDate(id, { confirmDate: today() })
       .then(() => {
         // 성공 시 쿼리 무효화하여 데이터 새로고침
         queryClient.invalidateQueries({ queryKey: ["builds"] });

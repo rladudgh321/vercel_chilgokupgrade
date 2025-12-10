@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Selected from "./Selected";
 import ListingsMain from "./ListingsMain";
 
@@ -10,10 +9,13 @@ export type SortKey =
   | "price-desc"
   | "price-asc"
   | "area-desc"
-  | "area-asc";
+  | "area-asc"
+  | undefined; // Add undefined to SortKey type
+
 
 export default function ListingsShell({
   ListingsData,
+  sortBy,
 }: {
   ListingsData: {
     currentPage: number;
@@ -22,17 +24,16 @@ export default function ListingsShell({
     totalItems: number;
     totalPages: number;
   };
+  sortBy: SortKey;
 }) {
-  const [sortKey, setSortKey] = useState<SortKey>("recent");
 
   return (
     <>
       <Selected
         totalCount={ListingsData?.totalItems ?? 0}
-        sortKey={sortKey}
-        onChangeSort={setSortKey}
+        sortKey={sortBy}
       />
-      <ListingsMain ListingsData={ListingsData} sortKey={sortKey} />
+      <ListingsMain ListingsData={ListingsData} sortKey={sortBy} />
     </>
   );
 }

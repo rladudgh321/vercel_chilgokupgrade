@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import clsx from "clsx";
 
@@ -8,7 +9,6 @@ import { type SortKey } from "./ListingsShell";
 interface SelectedProps {
   totalCount: number;
   sortKey: SortKey;
-  onChangeSort: (k: SortKey) => void;
 }
 
 const tabBtn = (active: boolean) =>
@@ -19,7 +19,22 @@ const tabBtn = (active: boolean) =>
       : "bg-white text-slate-700 border-slate-400 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
   );
 
-const Selected = ({ totalCount, sortKey, onChangeSort }: SelectedProps) => {
+const Selected = ({ totalCount, sortKey }: SelectedProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleSortChange = (newSortKey: SortKey) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (newSortKey) {
+      params.set("sortBy", newSortKey);
+    } else {
+      params.delete("sortBy");
+    }
+    router.push(`?${params.toString()}`);
+  };
+
+  const currentSortKey = sortKey ?? "latest"; // Default to 'latest' if sortKey is undefined
+
   return (
     <>
       {/* 컨트롤 인풋창 */}
@@ -32,41 +47,41 @@ const Selected = ({ totalCount, sortKey, onChangeSort }: SelectedProps) => {
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className={tabBtn(sortKey === "recent")}
-            onClick={() => onChangeSort("recent")}
-            aria-pressed={sortKey === "recent"}
+            className={tabBtn(currentSortKey === "latest")}
+            onClick={() => handleSortChange("latest")}
+            aria-pressed={currentSortKey === "latest"}
           >
             최신순
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey === "views")}
-            onClick={() => onChangeSort("views")}
-            aria-pressed={sortKey === "views"}
+            className={tabBtn(currentSortKey === "popular")}
+            onClick={() => handleSortChange("popular")}
+            aria-pressed={currentSortKey === "popular"}
           >
             인기순
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey.startsWith("price"))}
+            className={tabBtn(currentSortKey.startsWith("price"))}
             onClick={() =>
-              onChangeSort(sortKey === "price-desc" ? "price-asc" : "price-desc")
+              handleSortChange(currentSortKey === "price-desc" ? "price-asc" : "price-desc")
             }
-            aria-pressed={sortKey.startsWith("price")}
+            aria-pressed={currentSortKey.startsWith("price")}
           >
-            {sortKey === "price-asc" ? "금액순↑" : "금액순↓"}
+            {currentSortKey === "price-asc" ? "금액순↑" : "금액순↓"}
           </button>
           <button
             type="button"
-            className={tabBtn(sortKey.startsWith("area"))}
+            className={tabBtn(currentSortKey.startsWith("area"))}
             onClick={() =>
-              onChangeSort(
-                sortKey === "area-desc" ? "area-asc" : "area-desc"
+              handleSortChange(
+                currentSortKey === "area-desc" ? "area-asc" : "area-desc"
               )
             }
-            aria-pressed={sortKey.startsWith("area")}
+            aria-pressed={currentSortKey.startsWith("area")}
           >
-            {sortKey === "area-asc" ? "면적순↑" : "면적순↓"}
+            {currentSortKey === "area-asc" ? "면적순↑" : "면적순↓"}
           </button>
         </div>
 
