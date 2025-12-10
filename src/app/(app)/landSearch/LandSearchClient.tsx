@@ -29,7 +29,7 @@ const fetchListings = async ({ pageParam = 1, queryKey }: any) => {
   });
 
   params.set("page", pageParam.toString());
-  const res = await fetch(`/api/listings?${params.toString()}`);
+  const res = await fetch(`/api/listings?${params.toString()}`, { next: { tags: ['public']} });
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -44,7 +44,7 @@ const fetchMapListings = async ({ queryKey }: any) => {
       params.set(key, value);
     }
   });
-  const res = await fetch(`/api/listings/map?${params.toString()}`);
+  const res = await fetch(`/api/listings/map?${params.toString()}`, { next: { tags: ['public'] } });
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -61,7 +61,7 @@ export default function LandSearchClient() {
   const { data: settings } = useQuery({
     queryKey: ["search-bar-settings"],
     queryFn: async () => {
-      const res = await fetch("/api/search-bar-settings");
+      const res = await fetch("/api/search-bar-settings", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch search bar settings");
       const json = await res.json();
       return json.data;
@@ -70,7 +70,7 @@ export default function LandSearchClient() {
   const { data: roomOptions = [] } = useQuery({
     queryKey: ["room-options"],
     queryFn: async () => {
-      const res = await fetch("/api/room-options");
+      const res = await fetch("/api/room-options", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch room options");
       const json = await res.json();
       return json.data;
@@ -79,7 +79,7 @@ export default function LandSearchClient() {
   const { data: bathroomOptions = [] } = useQuery({
     queryKey: ["bathroom-options"],
     queryFn: async () => {
-      const res = await fetch("/api/bathroom-options");
+      const res = await fetch("/api/bathroom-options", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch bathroom options");
       const json = await res.json();
       return json.data;
@@ -88,7 +88,7 @@ export default function LandSearchClient() {
   const { data: floorOptions = [] } = useQuery({
     queryKey: ["floor-options"],
     queryFn: async () => {
-      const res = await fetch("/api/floor-options");
+      const res = await fetch("/api/floor-options", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch floor options");
       const json = await res.json();
       return json.data;
@@ -97,7 +97,7 @@ export default function LandSearchClient() {
   const { data: areaOptions = [] } = useQuery({
     queryKey: ["area"],
     queryFn: async () => {
-      const res = await fetch("/api/area");
+      const res = await fetch("/api/area", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch area presets");
       const json = await res.json();
       return json.data;
@@ -106,7 +106,7 @@ export default function LandSearchClient() {
   const { data: themeOptions = [] } = useQuery({
     queryKey: ["theme-images"],
     queryFn: async () => {
-      const res = await fetch("/api/theme-images-public");
+      const res = await fetch("/api/theme-images-public", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch theme images");
       const json = await res.json();
       return json.data;
@@ -115,7 +115,7 @@ export default function LandSearchClient() {
   const { data: propertyTypeOptions = [] } = useQuery({
     queryKey: ["listing-type"],
     queryFn: async () => {
-      const res = await fetch("/api/listing-type");
+      const res = await fetch("/api/listing-type", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch listing types");
       const json = await res.json();
       return json.data;
@@ -124,7 +124,7 @@ export default function LandSearchClient() {
   const { data: buyTypeOptions = [] } = useQuery({
     queryKey: ["buy-types"],
     queryFn: async () => {
-      const res = await fetch("/api/buy-types-public");
+      const res = await fetch("/api/buy-types-public", { next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch buy types");
       const json = await res.json();
       return json.data;
