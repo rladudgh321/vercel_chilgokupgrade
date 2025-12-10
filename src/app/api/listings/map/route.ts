@@ -1,19 +1,66 @@
-
 import { NextRequest, NextResponse } from "next/server";
-import { getMapListings } from "@/lib/data"; // Import the cached function
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
+import { createClient } from "@/app/utils/supabase/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const params: { [key: string]: string | string[] | undefined } = {};
-    searchParams.forEach((value, key) => {
-      params[key] = value;
-    });
+    
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
 
-    const data = await getMapListings(params);
+    const keywordRaw = searchParams.get("keyword")?.trim() ?? "";
+    const keyword = keywordRaw.length ? keywordRaw : undefined;
+    const theme = searchParams.get("theme")?.trim();
+    const propertyType = searchParams.get("propertyType")?.trim();
+    const buyType = searchParams.get("buyType")?.trim();
 
+    let q = supabase
+      .from("Build")
+      .select('id, title, address, isAddressPublic, lat, lng')
+      .is("deletedAt", null)
+      .eq("visibility", true)
+      .not("isAddressPublic", "eq", "private")
+      .not("isAddressPublic", "eq", "exclude")
+      .order("createdAt", { ascending: false });
+
+    if (keyword) {
+      if (/^\d+$/.test(keyword)) {
+        q = q.eq("id", Number(keyword));
+      } else {
+        q = q.ilike("address", `%${keyword}%`);
+      }
+    }
+    if (theme) {
+      q = q.contains("themes", [theme]);
+    }
+    if (propertyType) {
+      const { data: typeRec } = await supabase.from("ListingType").select("id").eq("name", propertyType).single();
+      if (typeRec) {
+          q = q.eq("listingTypeId", typeRec.id);
+      } else {
+          q = q.eq("listingTypeId", -1); // Return no results if propertyType doesn't exist
+      }
+    }
+
+    if (buyType) {
+      const { data: typeRec } = await supabase.from("BuyType").select("id").eq("name", buyType).single();
+      if (typeRec) {
+          q = q.eq("buyTypeId", typeRec.id);
+      } else {
+          q = q.eq("buyTypeId", -1); // Return no results if buyType doesn't exist
+      }
+    }
+
+    const { data, error } = await q;
+
+    if (error) {
+        console.error("Error fetching map listings:", error);
+        throw new Error("Could not fetch map listings.");
+    }
+    
     return NextResponse.json({
       ok: true,
       data: data ?? [],

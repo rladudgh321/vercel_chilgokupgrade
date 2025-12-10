@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAreaPresets } from "@/lib/data"; // Import the cached function
+
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 import { cookies } from "next/headers";
@@ -8,7 +8,13 @@ import { createClient } from "@/app/utils/supabase/server";
 // GET: 모든 면적 조회
 export async function GET(req: NextRequest) {
   try {
-    const data = await getAreaPresets(); // Call the cached function
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from("AreaPreset").select("*").order("id", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({ ok: true, data }, { status: 200 });
   } catch (e: any) {

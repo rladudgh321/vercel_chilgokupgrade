@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFloorOptions } from "@/lib/data"; // Import the cached function
+
 import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
+import { cookies } from "next/headers";
+import { createClient } from "@/app/utils/supabase/server";
 
 // GET: 모든 층 옵션 조회
 export async function GET(req: NextRequest) {
   try {
-    const data = await getFloorOptions(); // Call the cached function
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from("FloorOption").select("*").order("order", { ascending: true });
+
+    if (error) {
+      throw error;
+    }
 
     return new NextResponse(JSON.stringify({
       ok: true,
