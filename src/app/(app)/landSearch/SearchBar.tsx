@@ -71,7 +71,7 @@ export default function SearchBar({
     let alive = true;
     (async () => {
       try {
-        const r = await fetch(`/api/price-presets?buyTypeId=${bt.id}`);
+        const r = await fetch(`/api/price-presets?buyTypeId=${bt.id}`, { next: { tags: ['public'] } });
         if (!r.ok) return;
         const j = await r.json();
         if (alive && j?.ok) {
