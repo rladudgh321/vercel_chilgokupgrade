@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const theme = searchParams.get("theme")?.trim();
     const propertyType = searchParams.get("propertyType")?.trim();
     const buyType = searchParams.get("buyType")?.trim();
+    const rooms = searchParams.get("rooms")?.trim();
 
     let q = supabase
       .from("Build")
@@ -51,6 +52,16 @@ export async function GET(req: NextRequest) {
           q = q.eq("buyTypeId", typeRec.id);
       } else {
           q = q.eq("buyTypeId", -1); // Return no results if buyType doesn't exist
+      }
+    }
+
+    if (rooms) {
+      const { data: roomRecs } = await supabase.from("RoomOption").select("id").ilike("name", `${rooms}%`);
+      if (roomRecs && roomRecs.length > 0) {
+        const roomIds = roomRecs.map(r => r.id);
+        q = q.in("roomOptionId", roomIds);
+      } else {
+        q = q.eq("roomOptionId", -1);
       }
     }
 
