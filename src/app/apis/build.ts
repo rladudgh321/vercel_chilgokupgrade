@@ -14,7 +14,7 @@ export async function BuildFindAll(
   page: number = 1,
   limit: number = 12,
   keyword?: string,
-  filters?: { theme?: string; propertyType?: string; buyType?: string; rooms?: string; bathrooms?: string; popularity?: string },
+  filters?: { theme?: string; propertyType?: string; buyType?: string; rooms?: string; bathrooms?: string; popularity?: string; areaRange?: string },
   sortBy?: string,
   opts?: { signal?: AbortSignal }
 ) {
@@ -28,13 +28,18 @@ export async function BuildFindAll(
     ...(filters?.rooms ? { rooms: filters.rooms } : {}),
     ...(filters?.bathrooms ? { bathrooms: filters.bathrooms } : {}),
     ...(filters?.popularity ? { popularity: filters.popularity } : {}),
+    ...(filters?.areaRange ? { areaRange: filters.areaRange } : {}),
     ...(sortBy ? { sortBy: sortBy } : {}),
   });
 
-  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'force-cache', next: { tags: ['public'] } });
+  console.log('filters', filters)
+
+  console.log('qdsf', qs.toString());
+
+  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'no-store', next: { tags: ['public'] } });
   if(!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`GET /api/supabase/build failed (${res.status}): ${text}`);
+    throw new Error(`GET /api/visibility-build failed (${res.status}): ${text}`);
   }
   return res.json();
 }
@@ -248,6 +253,7 @@ export async function patchConfirmDateToToday(
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     signal: opts?.signal,
+    body: JSON.stringify(body),
   });
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json?.message ?? "현장 확인일 갱신 실패");

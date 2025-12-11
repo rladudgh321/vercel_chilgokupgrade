@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { notifySlack } from "@/app/utils/sentry/slack";
 import { createClient } from "@/app/utils/supabase/server";
 import { cookies } from "next/headers";
+import { koreanToNumber } from "@/app/utility/koreanToNumber";
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,12 +12,13 @@ export async function GET(req: NextRequest) {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
-    const keywordRaw = searchParams.get("keyword")?.trim() ?? "";
-    const keyword = keywordRaw.length ? keywordRaw : undefined;
+    const keyword = searchParams.get("keyword")?.trim() || undefined;
     const theme = searchParams.get("theme")?.trim();
     const propertyType = searchParams.get("propertyType")?.trim();
     const buyType = searchParams.get("buyType")?.trim();
     const rooms = searchParams.get("rooms")?.trim();
+    const bathrooms = searchParams.get("bathrooms")?.trim();
+    const areaRange = searchParams.get("areaRange")?.trim();
 
     let q = supabase
       .from("Build")
@@ -42,7 +44,7 @@ export async function GET(req: NextRequest) {
       if (typeRec) {
           q = q.eq("listingTypeId", typeRec.id);
       } else {
-          q = q.eq("listingTypeId", -1); // Return no results if propertyType doesn't exist
+          q = q.eq("listingTypeId", -1);
       }
     }
 
@@ -51,7 +53,7 @@ export async function GET(req: NextRequest) {
       if (typeRec) {
           q = q.eq("buyTypeId", typeRec.id);
       } else {
-          q = q.eq("buyTypeId", -1); // Return no results if buyType doesn't exist
+          q = q.eq("buyTypeId", -1);
       }
     }
 
@@ -64,6 +66,60 @@ export async function GET(req: NextRequest) {
         q = q.eq("roomOptionId", -1);
       }
     }
+
+    if (bathrooms) {
+      const { data: bathroomRec } = await supabase.from("BathroomOption").select("id").eq("name", bathrooms).single();
+      if (bathroomRec) {
+          q = q.eq("bathroomOptionId", bathroomRec.id);
+      } else {
+          q = q.eq("bathroomOptionId", -1);
+      }
+    }
+
+    if (areaRange) {
+        const PYEONG_TO_SQM = 3.305785;
+        const areaColumns = ['actualArea', 'supplyArea', 'landArea', 'buildingArea', 'totalArea', 'NetLeasableArea'];
+        let min_sqm: number | null = null;
+        let max_sqm: number | null = null;
+        const cleanedAreaRange = areaRange.replace(/평/g, "");
+
+        if (cleanedAreaRange.includes("~")) {
+            const [minStr, maxStr] = cleanedAreaRange.split("~");
+            const min = Number(minStr);
+            const max = Number(maxStr);
+            if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+            if (!isNaN(max)) max_sqm = max * PYEONG_TO_SQM;
+        } else if (cleanedAreaRange.includes("이상")) {
+            const min = Number(cleanedAreaRange.replace("이상", ""));
+            if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+        } else if (cleanedAreaRange.includes("이하")) {
+            const max = Number(cleanedAreaRange.replace("이하", ""));
+            if (!isNaN(max)) {
+              min_sqm = 0;
+              max_sqm = max * PYEONG_TO_SQM;
+            }
+        }
+
+        const orFilters: string[] = [];
+        if (min_sqm !== null && max_sqm !== null) {
+            areaColumns.forEach(col => {
+                orFilters.push(`and(${col}.gte.${min_sqm},${col}.lte.${max_sqm})`);
+            });
+        } else if (min_sqm !== null) {
+            areaColumns.forEach(col => {
+                orFilters.push(`${col}.gte.${min_sqm}`);
+            });
+        } else if (max_sqm !== null) {
+            areaColumns.forEach(col => {
+                orFilters.push(`${col}.lte.${max_sqm}`);
+            });
+        }
+        
+        if (orFilters.length > 0) {
+            q = q.or(orFilters.join(','));
+        }
+    }
+
 
     const { data, error } = await q;
 

@@ -7,14 +7,14 @@ import { notifySlack } from "@/app/utils/sentry/slack";
 
 export async function GET(req: NextRequest) {
   try {
+    console.log('work!!!!ffff')
     const searchParams = req.nextUrl.searchParams;
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
     const limit = Math.min(
       100,
       Math.max(1, parseInt(searchParams.get("limit") ?? "12", 10) || 12)
     );
-    const keywordRaw = searchParams.get("keyword")?.trim() ?? "";
-    const keyword = keywordRaw.length ? keywordRaw : undefined;
+    const keyword = searchParams.get("keyword")?.trim() || undefined;
     const theme = searchParams.get("theme")?.trim();
     const propertyType = searchParams.get("propertyType")?.trim();
     const buyType = searchParams.get("buyType")?.trim();
@@ -22,6 +22,10 @@ export async function GET(req: NextRequest) {
     const bathrooms = searchParams.get("bathrooms")?.trim();
     const sortBy = searchParams.get("sortBy")?.trim() ?? "latest";
     const popularity = searchParams.get("popularity")?.trim();
+    const floor = searchParams.get("floor")?.trim();
+    const priceRange = searchParams.get("priceRange")?.trim();
+    const areaRange = searchParams.get("areaRange")?.trim();
+    console.log('1111', areaRange);
 
     const from = (page - 1) * limit;
     const to = from + limit - 1;
@@ -47,9 +51,129 @@ export async function GET(req: NextRequest) {
       .is("deletedAt", null)
       .eq("visibility", true)
       .not("isAddressPublic", "eq", "private")
-      .not("isAddressPublic", "eq", "exclude")
+      .not("isAddressPublic", "eq", "exclude");
 
+    if (keyword) {
+      if (/^\d+$/.test(keyword)) {
+        q = q.eq("id", Number(keyword));
+      } else {
+        q = q.ilike("address", `%${keyword}%`);
+      }
+    }
+    if (theme) {
+      q = q.contains("themes", [theme]);
+    }
+     if (propertyType) {
+      const { data: typeRec } = await supabase.from("ListingType").select("id").eq("name", propertyType).single();
+      const idToFilter = typeRec ? typeRec.id : -1;
+      q = q.eq("listingTypeId", idToFilter);
+    }
+    if (buyType) {
+      const { data: typeRec } = await supabase.from("BuyType").select("id").eq("name", buyType).single();
+      const idToFilter = typeRec ? typeRec.id : -1;
+      q = q.eq("buyTypeId", idToFilter);
+    }
+    if (rooms) {
+      const { data: roomRecs } = await supabase.from("RoomOption").select("id").ilike("name", `${rooms}%`);
+      if (roomRecs && roomRecs.length > 0) {
+        const roomIds = roomRecs.map(r => r.id);
+        q = q.in("roomOptionId", roomIds);
+      } else {
+        q = q.eq("roomOptionId", -1);
+      }
+    }
+    if (bathrooms) {
+      const { data: bathroomRec } = await supabase.from("BathroomOption").select("id").eq("name", bathrooms).single();
+      const idToFilter = bathroomRec ? bathroomRec.id : -1;
+      q = q.eq("bathroomOptionId", idToFilter);
+    }
+    if (popularity) {
+      q = q.eq("popularity", popularity);
+    }
+     if (floor) {
+        const filters = [];
+        if (floor.includes("~")) {
+            const [minStr, maxStr] = floor.replace(/층/g, "").split("~");
+            const min = Number(minStr);
+            if (!isNaN(min)) filters.push(`currentFloor.gte.${min}`);
+            if (maxStr && !isNaN(Number(maxStr))) filters.push(`currentFloor.lte.${Number(maxStr)}`);
+        } else {
+            const singleFloor = Number(floor.replace("층", ""));
+            if (!isNaN(singleFloor)) filters.push(`currentFloor.eq.${singleFloor}`);
+        }
+        if (filters.length > 0) {
+          q = q.and(filters.join(","));
+        }
+    }
+    if (priceRange && buyType) {
+        let priceField = "";
+        if (buyType === "전세") priceField = "lumpSumPrice";
+        else if (buyType === "월세") priceField = "rentalPrice";
+        else if (buyType === "매매") priceField = "salePrice";
 
+        if (priceField) {
+            const filters = [];
+            if (priceRange.includes("~")) {
+                const [minStr, maxStr] = priceRange.split("~");
+                const min = koreanToNumber(minStr);
+                const max = koreanToNumber(maxStr);
+                if (min !== null) filters.push(`${priceField}.gte.${min}`);
+                if (max !== null) filters.push(`${priceField}.lte.${max}`);
+            } else if (priceRange.includes("이상")) {
+                const min = koreanToNumber(priceRange.replace("이상", ""));
+                if (min !== null) filters.push(`${priceField}.gte.${min}`);
+            } else if (priceRange.includes("이하")) {
+                const max = koreanToNumber(priceRange.replace("이하", ""));
+                if (max !== null) filters.push(`${priceField}.lte.${max}`);
+            }
+            if (filters.length > 0) {
+              q = q.and(filters.join(","));
+            }
+        }
+    }
+    if (areaRange) {
+      console.log('**', areaRange);
+        const PYEONG_TO_SQM = 3.305785;
+        const areaColumns = ['actualArea', 'supplyArea', 'landArea', 'buildingArea', 'totalArea', 'NetLeasableArea'];
+        let min_sqm: number | null = null;
+        let max_sqm: number | null = null;
+        const cleanedAreaRange = areaRange.replace(/평/g, "").trim();
+
+        if (cleanedAreaRange.includes("~")) {
+            const [minStr, maxStr] = cleanedAreaRange.split("~");
+            const min = Number(minStr.trim());
+            const max = Number(maxStr.trim());
+            if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+            if (!isNaN(max)) max_sqm = max * PYEONG_TO_SQM;
+        } else if (cleanedAreaRange.includes("이상")) {
+            const min = Number(cleanedAreaRange.replace("이상", "").trim());
+            if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+        } else if (cleanedAreaRange.includes("이하")) {
+            const max = Number(cleanedAreaRange.replace("이하", "").trim());
+            if (!isNaN(max)) {
+              max_sqm = max * PYEONG_TO_SQM;
+            }
+        }
+
+        const orFilters: string[] = [];
+        if (min_sqm !== null && max_sqm !== null) { // Handles "X ~ Y"
+            areaColumns.forEach(col => {
+                orFilters.push(`and(${col}.gte.${min_sqm},${col}.lte.${max_sqm})`);
+            });
+        } else if (min_sqm !== null) { // Handles "X 이상"
+            areaColumns.forEach(col => {
+                orFilters.push(`${col}.gte.${min_sqm}`);
+            });
+        } else if (max_sqm !== null) { // Handles "Y 이하"
+            areaColumns.forEach(col => {
+                orFilters.push(`${col}.lte.${max_sqm}`);
+            });
+        }
+        
+        if (orFilters.length > 0) {
+            q = q.or(orFilters.join(','));
+        }
+    }
       
     // Sorting logic
     switch (sortBy) {
@@ -80,128 +204,6 @@ export async function GET(req: NextRequest) {
 
     q = q.range(from, to);
 
-
-    if (keyword) {
-      if (/^\d+$/.test(keyword)) {
-        q = q.eq("id", Number(keyword));
-      } else {
-        q = q.ilike("address", `%${keyword}%`);
-      }
-    }
-    if (theme) {
-      q = q.contains("themes", [theme]);
-    }
-    if (propertyType) {
-      const { data: typeRec } = await supabase.from("ListingType").select("id").eq("name", propertyType).single();
-      if (typeRec) {
-          q = q.eq("listingTypeId", typeRec.id);
-      } else {
-          q = q.eq("listingTypeId", -1); // Return no results if propertyType doesn't exist
-      }
-    }
-
-    if (buyType) {
-      const { data: typeRec } = await supabase.from("BuyType").select("id").eq("name", buyType).single();
-      if (typeRec) {
-          q = q.eq("buyTypeId", typeRec.id);
-      } else {
-          q = q.eq("buyTypeId", -1); // Return no results if buyType doesn't exist
-      }
-    }
-
-    if (rooms) {
-      const { data: roomRecs } = await supabase.from("RoomOption").select("id").ilike("name", `${rooms}%`);
-      if (roomRecs && roomRecs.length > 0) {
-        const roomIds = roomRecs.map(r => r.id);
-        q = q.in("roomOptionId", roomIds);
-      } else {
-        q = q.eq("roomOptionId", -1);
-      }
-    }
-
-    if (bathrooms) {
-      const { data: bathroomRec } = await supabase.from("BathroomOption").select("id").eq("name", bathrooms).single();
-      if (bathroomRec) {
-          q = q.eq("bathroomOptionId", bathroomRec.id);
-      } else {
-          q = q.eq("bathroomOptionId", -1); // Return no results if bathroom option doesn't exist
-      }
-    }
-
-    if (popularity) {
-      q = q.eq("popularity", popularity);
-    }
-
-    const floor = searchParams.get("floor")?.trim();
-    if (floor) {
-        console.log(`[DEBUG] Raw floor param: ${floor}`);
-        const filters = [];
-        if (floor.includes("~")) {
-            const [minStr, maxStr] = floor.replace(/층/g, "").split("~");
-            console.log(`[DEBUG] Floor min string: ${minStr}, max string: ${maxStr}`);
-            const min = Number(minStr);
-            const max = Number(maxStr);
-            console.log(`[DEBUG] Floor min value: ${min}, max value: ${max}`);
-            if (!isNaN(min)) {
-                filters.push(`currentFloor.gte.${min}`);
-            }
-            if (maxStr && !isNaN(Number(maxStr))) {
-                filters.push(`currentFloor.lte.${Number(maxStr)}`);
-            }
-        } else {
-            const singleFloor = Number(floor.replace("층", ""));
-            console.log(`[DEBUG] Single floor value: ${singleFloor}`);
-            if (!isNaN(singleFloor)) {
-                filters.push(`currentFloor.eq.${singleFloor}`);
-            }
-        }
-
-        if (filters.length > 0) {
-            console.log(`[DEBUG] Applying floor filters: ${filters.join(",")}`);
-            q = q.and(filters.join(","));
-        }
-    }
-
-    const priceRange = searchParams.get("priceRange")?.trim();
-    if (priceRange && buyType) {
-        let priceField = "";
-        if (buyType === "전세") {
-            priceField = "lumpSumPrice";
-        } else if (buyType === "월세") {
-            priceField = "rentalPrice";
-        } else if (buyType === "매매") {
-            priceField = "salePrice";
-        }
-
-        if (priceField) {
-            const filters = [];
-            if (priceRange.includes("~")) {
-                const [minStr, maxStr] = priceRange.split("~");
-                const min = koreanToNumber(minStr);
-                const max = koreanToNumber(maxStr);
-                if (min !== null) {
-                    filters.push(`${priceField}.gte.${min}`);
-                }
-                if (max !== null) {
-                    filters.push(`${priceField}.lte.${max}`);
-                }
-            } else if (priceRange.includes("이상")) {
-                const min = koreanToNumber(priceRange.replace("이상", ""));
-                if (min !== null) {
-                    filters.push(`${priceField}.gte.${min}`);
-                }
-            } else if (priceRange.includes("이하")) {
-                const max = koreanToNumber(priceRange.replace("이하", ""));
-                if (max !== null) {
-                    filters.push(`${priceField}.lte.${max}`);
-                }
-            }
-
-            if (filters.length > 0) {
-                q = q.and(filters.join(","));
-            }
-        }
-    }
     const { data, error, count } = await q;
 
     if (error) {
@@ -319,7 +321,7 @@ export async function POST(request: NextRequest) {
 
   } catch (e: any) {
     Sentry.captureException(e);
-    await notifySlack(e, request.url);
+    await notifySlack(e, req.url);
     return NextResponse.json(
       { ok: false, error: { message: e?.message ?? "Unknown error" } },
       { status: 500 }
