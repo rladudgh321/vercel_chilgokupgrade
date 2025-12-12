@@ -195,7 +195,7 @@ export default function SearchBar({
           </select>
         )}
 
-        {settings?.showbuyType && (
+        {settings?.showDealType && (
           <select
             value={buyType}
             onChange={(e) => setBuyType(e.target.value)}
