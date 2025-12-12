@@ -128,27 +128,55 @@ export async function GET(request: Request) {
     }
     if (priceRange && buyType) {
         let priceField = "";
-        if (buyType === "전세") priceField = "lumpSumPrice";
-        else if (buyType === "월세") priceField = "rentalPrice";
-        else if (buyType === "매매") priceField = "salePrice";
+        switch (buyType) {
+            case "월세":
+                priceField = "rentalPrice";
+                break;
+            case "매매":
+                priceField = "salePrice";
+                break;
+            case "전세":
+                priceField = "lumpSumPrice";
+                break;
+            case "실입주금":
+                priceField = "actualEntryCost";
+                break;
+            case "관리비":
+                priceField = "managementFee";
+                break;
+            case "보증금":
+                priceField = "deposit";
+                break;
+            case "반전세의 월세":
+                priceField = "halfLumpSumMonthlyRent";
+                break;
+        }
 
         if (priceField) {
             const filters = [];
-            if (priceRange.includes("~")) {
-                const [minStr, maxStr] = priceRange.split("~");
+            const cleanedPriceRange = priceRange.trim();
+
+            if (cleanedPriceRange.includes("~")) {
+                const [minStr, maxStr] = cleanedPriceRange.split("~");
                 const min = koreanToNumber(minStr);
                 const max = koreanToNumber(maxStr);
                 if (min !== null) filters.push(`${priceField}.gte.${min}`);
                 if (max !== null) filters.push(`${priceField}.lte.${max}`);
-            } else if (priceRange.includes("이상")) {
-                const min = koreanToNumber(priceRange.replace("이상", ""));
+            } else if (cleanedPriceRange.includes("이상")) {
+                const min = koreanToNumber(cleanedPriceRange.replace("이상", ""));
                 if (min !== null) filters.push(`${priceField}.gte.${min}`);
-            } else if (priceRange.includes("이하")) {
-                const max = koreanToNumber(priceRange.replace("이하", ""));
+            } else if (cleanedPriceRange.includes("이하")) {
+                const max = koreanToNumber(cleanedPriceRange.replace("이하", ""));
                 if (max !== null) filters.push(`${priceField}.lte.${max}`);
             }
+
             if (filters.length > 0) {
-              q = q.and(filters.join(","));
+                filters.forEach(filterString => {
+                    const [column, operator, value] = filterString.split('.');
+                    if (column && operator && value) {
+                        q = q.filter(column, operator, value);
+                    }
+                });
             }
         }
     }
