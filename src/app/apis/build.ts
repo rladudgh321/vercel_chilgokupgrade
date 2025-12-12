@@ -36,7 +36,7 @@ export async function BuildFindAll(
 
   console.log('qdsf', qs.toString());
 
-  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'no-store', next: { tags: ['public'] } });
+  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'force-cache', next: { tags: ['public'] } });
   if(!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`GET /api/visibility-build failed (${res.status}): ${text}`);

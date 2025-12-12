@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         buyType:BuyType(name),
         roomOption:RoomOption(name),
         bathroomOption:BathroomOption(name),
-        floorOption:RoomOption(id, name, imageUrl)
+        floorOption:FloorOption(name)
       `,
         { count: "exact" }
       )
@@ -86,20 +86,45 @@ export async function GET(request: Request) {
     if (popularity) {
       q = q.eq("popularity", popularity);
     }
-     if (floor) {
-        const filters = [];
-        if (floor.includes("~")) {
-            const [minStr, maxStr] = floor.replace(/층/g, "").split("~");
-            const min = Number(minStr);
-            if (!isNaN(min)) filters.push(`currentFloor.gte.${min}`);
-            if (maxStr && !isNaN(Number(maxStr))) filters.push(`currentFloor.lte.${Number(maxStr)}`);
-        } else {
-            const singleFloor = Number(floor.replace("층", ""));
-            if (!isNaN(singleFloor)) filters.push(`currentFloor.eq.${singleFloor}`);
-        }
-        if (filters.length > 0) {
-          q = q.and(filters.join(","));
-        }
+    if (floor) {
+      const cleanedFloor = floor.replace(/층/g, "").trim();
+      const filters: string[] = [];
+
+      if (cleanedFloor.includes("~")) {
+          const [minStr, maxStr] = cleanedFloor.split("~");
+          const min = parseInt(minStr, 10);
+          const max = parseInt(maxStr, 10);
+          if (!isNaN(min)) {
+              filters.push(`currentFloor.gte.${min}`);
+          }
+          if (!isNaN(max)) {
+              filters.push(`currentFloor.lte.${max}`);
+          }
+      } else if (cleanedFloor.includes("이상")) {
+          const min = parseInt(cleanedFloor.replace("이상", "").trim(), 10);
+          if (!isNaN(min)) {
+              filters.push(`currentFloor.gte.${min}`);
+          }
+      } else if (cleanedFloor.includes("이하")) {
+          const max = parseInt(cleanedFloor.replace("이하", "").trim(), 10);
+          if (!isNaN(max)) {
+              filters.push(`currentFloor.lte.${max}`);
+          }
+      } else {
+          const singleFloor = parseInt(cleanedFloor, 10);
+          if (!isNaN(singleFloor)) {
+              filters.push(`currentFloor.eq.${singleFloor}`);
+          }
+      }
+
+      if (filters.length > 0) {
+        filters.forEach(filterString => {
+          const [column, operator, value] = filterString.split('.');
+          if (column && operator && value) {
+            q = q.filter(column, operator, value);
+          }
+        });
+      }
     }
     if (priceRange && buyType) {
         let priceField = "";
