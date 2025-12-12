@@ -21,3 +21,6 @@ FloorOption테이블에서 name부분이 데이터가 위의 예시처럼 될 �
  GET /api/listings?floor=1%EC%B8%B5&limit=12 500 in 532ms (compile: 16ms, proxy.ts: 83ms, render: 433ms)
 
  위 대로 콘솔이 나오고 있지만 매물들이 나오지 않고 있어.
+
+ ---
+ 이제는 잘 나오고 있고, `/landSearch`페이지 같은 경우에는 ListingList컴포넌트에는 반영되지만, `MapViews`컴포넌트에 반영되고 있지 않아.

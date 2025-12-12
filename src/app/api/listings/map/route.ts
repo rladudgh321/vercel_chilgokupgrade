@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
     const buyType = searchParams.get("buyType")?.trim();
     const rooms = searchParams.get("rooms")?.trim();
     const bathrooms = searchParams.get("bathrooms")?.trim();
+    const floor = searchParams.get("floor")?.trim();
     const areaRange = searchParams.get("areaRange")?.trim();
 
     let q = supabase
@@ -73,6 +74,47 @@ export async function GET(req: NextRequest) {
           q = q.eq("bathroomOptionId", bathroomRec.id);
       } else {
           q = q.eq("bathroomOptionId", -1);
+      }
+    }
+
+    if (floor) {
+      const cleanedFloor = floor.replace(/층/g, "").trim();
+      const filters: string[] = [];
+
+      if (cleanedFloor.includes("~")) {
+          const [minStr, maxStr] = cleanedFloor.split("~");
+          const min = parseInt(minStr, 10);
+          const max = parseInt(maxStr, 10);
+          if (!isNaN(min)) {
+              filters.push(`currentFloor.gte.${min}`);
+          }
+          if (!isNaN(max)) {
+              filters.push(`currentFloor.lte.${max}`);
+          }
+      } else if (cleanedFloor.includes("이상")) {
+          const min = parseInt(cleanedFloor.replace("이상", "").trim(), 10);
+          if (!isNaN(min)) {
+              filters.push(`currentFloor.gte.${min}`);
+          }
+      } else if (cleanedFloor.includes("이하")) {
+          const max = parseInt(cleanedFloor.replace("이하", "").trim(), 10);
+          if (!isNaN(max)) {
+              filters.push(`currentFloor.lte.${max}`);
+          }
+      } else {
+          const singleFloor = parseInt(cleanedFloor, 10);
+          if (!isNaN(singleFloor)) {
+              filters.push(`currentFloor.eq.${singleFloor}`);
+          }
+      }
+
+      if (filters.length > 0) {
+        filters.forEach(filterString => {
+          const [column, operator, value] = filterString.split('.');
+          if (column && operator && value) {
+            q = q.filter(column, operator, value);
+          }
+        });
       }
     }
 
