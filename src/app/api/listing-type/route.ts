@@ -10,17 +10,44 @@ export async function GET(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase
-        .from("ListingType")
-        .select("*")
-        .order("order", { ascending: true, nullsFirst: false });
-  
-      if (error) {
-          console.error("Error fetching listing types:", error);
-          throw new Error("Could not fetch listing types.");
-      }
 
-    return NextResponse.json({ ok: true, data }, { status: 200 });
+    // 1. 모든 매물 유형 조회
+    const { data: listingTypes, error: listingTypesError } = await supabase
+      .from("ListingType")
+      .select("*")
+      .order("order", { ascending: true, nullsFirst: false });
+
+    if (listingTypesError) {
+      console.error("Error fetching listing types:", listingTypesError);
+      throw new Error("Could not fetch listing types.");
+    }
+
+    // 2. 모든 매물(Build)의 listingTypeId 조회 (null이 아닌 것만)
+    const { data: builds, error: buildsError } = await supabase
+      .from("Build")
+      .select("listingTypeId")
+      .not("listingTypeId", "is", null);
+
+    if (buildsError) {
+      console.error("Error fetching builds for count:", buildsError);
+      throw new Error("Could not fetch builds for count.");
+    }
+
+    // 3. 매물 유형별 개수 집계
+    const counts = builds.reduce((acc, build) => {
+      if (build.listingTypeId) {
+        acc[build.listingTypeId] = (acc[build.listingTypeId] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+
+    // 4. 매물 유형 데이터에 개수 정보 추가
+    const dataWithCounts = listingTypes.map((type) => ({
+      ...type,
+      count: counts[type.id] || 0,
+    }));
+
+    return NextResponse.json({ ok: true, data: dataWithCounts }, { status: 200 });
   } catch (e: any) {
     Sentry.captureException(e);
     await notifySlack(e, req.url);

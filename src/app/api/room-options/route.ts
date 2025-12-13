@@ -10,15 +10,44 @@ export async function GET(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase.from("RoomOption").select("*").order("order", { ascending: true });
 
-    if (error) {
-      throw error;
+    // 1. 모든 RoomOption 조회
+    const { data: roomOptions, error: roomOptionsError } = await supabase
+      .from("RoomOption")
+      .select("*")
+      .order("order", { ascending: true });
+
+    if (roomOptionsError) {
+      throw roomOptionsError;
     }
+
+    // 2. 모든 Build에서 roomOptionId 조회
+    const { data: builds, error: buildsError } = await supabase
+      .from("Build")
+      .select("roomOptionId")
+      .not("roomOptionId", "is", null);
+
+    if (buildsError) {
+      throw buildsError;
+    }
+
+    // 3. roomOptionId별 개수 집계
+    const counts = builds.reduce((acc, build) => {
+      if (build.roomOptionId) {
+        acc[build.roomOptionId] = (acc[build.roomOptionId] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+
+    // 4. RoomOption 데이터에 개수 정보 추가
+    const dataWithCounts = roomOptions.map((option) => ({
+      ...option,
+      count: counts[option.id] || 0,
+    }));
 
     return new NextResponse(JSON.stringify({
       ok: true,
-      data: data
+      data: dataWithCounts
     }), {
       status: 200,
       headers: {

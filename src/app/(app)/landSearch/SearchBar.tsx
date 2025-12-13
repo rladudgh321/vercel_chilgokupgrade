@@ -19,22 +19,12 @@ export default function SearchBar({
   const isInitial = useRef(true);
 
   // ── 옵션 파생값: 메모이즈로 고정 (렌더마다 새 배열 생성 방지)
-  const roomOptions = 
-    () => roomOpts0.map((x) => x.name)
-  const bathroomOptions = 
-    () => bathOpts0.map((x) => x.name)
-  const floorOptions = 
-    () => floorOpts0.map((x) => x.name)
-  const areaOptions = 
-    () => areaOpts0.map((x) => x.name)
-  const themeOptions = () => {
-    if (Array.isArray(themeOpts0) && typeof themeOpts0[0] === "string") {
-      return themeOpts0 as string[];
-    }
-    return (themeOpts0 as Array<{ label: string }>).map((x) => x.label);
-  }
-  const propertyTypeOptions = 
-    () => propTypeOpts0.map((x) => x.name)
+  const roomOptions = () => roomOpts0;
+  const bathroomOptions = () => bathOpts0;
+  const floorOptions = () => floorOpts0;
+  const areaOptions = () => areaOpts0;
+  const themeOptions = () => themeOpts0;
+  const propertyTypeOptions = () => propTypeOpts0;
 
   // ── URL 동기화가 필요한 필터 상태만 state로 관리
   const [searchTerm, setSearchTerm] = useState(sp.get("keyword") ?? "");
@@ -187,11 +177,14 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">매물 종류</option>
-            {propertyTypeOptions().map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+            {propertyTypeOptions().map((opt) => {
+              console.log('opt', opt.name);
+              return (
+              <option key={opt.name} value={opt.name}>
+                {opt.name} ({opt.count})
               </option>
-            ))}
+            )
+            })}
           </select>
         )}
 
@@ -204,7 +197,7 @@ export default function SearchBar({
             <option value="">거래유형</option>
             {buyTypeOpts.map((opt) => (
               <option key={opt.id} value={opt.name}>
-                {opt.name}
+                {opt.name} ({opt.count})
               </option>
             ))}
           </select>
@@ -234,8 +227,8 @@ export default function SearchBar({
           >
             <option value="">면적</option>
             {areaOptions().map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+              <option key={opt.name} value={opt.name}>
+                {opt.name} ({opt.count})
               </option>
             ))}
           </select>
@@ -248,9 +241,9 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">테마</option>
-            {themeOptions().map((label) => (
-              <option key={label} value={label}>
-                {label}
+            {themeOptions().map((opt) => (
+              <option key={opt.id} value={opt.label}>
+                {opt.label} ({opt.count})
               </option>
             ))}
           </select>
@@ -264,8 +257,8 @@ export default function SearchBar({
           >
             <option value="">방</option>
             {roomOptions().map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+              <option key={opt.name} value={opt.name}>
+                {opt.name} ({opt.count})
               </option>
             ))}
           </select>
@@ -279,8 +272,8 @@ export default function SearchBar({
           >
             <option value="">층수</option>
             {floorOptions().map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+              <option key={opt.name} value={opt.name}>
+                {opt.name} ({opt.count})
               </option>
             ))}
           </select>
@@ -294,8 +287,8 @@ export default function SearchBar({
           >
             <option value="">화장실</option>
             {bathroomOptions().map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+              <option key={opt.name} value={opt.name}>
+                {opt.name} ({opt.count})
               </option>
             ))}
           </select>

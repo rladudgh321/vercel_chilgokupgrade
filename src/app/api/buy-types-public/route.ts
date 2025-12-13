@@ -8,17 +8,44 @@ export async function GET(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase
+
+    // 1. 모든 BuyType 조회
+    const { data: buyTypes, error: buyTypesError } = await supabase
       .from("BuyType")
       .select("*")
       .order("order", { ascending: true, nullsFirst: false });
 
-    if (error) {
-        console.error("Error fetching buy types:", error);
-        throw new Error("Could not fetch buy types.");
+    if (buyTypesError) {
+      console.error("Error fetching buy types:", buyTypesError);
+      throw new Error("Could not fetch buy types.");
     }
 
-    return NextResponse.json({ ok: true, data });
+    // 2. 모든 Build에서 buyTypeId 조회
+    const { data: builds, error: buildsError } = await supabase
+      .from("Build")
+      .select("buyTypeId")
+      .not("buyTypeId", "is", null);
+
+    if (buildsError) {
+      console.error("Error fetching builds for count:", buildsError);
+      throw new Error("Could not fetch builds for count.");
+    }
+
+    // 3. buyTypeId별 개수 집계
+    const counts = builds.reduce((acc, build) => {
+      if (build.buyTypeId) {
+        acc[build.buyTypeId] = (acc[build.buyTypeId] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<number, number>);
+
+    // 4. BuyType 데이터에 개수 정보 추가
+    const dataWithCounts = buyTypes.map((type) => ({
+      ...type,
+      count: counts[type.id] || 0,
+    }));
+
+    return NextResponse.json({ ok: true, data: dataWithCounts });
   } catch (e: any) {
     Sentry.captureException(e);
     await notifySlack(e, req.url);

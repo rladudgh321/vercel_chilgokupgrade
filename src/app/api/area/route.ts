@@ -10,13 +10,62 @@ export async function GET(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
-    const { data, error } = await supabase.from("AreaPreset").select("*").order("id", { ascending: true });
 
-    if (error) {
-      throw error;
+    const { data: areaPresets, error: areaPresetsError } = await supabase.from("AreaPreset").select("*").order("id", { ascending: true });
+    if (areaPresetsError) {
+      throw areaPresetsError;
     }
 
-    return NextResponse.json({ ok: true, data }, { status: 200 });
+    const { data: builds, error: buildsError } = await supabase.from("Build").select("actualArea, supplyArea, landArea, buildingArea, totalArea, NetLeasableArea").is("deletedAt", null).eq("visibility", true);
+    if (buildsError) {
+      throw buildsError;
+    }
+
+    const PYEONG_TO_SQM = 3.305785;
+    const areaColumns = ['actualArea', 'supplyArea', 'landArea', 'buildingArea', 'totalArea', 'NetLeasableArea'];
+
+    const dataWithCounts = areaPresets.map(preset => {
+      const cleanedAreaRange = preset.name.replace(/평/g, "").trim();
+      let min_sqm: number | null = null;
+      let max_sqm: number | null = null;
+
+      if (cleanedAreaRange.includes("~")) {
+          const [minStr, maxStr] = cleanedAreaRange.split("~");
+          const min = Number(minStr.trim());
+          const max = Number(maxStr.trim());
+          if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+          if (!isNaN(max)) max_sqm = max * PYEONG_TO_SQM;
+      } else if (cleanedAreaRange.includes("이상")) {
+          const min = Number(cleanedAreaRange.replace("이상", "").trim());
+          if (!isNaN(min)) min_sqm = min * PYEONG_TO_SQM;
+      } else if (cleanedAreaRange.includes("이하")) {
+          const max = Number(cleanedAreaRange.replace("이하", "").trim());
+          if (!isNaN(max)) max_sqm = max * PYEONG_TO_SQM;
+      }
+
+      const count = builds.filter(build => {
+        return areaColumns.some(col => {
+          const area = build[col] as number | null;
+          if (area === null || area === undefined) return false;
+
+          if (min_sqm !== null && max_sqm !== null) {
+            return area >= min_sqm && area <= max_sqm;
+          } else if (min_sqm !== null) {
+            return area >= min_sqm;
+          } else if (max_sqm !== null) {
+            return area <= max_sqm;
+          }
+          return false;
+        });
+      }).length;
+
+      return {
+        ...preset,
+        count
+      };
+    });
+
+    return NextResponse.json({ ok: true, data: dataWithCounts }, { status: 200 });
   } catch (e: any) {
     Sentry.captureException(e);
           await notifySlack(e, req.url);

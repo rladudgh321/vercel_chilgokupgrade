@@ -1,32 +1,33 @@
-`/landSearch`페이지나 `/card`페이지에서, SearchBar컴포넌트에서 거래 유형을 선택한 후에, 금액 부분을 선택을 하게 되면, 매물들이 필터링이 되지 않고 있어.
-나는 SearchBar컴포넌트에서 `금액`을 동적으로 불러오고 있고, `금액`에 해당되는 매물들이 나열되었으면 좋겠어.
-예를들어, 동적인 거래유형에서 `월세`를 클릭하여 동적인 금액부분을 `10만원 이상`이라고 하면 Build테이블의 `rentalPrice`컬럼이 `100000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `매매`를 클릭하여 동적인 금액부분을 `10억원 이상`이라고 하면,
-Build테이블의 `salePrice`컬럼이 `1000000000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `전세`를 클릭하여 동적인 금액부분을 `1억원 이상`이라고 하면,
-Build테이블의 `lumpSumPrice`컬럼이 `100000000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `실입주금`를 클릭하여 동적인 금액부분을 `5억원 이상`이라고 하면,
-Build테이블의 `actualEntryCost`컬럼이 `500000000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `관리비`를 클릭하여 동적인 금액부분을 `15만원 이상`이라고 하면,
-Build테이블의 `managementFee`컬럼이 `150000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `보증금`를 클릭하여 동적인 금액부분을 `300백만원 이상`이라고 하면,
-Build테이블의 `deposit`컬럼이 `3000000` 이상된 매물들이 나타나고
-동적인 거래 유형에서 `반전세의 월세`를 클릭하여 동적인 금액부분을 `50만원 이상`이라고 하면,
-Build테이블의 `halfLumpSumMonthlyRent`컬럼이 `500000` 이상된 매물들이 나타나고
+`/landSearch`페이지나 `/card`페이지의 SearchBar컴포넌트를 수정하고자해. 
+`/admin/listings/category-settings`페이지에서 true된 것들에 대해서 select바를 선택하면 나열된 item들에 대하여 매물들 갯수가 오른쪽에 보이도록 해줘.
+예를들면, `매물 종류`에 대한 select를 클릭을 하면, `/admin/listings/listing-types`페이지에 따른 `과수원, 나대지` 같은 항목과 ListingsList나 CardList에서 Build테이블과 관련된 ListingType테이블의 name부분이 일치된 항목인 `과수원, 나대지`같은 항목에 대한 숫자를 SearchBar컴포넌트 옆에 `과수원(3)`, `나대지(5)` 이렇게 소괄호로 매물갯수를 표현해줘.
+---
+Console Error
 
-예를들어, 동적인 거래유형에서 `월세`를 클릭하여 동적인 금액부분을 `10만원 이하`이라고 하면 Build테이블의 `rentalPrice`컬럼이 `100000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `매매`를 클릭하여 동적인 금액부분을 `10억원 이하`이라고 하면,
-Build테이블의 `salePrice`컬럼이 `1000000000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `전세`를 클릭하여 동적인 금액부분을 `1억원 이하`이라고 하면,
-Build테이블의 `lumpSumPrice`컬럼이 `100000000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `실입주금`를 클릭하여 동적인 금액부분을 `5억원 이하`이라고 하면,
-Build테이블의 `actualEntryCost`컬럼이 `500000000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `관리비`를 클릭하여 동적인 금액부분을 `15만원 이하`이라고 하면,
-Build테이블의 `managementFee`컬럼이 `150000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `보증금`를 클릭하여 동적인 금액부분을 `300백만원 이하`이라고 하면,
-Build테이블의 `deposit`컬럼이 `3000000` 이하인 매물들이 나타나고
-동적인 거래 유형에서 `반전세의 월세`를 클릭하여 동적인 금액부분을 `50만원 이하`이라고 하면,
-Build테이블의 `halfLumpSumMonthlyRent`컬럼이 `500000` 이하인 매물들이 나타나고
 
-예를들어 SearchBar컴포넌트에서 금액부분이 `~`인 것은 그 사이에 매물들이 해당되면 나타나게 해줘
-예를들면 `30만원~40만원`이라고 하면 매물들이 30만원에서 40만원 사이에 있는 매물들이 전부 포함되는 것이다.
+Encountered two children with the same key, `기본 테마`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+src\app\(app)\landSearch\page.tsx (5:5) @ Page
+
+
+  3 | export default async function Page() {
+  4 |   return (
+> 5 |     <LandSearchClient />
+    |     ^
+  6 |   );
+  7 | }
+Call Stack
+26
+
+Show 20 ignore-listed frame(s)
+option
+<anonymous>
+<unknown>
+file:///C:/proj/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (1960:259)
+Array.map
+<anonymous>
+SearchBar
+file:///C:/proj/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (1960:44)
+LandSearchClient
+file:///C:/proj/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (3982:225)
+Page
+src\app\(app)\landSearch\page.tsx (5:5)
