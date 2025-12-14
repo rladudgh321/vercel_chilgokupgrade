@@ -1,5 +1,11 @@
 "use client";
-import { useDeferredValue, useEffect, useRef, useState, startTransition } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+  startTransition,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SearchBarProps } from "@/app/interface/card";
 
@@ -12,24 +18,19 @@ export default function SearchBar({
   themeOptions: themeOpts0,
   propertyTypeOptions: propTypeOpts0,
   buyTypeOptions: buyTypeOpts,
+  listings,
 }: SearchBarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
   const isInitial = useRef(true);
 
-  // ── 옵션 파생값: 메모이즈로 고정 (렌더마다 새 배열 생성 방지)
-  const roomOptions = () => roomOpts0;
-  const bathroomOptions = () => bathOpts0;
-  const floorOptions = () => floorOpts0;
-  const areaOptions = () => areaOpts0;
-  const themeOptions = () => themeOpts0;
-  const propertyTypeOptions = () => propTypeOpts0;
-
   // ── URL 동기화가 필요한 필터 상태만 state로 관리
   const [searchTerm, setSearchTerm] = useState(sp.get("keyword") ?? "");
   const deferredSearch = useDeferredValue(searchTerm); // 디바운스 대체
-  const [propertyType, setPropertyType] = useState(sp.get("propertyType") ?? "");
+  const [propertyType, setPropertyType] = useState(
+    sp.get("propertyType") ?? ""
+  );
   const [buyType, setBuyType] = useState(sp.get("buyType") ?? "");
   const [priceRange, setPriceRange] = useState(sp.get("priceRange") ?? "");
   const [areaRange, setAreaRange] = useState(sp.get("areaRange") ?? "");
@@ -39,8 +40,200 @@ export default function SearchBar({
   const [bathrooms, setBathrooms] = useState(sp.get("bathrooms") ?? "");
   const [subwayLine, setSubwayLine] = useState(sp.get("subwayLine") ?? "");
 
-  const [pricePresets, setPricePresets] = useState<Array<{ id: number; name: string }>>([]);
-  const pricePresetsCache = useRef<Record<number, Array<{ id: number; name: string }>>>({});
+  const [dynamicOptions, setDynamicOptions] = useState({
+    roomOptions: roomOpts0 || [],
+    bathroomOptions: bathOpts0 || [],
+    floorOptions: floorOpts0 || [],
+    areaOptions: areaOpts0 || [],
+    themeOptions: themeOpts0 || [],
+    propertyTypeOptions: propTypeOpts0 || [],
+    buyTypeOptions: buyTypeOpts || [],
+  });
+
+  useEffect(() => {
+    if (!listings) return;
+
+    const calculateDynamicOptions = () => {
+      const activeFilters: any = {
+        propertyType,
+        buyType,
+        theme,
+        rooms,
+        floor,
+        bathrooms,
+        areaRange,
+      };
+
+      const filterListings = (excludeKey: string | null = null) => {
+        return listings.filter((listing) => {
+          for (const key in activeFilters) {
+            if (key === excludeKey) continue;
+            const filterValue = activeFilters[key];
+            if (!filterValue) continue;
+
+            switch (key) {
+              case "propertyType":
+                if (listing.propertyType !== filterValue) return false;
+                break;
+              case "buyType":
+                if (listing.buyType !== filterValue) return false;
+                break;
+              case "theme":
+                if (!listing.themes?.includes(filterValue)) return false;
+                break;
+              case "rooms":
+                if (listing.roomOption !== filterValue) return false;
+                break;
+
+              case "floor":
+                if (listing.floorOption !== filterValue) return false;
+                break;
+              case "bathrooms":
+                if (listing.bathroomOption !== filterValue) return false;
+                break;
+              case "areaRange": {
+                const areaValue = listing.supplyArea;
+                if (!areaValue) return false;
+
+                const areaOpt = areaOpts0.find((o) => o.name === filterValue);
+                if (areaOpt) {
+                  const [minStr, maxStr] = areaOpt.name.split("-");
+                  const min = parseInt(minStr.replace("평", ""));
+                  if (maxStr && maxStr.length > 0) {
+                    const max = parseInt(maxStr.replace("평", ""));
+                    if (!(min <= areaValue && areaValue < max)) return false;
+                  } else {
+                    if (!(min <= areaValue)) return false;
+                  }
+                } else {
+                  return false;
+                }
+                break;
+              }
+              default:
+                break;
+            }
+          }
+          return true;
+        });
+      };
+
+      const countOptions = (
+        filteredListings: any[],
+        optionKey: string,
+        options: any[],
+        isMulti = false,
+        isRange = false
+      ) => {
+        const counts: Record<string, number> = {};
+        for (const listing of filteredListings) {
+          if (isRange) {
+            const areaValue = listing.supplyArea;
+            if (areaValue) {
+              for (const item of options) {
+                const [minStr, maxStr] = item.name.split("-");
+                const min = parseInt(minStr.replace("평", ""));
+                if (maxStr && maxStr.length > 0) {
+                  const max = parseInt(maxStr.replace("평", ""));
+                  if (min <= areaValue && areaValue < max) {
+                    counts[item.name] = (counts[item.name] || 0) + 1;
+                  }
+                } else {
+                  if (min <= areaValue) {
+                    counts[item.name] = (counts[item.name] || 0) + 1;
+                  }
+                }
+              }
+            }
+          } else if (isMulti) {
+            const values = listing[optionKey];
+            if (Array.isArray(values)) {
+              values.forEach((v) => {
+                counts[v] = (counts[v] || 0) + 1;
+              });
+            }
+          } else {
+            const value = listing[optionKey];
+            if (value) {
+              counts[value] = (counts[value] || 0) + 1;
+            }
+          }
+        }
+        return options.map((opt) => ({
+          ...opt,
+          count: counts[isMulti ? opt.label : opt.name] || 0,
+        }));
+      };
+
+      return {
+        propertyTypeOptions: countOptions(
+          filterListings("propertyType"),
+          "propertyType",
+          propTypeOpts0
+        ),
+        buyTypeOptions: countOptions(
+          filterListings("buyType"),
+          "buyType",
+          buyTypeOpts
+        ),
+        roomOptions: countOptions(
+          filterListings("rooms"),
+          "roomOption",
+          roomOpts0
+        ),
+        floorOptions: countOptions(
+          filterListings("floor"),
+          "floorOption",
+          floorOpts0
+        ),
+        bathroomOptions: countOptions(
+          filterListings("bathrooms"),
+          "bathroomOption",
+          bathOpts0
+        ),
+        themeOptions: countOptions(
+          filterListings("theme"),
+          "themes",
+          themeOpts0,
+          true
+        ),
+        areaOptions: countOptions(
+          filterListings("areaRange"),
+          "supplyArea",
+          areaOpts0,
+          false,
+          true
+        ),
+      };
+    };
+
+    if (listings) {
+        setDynamicOptions(calculateDynamicOptions());
+    }
+  }, [
+    listings,
+    propertyType,
+    buyType,
+    areaRange,
+    theme,
+    rooms,
+    floor,
+    bathrooms,
+    propTypeOpts0,
+    buyTypeOpts,
+    roomOpts0,
+    floorOpts0,
+    bathOpts0,
+    themeOpts0,
+    areaOpts0,
+  ]);
+
+  const [pricePresets, setPricePresets] = useState<
+    Array<{ id: number; name: string }>
+  >([]);
+  const pricePresetsCache = useRef<
+    Record<number, Array<{ id: number; name: string }>>
+  >({});
 
   // ── buyType 변경 시 프리셋 (로컬 캐시 적용)
   useEffect(() => {
@@ -61,7 +254,10 @@ export default function SearchBar({
     let alive = true;
     (async () => {
       try {
-        const r = await fetch(`/api/price-presets?buyTypeId=${bt.id}`, { cache: 'force-cache', next: { tags: ['public'] } });
+        const r = await fetch(
+          `/api/price-presets?buyTypeId=${bt.id}`,
+          { cache: "force-cache", next: { tags: ["public"] } }
+        );
         if (!r.ok) return;
         const j = await r.json();
         if (alive && j?.ok) {
@@ -177,14 +373,11 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">매물 종류</option>
-            {propertyTypeOptions().map((opt) => {
-              console.log('opt', opt.name);
-              return (
+            {dynamicOptions.propertyTypeOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>
-            )
-            })}
+            ))}
           </select>
         )}
 
@@ -195,7 +388,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">거래유형</option>
-            {buyTypeOpts.map((opt) => (
+            {dynamicOptions.buyTypeOptions?.map((opt) => (
               <option key={opt.id} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>
@@ -226,7 +419,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">면적</option>
-            {areaOptions().map((opt) => (
+            {dynamicOptions.areaOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>
@@ -241,7 +434,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">테마</option>
-            {themeOptions().map((opt) => (
+            {dynamicOptions.themeOptions?.map((opt) => (
               <option key={opt.id} value={opt.label}>
                 {opt.label} ({opt.count})
               </option>
@@ -256,7 +449,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">방</option>
-            {roomOptions().map((opt) => (
+            {dynamicOptions.roomOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>
@@ -271,7 +464,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">층수</option>
-            {floorOptions().map((opt) => (
+            {dynamicOptions.floorOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>
@@ -286,7 +479,7 @@ export default function SearchBar({
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">화장실</option>
-            {bathroomOptions().map((opt) => (
+            {dynamicOptions.bathroomOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
                 {opt.name} ({opt.count})
               </option>

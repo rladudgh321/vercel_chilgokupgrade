@@ -139,6 +139,21 @@ export default function LandSearchClient() {
     return params;
   }, [currentSearchParams]);
 
+  const { data: allListingsForCounting = [] } = useQuery({
+    queryKey: ["all-listings-for-counting"],
+    queryFn: async () => {
+      const res = await fetch("/api/listings/all");
+      if (!res.ok) {
+        console.error("Failed to fetch all listings for counting");
+        return [];
+      }
+      const json = await res.json();
+      return json.listings ?? [];
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+
   const {
     data: paginatedData,
     fetchNextPage,
@@ -241,6 +256,7 @@ export default function LandSearchClient() {
           themeOptions={themeOptions}
           propertyTypeOptions={propertyTypeOptions}
           buyTypeOptions={buyTypeOptions}
+          listings={allListingsForCounting}
         />
       </div>
 

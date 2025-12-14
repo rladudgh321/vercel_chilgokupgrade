@@ -22,4 +22,5 @@ export interface SearchBarProps {
   themeOptions: ThemeOptionWithCount[];
   propertyTypeOptions: OptionNameWithCount[];
   buyTypeOptions: BuyTypeWithCount[];
+  listings: Record<string, any>[];
 }
