@@ -105,8 +105,19 @@ const SingleImageUploader = ({ title, getApiEndpoint, updateApiEndpoint, uploadA
       {imageUrl && (
         <div className="mt-4">
           <h2 className="text-xl font-semibold">현재 로고</h2>
-          <div className="relative w-48 h-48 mt-2">
-            <Image src={imageUrl} alt="Current Logo" fill objectFit="contain" />
+          
+          <div className="mt-2 p-4 bg-white border border-gray-300 rounded-lg shadow-sm">
+            <h3 className="text-lg font-medium mb-2">흰색 배경</h3>
+            <div className="relative w-48 h-48 flex items-center justify-center">
+              <Image src={imageUrl} alt="Current Logo on White Background" fill objectFit="contain" />
+            </div>
+          </div>
+
+          <div className="mt-4 p-4 bg-black border border-gray-700 rounded-lg shadow-sm">
+            <h3 className="text-lg font-medium mb-2 text-white">검은색 배경</h3>
+            <div className="relative w-48 h-48 flex items-center justify-center">
+              <Image src={imageUrl} alt="Current Logo on Black Background" fill objectFit="contain" />
+            </div>
           </div>
         </div>
       )}

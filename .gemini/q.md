@@ -1,14 +1,10 @@
-`/landSearch`페이지와 `/card`페이지에서 사용하는 SearchBar컴포넌트의 소괄호 안에 매물 갯수에 대해서 처음 select할 때는 정상적인 작동을 하게 해주지만, 두번째 select를 할 때에는 첫번째 select를 조건에 대하여 다른 select의 매물갯수가 적용되게 해줘. 예를들면 매물종류에 대해서 선택을 했으면 그 해당되는 매물종류에 대한 select 갯수가 옆에 있게끔 작동되게 해줘.
-
----
-첫번째 select는 잘되는데 두번째 select는 첫번째 select조건 하에 두번째 select의 매물갯수가 소괄호 안에 작동되도록 해줘. 
-
----
-SearchBar컴포넌트에서 첫번째 select에 대하여서는 소괄호 안에 매물갯수가 정확히 있는데, 첫번째 select를 선택했으면 그 select 조건을 추가하여 두번째 select의 소괄호 안에 매물갯수가 적용되길 바래.
-예를들면 `매물 종류`에서 나대지를 선택하면 7개가 매물이 나온다면 두번째 조건으로 select를 선택하면 7개 중에서 select의 조건대로 필터링 되도록 하고 싶어
-
----
-첫번째 select로는 테마로 귀농귀촌을 선택했으면 그 귀농귀촌인 매물 중에서 두번째 select의 매물종류를 나대지로 하면 나대지인 매물만이 나와야 하는데, 매물과 지도 마커는 잘 나오지만, 소괄호 안에 매물갯수도 그렇게 맞춰줘 
-
----
-SearchBar컴포넌트에서 임의의 select를 해보면 소괄호 안의 매물갯수와 실제 매물 갯수가 달라
+`/admin/webView/logo-settings`페이지에서 `현재 로고` 위 부분에 input의 radio 3개를 만들어서, `/src/app/layout/app/Footer/index.tsx`파일에 input에 대한 상태에 따라 변하게 하고 싶어.
+첫번째 input은 `로고 + 브랜드명`이며, `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`가 없게 하고 싶고
+두번째 input은 `로고`이며, `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`와 `{headerData.data.logoUrl && <Image 
+              src={String(headerData.data.logoUrl)} 
+              alt="logo" 
+              width={120} 
+              height={60}
+              className="w-auto h-auto" 
+            />}`가 나란히 옆에 있게 되도록 하고 싶어. 왼쪽과 오른쪽 이렇게 나란히 말이지
+세번째 input은 `브랜드명`을 선택시 `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`가 없게 하고 싶어
