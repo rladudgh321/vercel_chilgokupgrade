@@ -228,6 +228,7 @@ export default function SearchBar({
     areaOpts0,
   ]);
 
+  const [openSelect, setOpenSelect] = useState<string | null>(null);
   const [pricePresets, setPricePresets] = useState<
     Array<{ id: number; name: string }>
   >([]);
@@ -369,13 +370,18 @@ export default function SearchBar({
         {settings?.showPropertyType && (
           <select
             value={propertyType}
-            onChange={(e) => setPropertyType(e.target.value)}
+            onChange={(e) => {
+              setPropertyType(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('propertyType')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">매물 종류</option>
             {dynamicOptions.propertyTypeOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'propertyType' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>
@@ -384,13 +390,18 @@ export default function SearchBar({
         {settings?.showDealType && (
           <select
             value={buyType}
-            onChange={(e) => setBuyType(e.target.value)}
+            onChange={(e) => {
+              setBuyType(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('buyType')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">거래유형</option>
             {dynamicOptions.buyTypeOptions?.map((opt) => (
               <option key={opt.id} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'buyType' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>
@@ -415,13 +426,18 @@ export default function SearchBar({
         {settings?.showAreaRange && (
           <select
             value={areaRange}
-            onChange={(e) => setAreaRange(e.target.value)}
+            onChange={(e) => {
+              setAreaRange(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('areaRange')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">면적</option>
             {dynamicOptions.areaOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'areaRange' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>
@@ -430,13 +446,18 @@ export default function SearchBar({
         {settings?.showTheme && (
           <select
             value={theme}
-            onChange={(e) => setTheme(e.target.value)}
+            onChange={(e) => {
+              setTheme(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('theme')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">테마</option>
             {dynamicOptions.themeOptions?.map((opt) => (
               <option key={opt.id} value={opt.label}>
-                {opt.label} ({opt.count})
+                {openSelect === 'theme' ? `${opt.label} (${opt.count})` : opt.label}
               </option>
             ))}
           </select>
@@ -445,13 +466,18 @@ export default function SearchBar({
         {settings?.showRooms && (
           <select
             value={rooms}
-            onChange={(e) => setRooms(e.target.value)}
+            onChange={(e) => {
+              setRooms(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('rooms')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">방</option>
             {dynamicOptions.roomOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'rooms' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>
@@ -460,13 +486,18 @@ export default function SearchBar({
         {settings?.showFloor && (
           <select
             value={floor}
-            onChange={(e) => setFloor(e.target.value)}
+            onChange={(e) => {
+              setFloor(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('floor')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">층수</option>
             {dynamicOptions.floorOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'floor' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>
@@ -475,13 +506,18 @@ export default function SearchBar({
         {settings?.showBathrooms && (
           <select
             value={bathrooms}
-            onChange={(e) => setBathrooms(e.target.value)}
+            onChange={(e) => {
+              setBathrooms(e.target.value);
+              setOpenSelect(null);
+            }}
+            onFocus={() => setOpenSelect('bathrooms')}
+            onBlur={() => setOpenSelect(null)}
             className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
           >
             <option value="">화장실</option>
             {dynamicOptions.bathroomOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {opt.name} ({opt.count})
+                {openSelect === 'bathrooms' ? `${opt.name} (${opt.count})` : opt.name}
               </option>
             ))}
           </select>

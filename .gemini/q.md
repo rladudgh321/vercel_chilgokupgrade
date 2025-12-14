@@ -1,16 +1,123 @@
-`/admin/webView/logo-settings`페이지에서 `현재 로고` 위 부분에 input의 radio 3개를 만들어서, `/src/app/layout/app/Footer/index.tsx`파일에 input에 대한 상태에 따라 변하게 하고 싶어.
-첫번째 input은 `로고 + 브랜드명`이며, `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`가 없게 하고 싶고
-두번째 input은 `로고`이며, `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`와 `{headerData.data.logoUrl && <Image 
-              src={String(headerData.data.logoUrl)} 
-              alt="logo" 
-              width={120} 
-              height={60}
-              className="w-auto h-auto" 
-            />}`가 나란히 옆에 있게 되도록 하고 싶어. 왼쪽과 오른쪽 이렇게 나란히 말이지
-세번째 input은 `브랜드명`을 선택시 `/src/app/layout/app/Footer/index.tsx` 파일에 선택시 `headerData.data.companyName`가 없게 하고 싶어
-
+`/landSearch`페이지와 `/card`페이지에서 공통으로 사용하는 SearchBar컴포넌트에서 select를 선택하면 option에 소괄호 안에 매물갯수가 정상적으로 잘 나오는데, option을 클릭하면 그 option에 소괄호와 그 안에 매물갯수가 나오고 있어. 나는 option을 클릭하면 소괄호와 매물갯수가 없게 해줘
 ---
-나는 prisma 스키마를 변경없이 코드를 수정하고 싶어 이미 기존에 있는 코드를 활용해줘
+Runtime ReferenceError
 
----
-좋아 올바르게 수정되었고 내가 원하는대로 코드가 수정되었어. 하지만 schema.prisma가 수정되었는데 npx prisma migrate dev를 하라고 너가 지시했는데 내가 취소했어. 나는 너가 수정해준 schema.prisma로 npx prisma migrate dev를 하기 싫어 차후에 npx prisma migrate dev가 필요할시 데이터 구조가 바뀔까봐 걱정돼.
+
+setPricePresets is not defined
+src\app\(app)\landSearch\page.tsx (5:5) @ Page
+
+
+  3 | export default async function Page() {
+  4 |   return (
+> 5 |     <LandSearchClient />
+    |     ^
+  6 |   );
+  7 | }
+Call Stack
+52
+
+Hide 49 ignore-listed frame(s)
+SearchBar.useEffect
+file:///C:/project/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (197:17)
+Object.react_stack_bottom_frame
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (28101:20)
+runWithFiberInDEV
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (984:30)
+commitHookEffectListMount
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (13690:29)
+commitHookPassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (13777:11)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17122:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17175:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17175:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17114:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17114:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17175:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17175:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17114:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17175:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17114:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+reconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17114:11)
+recursivelyTraverseReconnectPassiveEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17074:9)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16946:19)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16896:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16751:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17008:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17008:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16723:11)
+recursivelyTraversePassiveMountEffects
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (16676:13)
+commitPassiveMountOnFiber
+node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (17008:11)
+LandSearchClient
+file:///C:/project/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (4156:225)
+Page
+src\app\(app)\landSearch\page.tsx (5:5)
