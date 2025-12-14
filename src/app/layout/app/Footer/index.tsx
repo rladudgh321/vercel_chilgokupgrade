@@ -7,22 +7,52 @@ const Footer = async ({ headerPromise }: {headerPromise: ReturnType<typeof getWo
   if(!headerData.ok || !headerData.data) {
     return null;
   }
+
+  const logoName = headerData.data.logoName || '';
+  const [_, style] = logoName.split('#');
+  const displayStyle = style || 'both';
+
+  const renderContent = () => {
+    const logo = headerData.data.logoUrl && (
+      <Image 
+        src={String(headerData.data.logoUrl)} 
+        alt="logo" 
+        width={120} 
+        height={60}
+        className="w-auto h-auto" 
+      />
+    );
+    const brand = (
+      <p className="text-lg font-bold text-white">
+        {headerData.data.companyName}
+      </p>
+    );
+
+    switch (displayStyle) {
+      case 'logo_only':
+        return logo;
+      case 'brand_only':
+        return brand;
+      case 'both':
+      default:
+        // As per user request: "두번째 input은 `로고`이며... `companyName`와 `{logo}`가 나란히 옆에 있게"
+        // This appears to describe the 'both' case.
+        return (
+          <div className="flex flex-row items-center gap-4">
+            {logo}
+            {brand}
+          </div>
+        );
+    }
+  };
+
   return (
     <footer className="bg-gray-800 text-gray-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-3 gap-8">
           {/* 로고 및 회사명 */}
           <div className="flex flex-col items-start">
-           {headerData.data.logoUrl && <Image 
-              src={String(headerData.data.logoUrl)} 
-              alt="logo" 
-              width={120} 
-              height={60}
-              className="w-auto h-auto" 
-            />}
-            <p className="mt-4 text-lg font-bold text-white">
-              {headerData.data.companyName}
-            </p>
+            {renderContent()}
           </div>
 
           {/* 상세 정보 */}

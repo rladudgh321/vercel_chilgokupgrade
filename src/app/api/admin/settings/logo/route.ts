@@ -40,7 +40,18 @@ export async function GET(req: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const { logoUrl, logoName } = await request.json();
-    if (!logoUrl || !logoName) {
+    const updateData: { logoUrl?: string; logoName?: string; updatedAt: Date } = {
+      updatedAt: new Date(),
+    };
+
+    if (logoUrl) {
+      updateData.logoUrl = logoUrl;
+    }
+    if (logoName) {
+      updateData.logoName = logoName;
+    }
+
+    if (!logoUrl && !logoName) {
       return NextResponse.json(
         { ok: false, error: { message: "로고 정보가 필요합니다." } },
         { status: 400 }
@@ -52,7 +63,7 @@ export async function PUT(request: NextRequest) {
 
     const { data, error } = await supabase
       .from("WorkInfo")
-      .update({ logoUrl, logoName, updatedAt: new Date() })
+      .update(updateData)
       .eq("id", "main")
       .select();
 

@@ -6,7 +6,7 @@ import SnsIcon, { SnsSetting } from "@/app/components/SnsIcon";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
 export async function getWorkInfo(): Promise<{data?: HeaderProps; ok: boolean;}> {
-  const response = await fetch(`${BASE_URL}/api/workinfo`, { next: { tags: ["public", "workInfo"] } });
+  const response = await fetch(`${BASE_URL}/api/workinfo`, { cache: 'force-cache', next: { tags: ["public", "workInfo"] } });
   if (!response.ok) {
     console.error('Error fetching posts:', await response.text());
     return { ok: false };
@@ -15,7 +15,7 @@ export async function getWorkInfo(): Promise<{data?: HeaderProps; ok: boolean;}>
 }
 
 export async function getSnsSettings(): Promise<SnsSetting[]> {
-  const res = await fetch(`${BASE_URL}/api/sns-settings`, { next: { tags: ["public", "sns-settings"] } });
+  const res = await fetch(`${BASE_URL}/api/sns-settings`, { cache: 'force-cache', next: { tags: ["public", "sns-settings"] } });
   if (!res.ok) throw new Error("Network response was not ok");
   const data = await res.json();
   return data.data;
