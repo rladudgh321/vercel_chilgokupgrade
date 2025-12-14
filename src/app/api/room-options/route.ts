@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
     const { data: builds, error: buildsError } = await supabase
       .from("Build")
       .select("roomOptionId")
-      .not("roomOptionId", "is", null);
+      .not("roomOptionId", "is", null)
+      .eq("visibility", true)
+      .is("deletedAt", null);
 
     if (buildsError) {
       throw buildsError;

@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
     // 2. 모든 Build에서 themes 배열 조회
     const { data: builds, error: buildsError } = await supabase
       .from("Build")
-      .select("themes");
+      .select("themes")
+      .eq("visibility", true)
+      .is("deletedAt", null);
 
     if (buildsError) {
       console.error("Error fetching builds for theme count:", buildsError);

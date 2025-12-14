@@ -1,5 +1,6 @@
-export type OptionName = { name: string };
-export type BuyType = { id: number; name: string };
+export type OptionNameWithCount = { name: string; count: number };
+export type BuyTypeWithCount = { id: number; name: string; count: number };
+export type ThemeOptionWithCount = { id: number; label: string; count: number };
 
 export interface SearchBarProps {
   settings: {
@@ -14,11 +15,11 @@ export interface SearchBarProps {
     showBathrooms?: boolean;
     showSubwayLine?: boolean;
   };
-  roomOptions: OptionName[];
-  bathroomOptions: OptionName[];
-  floorOptions: OptionName[];
-  areaOptions: OptionName[];
-  themeOptions: string[] | Array<{ label: string }>;
-  propertyTypeOptions: OptionName[];
-  buyTypeOptions: BuyType[];
+  roomOptions: OptionNameWithCount[];
+  bathroomOptions: OptionNameWithCount[];
+  floorOptions: OptionNameWithCount[];
+  areaOptions: OptionNameWithCount[];
+  themeOptions: ThemeOptionWithCount[];
+  propertyTypeOptions: OptionNameWithCount[];
+  buyTypeOptions: BuyTypeWithCount[];
 }

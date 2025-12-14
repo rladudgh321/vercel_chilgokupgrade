@@ -26,7 +26,9 @@ export async function GET(req: NextRequest) {
     const { data: builds, error: buildsError } = await supabase
       .from("Build")
       .select("listingTypeId")
-      .not("listingTypeId", "is", null);
+      .not("listingTypeId", "is", null)
+      .eq("visibility", true)
+      .is("deletedAt", null);
 
     if (buildsError) {
       console.error("Error fetching builds for count:", buildsError);
