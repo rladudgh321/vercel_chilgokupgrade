@@ -55,25 +55,20 @@ const LocationCard = () => {
   };
 
   return (
-    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100">
+    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100 dark:bg-slate-800">
       {isPostcodeOpen && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.5)",
-            zIndex: 100,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center"
         >
-          <div style={{ width: "400px", backgroundColor: "white", padding: "20px" }}>
+          <div className="w-[400px] bg-white dark:bg-gray-800 p-5">
             <DaumPostcode onComplete={handleComplete} />
-            <button type="button" onClick={() => setIsPostcodeOpen(false)}>닫기</button>
+            <button
+              type="button"
+              onClick={() => setIsPostcodeOpen(false)}
+              className="mt-4 px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded-md w-full"
+            >
+              닫기
+            </button>
           </div>
         </div>
       )}
@@ -82,7 +77,7 @@ const LocationCard = () => {
       <div className="flex flex-col">
         <label
           htmlFor="address"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           주소
         </label>
@@ -92,18 +87,18 @@ const LocationCard = () => {
             id="address"
             {...register("address", { required: "주소를 입력해주세요" })}
             placeholder="상세주소 입력하세요"
-            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
           <button
             type="button"
             onClick={() => setIsPostcodeOpen(true)}
-            className="mt-1 px-4 py-2 bg-blue-500 text-white rounded-md"
+            className="mt-1 px-4 py-2 bg-blue-500 text-white rounded-md dark:bg-blue-700 dark:hover:bg-blue-800"
           >
             주소 검색
           </button>
         </div>
         {errors.address && (
-          <p className="text-red-500 text-xs">
+          <p className="text-red-500 text-xs dark:text-red-400">
             {errors.address.message as string}
           </p>
         )}
@@ -114,7 +109,7 @@ const LocationCard = () => {
         <div className="flex flex-col">
           <label
             htmlFor="dong"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             동
           </label>
@@ -123,14 +118,14 @@ const LocationCard = () => {
             id="dong"
             {...register("dong")}
             placeholder="동"
-            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
 
         <div className="flex flex-col">
           <label
             htmlFor="ho"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             호
           </label>
@@ -139,7 +134,7 @@ const LocationCard = () => {
             id="ho"
             {...register("ho")}
             placeholder="호수"
-            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
       </div>
@@ -148,7 +143,7 @@ const LocationCard = () => {
       <div className="flex flex-col">
         <label
           htmlFor="etc"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           기타사항
         </label>
@@ -157,7 +152,7 @@ const LocationCard = () => {
           id="etc"
           {...register("etc")}
           placeholder="기타사항"
-          className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       </div>
 

@@ -64,23 +64,14 @@ const AddressVisibility: FC<AddressVisibilityProps> = ({
     mutate({ id: listingId, state });
   };
 
-  const pillStyle = (active: string, me: string) => ({
-    backgroundColor: active === me ? "#2b6cb0" : "white",
-    color: active === me ? "white" : "gray",
-    borderColor: "#cbd5e0",
-    padding: "0.5rem 1rem",
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    borderRadius: "0.375rem",
-    cursor: disabled || isPending ? "not-allowed" : "pointer",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-    transition: "all 0.2s ease",
-    opacity: disabled || isPending ? 0.5 : 1,
-  });
+  const pillBaseStyle = "border p-2 px-4 text-sm font-medium rounded-md cursor-pointer shadow-md transition-all duration-200";
+  const pillActiveStyle = "bg-blue-600 text-white border-blue-600";
+  const pillInactiveStyle = "bg-white text-gray-500 border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600";
+
 
   return (
     <div className="flex flex-col">
-      <label className="block text-sm font-medium text-gray-700">주소 공개 여부</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">주소 공개 여부</label>
 
       <div className={clsx("flex items-center mb-4 flex-wrap gap-2", { "justify-center": ArrayType })}>
         <label htmlFor={idPublic} className="flex items-center space-x-2">
@@ -94,7 +85,7 @@ const AddressVisibility: FC<AddressVisibilityProps> = ({
             onChange={() => onPick("public")}
             disabled={disabled || isPending}
           />
-          <span style={pillStyle(activeAddressPublic, "public")}>공개</span>
+          <span className={clsx(pillBaseStyle, activeAddressPublic === 'public' ? pillActiveStyle : pillInactiveStyle)}>공개</span>
         </label>
 
         <label htmlFor={idPrivate} className="flex items-center space-x-2">
@@ -108,7 +99,7 @@ const AddressVisibility: FC<AddressVisibilityProps> = ({
             onChange={() => onPick("private")}
             disabled={disabled || isPending}
           />
-          <span style={pillStyle(activeAddressPublic, "private")}>비공개</span>
+          <span className={clsx(pillBaseStyle, activeAddressPublic === 'private' ? pillActiveStyle : pillInactiveStyle)}>비공개</span>
         </label>
 
         <label htmlFor={idExclude} className="flex items-center space-x-2">
@@ -122,7 +113,7 @@ const AddressVisibility: FC<AddressVisibilityProps> = ({
             onChange={() => onPick("exclude")}
             disabled={disabled || isPending}
           />
-          <span style={pillStyle(activeAddressPublic, "exclude")}>지번 제외 공개</span>
+          <span className={clsx(pillBaseStyle, activeAddressPublic === 'exclude' ? pillActiveStyle : pillInactiveStyle)}>지번 제외 공개</span>
         </label>
       </div>
     </div>

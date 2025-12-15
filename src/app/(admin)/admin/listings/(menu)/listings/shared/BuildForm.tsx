@@ -276,7 +276,9 @@ export default function BuildForm({
             type="submit"
             disabled={!!isSubmitting}
             className={`w-full py-2 rounded-md transition duration-300 ${
-              isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600 text-white"
+              isSubmitting
+                ? "bg-gray-400 dark:bg-gray-600"
+                : "bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
             }`}
           >
             {isSubmitting ? (mode === "create" ? "등록 중..." : "수정 중...") : submitLabel ?? (mode === "create" ? "등록" : "수정")}
@@ -285,7 +287,7 @@ export default function BuildForm({
           <button
             type="button"
             onClick={onCancel}
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-800"
           >
             뒤로가기
           </button>

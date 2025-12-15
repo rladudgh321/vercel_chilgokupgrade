@@ -17,20 +17,20 @@ const PriceInput = ({ name, label, enabledName }) => {
           id={`${enabledName}-checkbox`}
           type="checkbox"
           {...register(enabledName)}
-          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
         />
-        <label htmlFor={name} className="ml-2 block text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={name} className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
       </div>
       <div className="flex items-center">
         <input
           id={name}
           type="number"
           {...register(name, { setValueAs: v => v === "" ? 0 : Number(v) })}
-          className={`mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${!isEnabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+          className={`mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${!isEnabled ? 'bg-gray-100 cursor-not-allowed dark:bg-gray-800' : 'dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white'}`}
           placeholder="숫자로만 입력"
           disabled={!isEnabled}
         />
-        {isEnabled && value > 0 && <span className="ml-2 text-sm text-gray-500 whitespace-nowrap">{numberToKoreanWithDigits(value)}</span>}
+        {isEnabled && value > 0 && <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">{numberToKoreanWithDigits(value)}</span>}
       </div>
     </div>
   );
@@ -52,19 +52,9 @@ const LandInfo = () => {
 
   const isActive = (curr: any, item: any) => curr === item;
 
-  const chip = (active: boolean) =>
-    ({
-      backgroundColor: active ? "#2b6cb0" : "white",
-      color: active ? "white" : "gray",
-      borderColor: "#cbd5e0",
-      padding: "0.4rem 0.8rem",
-      fontSize: "0.75rem",
-      fontWeight: 500,
-      borderRadius: "0.375rem",
-      cursor: "pointer",
-      boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-      transition: "all .2s ease",
-    } as React.CSSProperties);
+  const chipBaseStyle = "border p-2 px-4 text-sm font-medium rounded-md cursor-pointer shadow-md transition-all duration-200";
+  const chipActiveStyle = "bg-blue-600 text-white border-blue-600";
+  const chipInactiveStyle = "bg-white text-gray-500 border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600";
 
   // 매물종류 옵션 동적 로드
   const [propertyTypeOptions, setPropertyTypeOptions] = useState<string[]>([]);
@@ -110,10 +100,10 @@ const LandInfo = () => {
   }, []);
 
   return (
-    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100">
+    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100 dark:bg-slate-800">
       {/* 매물종류 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">매물종류</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">매물종류</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4 gap-x-2">
           {(propertyTypeOptions.length > 0
             ? propertyTypeOptions
@@ -127,7 +117,7 @@ const LandInfo = () => {
                 checked={propertyType === item}
                 onChange={() => onPick("propertyType", item)}
               />
-              <span style={chip(isActive(propertyType, item))}>{item}</span>
+              <span className={`${chipBaseStyle} ${isActive(propertyType, item) ? chipActiveStyle : chipInactiveStyle}`}>{item}</span>
             </label>
           ))}
         </div>
@@ -135,7 +125,7 @@ const LandInfo = () => {
 
       {/* 거래유형 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">거래유형</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">거래유형</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4 gap-x-2">
           {buyTypeOptions.map((item) => (
             <label key={item.id} className="cursor-pointer">
@@ -147,7 +137,7 @@ const LandInfo = () => {
                 checked={buyTypeId === item.id}
                 onChange={() => onPick("buyTypeId", item.id)}
               />
-              <span style={chip(isActive(buyTypeId, item.id))}>{item.name}</span>
+              <span className={`${chipBaseStyle} ${isActive(buyTypeId, item.id) ? chipActiveStyle : chipInactiveStyle}`}>{item.name}</span>
             </label>
           ))}
         </div>
@@ -166,7 +156,7 @@ const LandInfo = () => {
 
       {/* 공개여부 (불린) */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">공개여부</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">공개여부</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4 gap-x-2">
           {[{ label: "공개", value: true }, { label: "비공개", value: false }].map(({ label, value }) => (
             <label key={label} className="cursor-pointer">
@@ -179,7 +169,7 @@ const LandInfo = () => {
                 checked={visibility === value}
                 onChange={() => onPick("visibility", value)}
               />
-              <span style={chip(isActive(visibility, value))}>{label}</span>
+              <span className={`${chipBaseStyle} ${isActive(visibility, value) ? chipActiveStyle : chipInactiveStyle}`}>{label}</span>
             </label>
           ))}
         </div>
@@ -187,7 +177,7 @@ const LandInfo = () => {
 
       {/* 금액 표기 방법 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">금액 표기 방법</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">금액 표기 방법</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4 gap-x-2">
           {["공개", "비공개", "협의가능"].map((item) => (
             <label key={item} className="cursor-pointer">
@@ -199,7 +189,7 @@ const LandInfo = () => {
                 checked={priceDisplay === item}
                 onChange={() => onPick("priceDisplay", item)}
               />
-              <span style={chip(isActive(priceDisplay, item))}>{item}</span>
+              <span className={`${chipBaseStyle} ${isActive(priceDisplay, item) ? chipActiveStyle : chipInactiveStyle}`}>{item}</span>
             </label>
           ))}
         </div>
@@ -207,7 +197,7 @@ const LandInfo = () => {
 
       {/* 거래범위 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">거래범위</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">거래범위</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4 gap-x-2">
           {["부분", "전체"].map((item) => (
             <label key={item} className="cursor-pointer">
@@ -219,7 +209,7 @@ const LandInfo = () => {
                 checked={dealScope === item}
                 onChange={() => onPick("dealScope", item)}
               />
-              <span style={chip(isActive(dealScope, item))}>{item}</span>
+              <span className={`${chipBaseStyle} ${isActive(dealScope, item) ? chipActiveStyle : chipInactiveStyle}`}>{item}</span>
             </label>
           ))}
         </div>
@@ -227,13 +217,13 @@ const LandInfo = () => {
 
       {/* 기타사항 */}
       <div className="flex flex-col">
-        <label htmlFor="managementEtc" className="block text-sm font-medium text-gray-700">기타사항</label>
+        <label htmlFor="managementEtc" className="block text-sm font-medium text-gray-700 dark:text-gray-300">기타사항</label>
         <input
           id="managementEtc"
           type="text"
           {...register("managementEtc")}
           placeholder="'경매에 나올 물건이다', '주인이 가격 할인 의지가 있다', '반전세가격은 전세가격마다 월세를 다르게 받을 수 있다' 등"
-          className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
         />
       </div>
     </div>

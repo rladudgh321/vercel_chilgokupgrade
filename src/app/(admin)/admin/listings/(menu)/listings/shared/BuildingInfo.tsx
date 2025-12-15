@@ -1,317 +1,36 @@
-"use client";
-
-import React, { lazy, MouseEventHandler, Suspense } from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import React, { lazy, Suspense } from "react";
+import { useFormContext, Controller, useWatch } from "react-hook-form";
 import { ko } from "date-fns/locale";
-import { clsx } from "clsx";
 import "react-datepicker/dist/react-datepicker.css";
+import {
+  buttonBaseStyle,
+  buttonActiveStyle,
+  buttonInactiveStyle,
+  InputField,
+  SelectField,
+  toDate,
+  toYMD,
+} from "@/app/components/form-fields";
+import clsx from "clsx";
 
-const DatePicker = lazy(() => import('react-datepicker'));
-
-/* =========================
-   공통 스타일/컴포넌트
-   ========================= */
-const getButtonStyle = (activeState: string | null | boolean | number, item?: string | number) => {
-  return {
-    backgroundColor: activeState === item ? "#2b6cb0" : "white",
-    color: activeState === item ? "white" : "gray",
-    borderColor: "#cbd5e0",
-    padding: "0.4rem 0.8rem",
-    fontSize: "0.75rem",
-    fontWeight: 500,
-    borderRadius: "0.375rem",
-    cursor: "pointer",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-    transition: "all 0.2s ease",
-  } as React.CSSProperties;
-};
-
-type InputFieldProps = {
-  label: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-  className?: string;
-  isDatePicker?: boolean;
-  min?: number;
-};
-
-/* ---------- 유틸 함수 ---------- */
-// Date -> "YYYY-MM-DD"
-const dateToDateOnlyString = (d: Date) => {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-};
-
-// value (string | Date | null | undefined) -> Date | null (로컬 자정으로 생성)
-const parseValueToDate = (val: any): Date | null => {
-  if (!val) return null;
-
-  if (typeof val === 'string') {
-    const datePart = val.split('T')[0];
-    const [year, month, day] = datePart.split('-').map(Number);
-    if (year && month && day) {
-      return new Date(year, month - 1, day);
-    }
-  }
-
-  if (val instanceof Date) {
-    return new Date(val.getFullYear(), val.getMonth(), val.getDate());
-  }
-
-  // Fallback for other types or failed parsing
-  try {
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) {
-      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    }
-  } catch {}
-
-  return null;
-};
-
-const InputField = ({
-  label,
-  name,
-  type = "text",
-  placeholder = "",
-  className = "",
-  isDatePicker = false,
-  min,
-}: InputFieldProps) => {
-  const { control } = useFormContext();
-  return (
-    <div className="flex flex-col">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-
-      <Controller
-        control={control}
-        name={name}
-        render={({ field }) =>
-          isDatePicker ? (
-            <Suspense>
-              <DatePicker
-                id={name}
-                selected={parseValueToDate(field.value)}
-                onChange={(date: Date | null) => {
-                  if (date) {
-                    // 사용자 선택한 로컬 날짜를 "YYYY-MM-DD" 형식 문자열로 저장
-                    const only = dateToDateOnlyString(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-                    field.onChange(only);
-                  } else {
-                    field.onChange(null);
-                  }
-                }}
-                placeholderText={placeholder || "날짜 선택"}
-                dateFormat="yyyy/MM/dd"
-                locale={ko}
-                showYearDropdown
-                showMonthDropdown
-                scrollableYearDropdown
-                className={clsx(
-                  "mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-                  className
-                )}
-              />
-            </Suspense>
-          ) : (
-            <input
-              id={name}
-              type={type}
-              placeholder={placeholder}
-              min={min}
-              className={clsx(
-                "mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-                className
-              )}
-              {...field}
-              value={field.value === null || field.value === undefined ? "" : field.value}
-              onChange={(e) => {
-                const val = e.target.value;
-                field.onChange(val === "" ? null : val);
-              }}
-            />
-          )
-        }
-      />
-    </div>
-  );
-};
-
-const SelectField = ({
-  label,
-  name,
-  options,
-  placeholder,
-  className = "",
-}: {
-  label: string;
-  name: string;
-  options: string[];
-  placeholder?: string;
-  className?: string;
-}) => {
-  const { control } = useFormContext();
-
-  return (
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <Controller
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <select
-            {...field}
-            onChange={(e) => {
-              if (e.target.value === "") {
-                field.onChange(null);
-              } else {
-                field.onChange(e.target.value);
-              }
-            }}
-            value={field.value || ""}
-            className={clsx(
-              "mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-              className
-            )}
-          >
-            {placeholder && <option value="">{placeholder}</option>}
-            {(options || []).map((op) => (
-              <option key={op} value={op}>
-                {op}
-              </option>
-            ))}
-          </select>
-        )}
-      />
-    </div>
-  );
-};
-
-const Button = ({
-  type,
-  label,
-  className = "p-2 border",
-  isSelected = false,
-  onClick,
-}: {
-  type: "button" | "submit";
-  label: string;
-  className?: string;
-  isSelected?: boolean;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
-  const buttonStyle = getButtonStyle(isSelected);
-  return (
-    <button
-      type={type}
-      className={clsx(className, "p-3 rounded")}
-      style={buttonStyle}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  );
-};
-
-type YMD = string; // 'YYYY-MM-DD'로 폼에 저장한다고 가정
-
-// 문자열('YYYY-MM-DD') 또는 Date -> Date|null
-const toDate = (v: unknown): Date | null => {
-  if (!v) return null;
-
-  if (typeof v === 'string') {
-    const datePart = v.split('T')[0];
-    const [year, month, day] = datePart.split('-').map(Number);
-    if (year && month && day) {
-      return new Date(year, month - 1, day);
-    }
-  }
-
-  if (v instanceof Date) {
-    return new Date(v.getFullYear(), v.getMonth(), v.getDate());
-  }
-
-  // Fallback for other types or failed parsing
-  try {
-    const d = new Date(v);
-    if (!isNaN(d.getTime())) {
-      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    }
-  } catch {}
-
-  return null;
-};
-
-// Date|null -> 'YYYY-MM-DD' 또는 ''
-const toYMD = (d: Date | null): YMD => {
-  if (!d) return "";
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-};
+const DatePicker = lazy(() => import("react-datepicker"));
 
 const BuildingInfo = () => {
-  const { register, setValue, control, watch } = useFormContext();
+  const { register, setValue, control } = useFormContext();
 
-  // 🔎 RHF 값만 바라보고 UI 구성 (로컬 active state 불필요)
-  const elevatorType   = watch("elevatorType");   // "유" | "무" | undefined
-  const heatingType    = watch("heatingType");
-  const yieldType      = watch("yieldType");
-  const moveInType     = watch("moveInType");
-  const otherYield     = watch("otherYield");
-  const watchedDirection = watch("direction");
-  const watchedDirectionBase = watch("directionBase");
-
-  // 라디오 클릭 핸들러 (필요 시 의존 필드 정리)
-  const pick = (field: string, value: string | null) => {
-    setValue(field as any, value, { shouldDirty: true });
-
-    // 의존 필드 초기화 규칙
-    if (field === "elevatorType" && value !== "유") {
-      setValue("elevatorCount", 0, { shouldDirty: true });
-    }
-    if (field === "moveInType" && value !== "가까운 시일내 협의") {
-      setValue("moveInDate", "", { shouldDirty: true }); // YMD로 저장
-    }
-    if (field === "yieldType" && value !== "기타수익률") {
-      setValue("otherYield", "", { shouldDirty: true });
-    }
-  };
-
-  const handleRadioChange = (
-    item: string | null,
-    type: "direction" | "directionBase"
-  ) => {
-    setValue(type, item, { shouldDirty: true, shouldTouch: true });
-  };
-
-  const getButtonStyle = (current: string | null | undefined, item: string | null) => ({
-    backgroundColor: current === item ? "#2b6cb0" : "white",
-    color: current === item ? "white" : "gray",
-    borderColor: "#cbd5e0",
-    padding: "0.4rem 0.8rem",
-    fontSize: "0.75rem",
-    fontWeight: 500,
-    borderRadius: "0.375rem",
-    cursor: "pointer",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-    transition: "all .2s ease"
-  });
+  const elevatorType   = useWatch({ control, name: "elevatorType" });
+  const heatingType    = useWatch({ control, name: "heatingType" });
+  const yieldType      = useWatch({ control, name: "yieldType" });
+  const moveInType     = useWatch({ control, name: "moveInType" });
+  const watchedDirection = useWatch({ control, name: "direction" });
+  const watchedDirectionBase = useWatch({ control, name: "directionBase" });
 
   return (
-    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100">
+    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-slate-100 dark:bg-slate-800">
 
       {/* 엘리베이터 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">엘리베이터</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">엘리베이터</label>
         <div className="flex space-x-0 mt-2">
           {["유", "무", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -321,16 +40,21 @@ const BuildingInfo = () => {
                 {...register("elevatorType")}
                 value={item === null ? "" : item}
                 checked={elevatorType === item}
-                onChange={() => pick("elevatorType", item)}
+                onChange={() => {
+                  setValue("elevatorType", item, { shouldDirty: true });
+                  if (item !== "유") {
+                    setValue("elevatorCount", 0, { shouldDirty: true });
+                  }
+                }}
               />
-              <span style={getButtonStyle(elevatorType, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, elevatorType === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
 
         {elevatorType === "유" && (
           <div className="mt-2">
-            <label htmlFor="elevatorCount" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="elevatorCount" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               엘리베이터 갯수
             </label>
             <input
@@ -340,7 +64,7 @@ const BuildingInfo = () => {
               {...register("elevatorCount", {
                 setValueAs: (v) => v === "" || v == null ? 0 : Number(v),
               })}
-              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full p-2 sm:p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
             />
           </div>
         )}
@@ -348,7 +72,7 @@ const BuildingInfo = () => {
 
       {/* 입주 가능일 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">입주 가능일</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">입주 가능일</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
           {["즉시", "가까운 시일내 협의", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -358,9 +82,14 @@ const BuildingInfo = () => {
                 {...register("moveInType")}
                 value={item === null ? "" : item}
                 checked={moveInType === item}
-                onChange={() => pick("moveInType", item)}
+                onChange={() => {
+                  setValue("moveInType", item, { shouldDirty: true });
+                  if (item !== "가까운 시일내 협의") {
+                    setValue("moveInDate", "", { shouldDirty: true });
+                  }
+                }}
               />
-              <span style={getButtonStyle(moveInType, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, moveInType === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -376,7 +105,7 @@ const BuildingInfo = () => {
                   onChange={(d) => field.onChange(toYMD(d))}
                   dateFormat="yyyy/MM/dd"
                   placeholderText="입주 가능일 선택"
-                  className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                   locale={ko}
                   portalId="react-datepicker-portal"
                 />
@@ -388,7 +117,7 @@ const BuildingInfo = () => {
 
       {/* 난방 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">난방</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">난방</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
           {["지역난방", "개별난방", "중앙난방", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -398,9 +127,9 @@ const BuildingInfo = () => {
                 {...register("heatingType")}
                 value={item === null ? "" : item}
                 checked={heatingType === item}
-                onChange={() => pick("heatingType", item)}
+                onChange={() => setValue("heatingType", item, { shouldDirty: true })}
               />
-              <span style={getButtonStyle(heatingType, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, heatingType === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -408,7 +137,7 @@ const BuildingInfo = () => {
 
       {/* 수익률 사용 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">수익률 사용</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">수익률 사용</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
           {["미사용", "상가수익률", "건물수익률", "기타수익률", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -418,9 +147,14 @@ const BuildingInfo = () => {
                 {...register("yieldType")}
                 value={item === null ? "" : item}
                 checked={yieldType === item}
-                onChange={() => pick("yieldType", item)}
+                onChange={() => {
+                  setValue("yieldType", item, { shouldDirty: true });
+                  if (item !== "기타수익률") {
+                    setValue("otherYield", "", { shouldDirty: true });
+                  }
+                }}
               />
-              <span style={getButtonStyle(yieldType, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, yieldType === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -430,15 +164,14 @@ const BuildingInfo = () => {
             type="text"
             placeholder="기타수익률 입력"
             {...register("otherYield")}
-            defaultValue={otherYield ?? ""}
-            className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
           />
         )}
       </div>
 
       {/* 계약만료일 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">계약만료일</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">계약만료일</label>
         <Controller
           control={control}
           name="contractEndDate" // 폼에는 'YYYY-MM-DD' 문자열로 저장
@@ -449,7 +182,7 @@ const BuildingInfo = () => {
                 onChange={(d) => field.onChange(toYMD(d))}
                 dateFormat="yyyy/MM/dd"
                 placeholderText="계약만료일 선택"
-                className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                 locale={ko}
               />
             </Suspense>
@@ -459,7 +192,7 @@ const BuildingInfo = () => {
 
       {/* 방향기준 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">햇빛 방향기준</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">햇빛 방향기준</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
           {["거실", "안방", "주된출입구", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -469,9 +202,9 @@ const BuildingInfo = () => {
                 value={item === null ? "" : item}
                 className="hidden"
                 checked={watchedDirectionBase === item}
-                onChange={() => handleRadioChange(item, "directionBase")}
+                onChange={() => setValue("directionBase", item, { shouldDirty: true })}
               />
-              <span style={getButtonStyle(watchedDirectionBase, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, watchedDirectionBase === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -479,7 +212,7 @@ const BuildingInfo = () => {
 
       {/* 방향 */}
       <div className="flex flex-col">
-        <label className="block text-sm font-medium text-gray-700">햇빛 방향</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">햇빛 방향</label>
         <div className="flex space-x-0 mt-2 flex-wrap gap-y-4">
           {["동향", "서향", "남향", "북향", "북동향", "남동향", "남서향", "북서향", null].map((item) => (
             <label key={item === null ? "none" : item} className="cursor-pointer">
@@ -489,9 +222,9 @@ const BuildingInfo = () => {
                 value={item === null ? "" : item}
                 className="hidden"
                 checked={watchedDirection === item}
-                onChange={() => handleRadioChange(item, "direction")}
+                onChange={() => setValue("direction", item, { shouldDirty: true })}
               />
-              <span style={getButtonStyle(watchedDirection, item)}>{item === null ? "선택없음" : item}</span>
+              <span className={clsx(buttonBaseStyle, watchedDirection === item ? buttonActiveStyle : buttonInactiveStyle)}>{item === null ? "선택없음" : item}</span>
             </label>
           ))}
         </div>
@@ -528,18 +261,19 @@ const BuildingInfo = () => {
         { id: "roofStructure", label: "지붕구조" },
       ].map(({ id, label }) => (
         <div key={id} className="flex flex-col">
-          <label htmlFor={id} className="block text-sm font-medium text-gray-700">{label}</label>
+          <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
           <input
             id={id}
             type="text"
             {...register(id as any)}
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
             placeholder={label}
           />
         </div>
       ))}
     </div>
   );
-};
-
+}
 export default BuildingInfo;
+
+

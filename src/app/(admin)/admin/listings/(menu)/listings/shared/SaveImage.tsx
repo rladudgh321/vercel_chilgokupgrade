@@ -155,26 +155,26 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-2 sm:p-4">
+    <div className="max-w-4xl mx-auto p-2 sm:p-4 dark:bg-gray-800">
       {/* 대표 사진 */}
       <div className="mb-6">
-        <label className="block text-lg sm:text-xl font-semibold">매물 대표 사진</label>
-        <input type="file" accept="image/*" onChange={onPickMain} className="mt-2" />
+        <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">매물 대표 사진</label>
+        <input type="file" accept="image/*" onChange={onPickMain} className="mt-2 text-gray-700 dark:text-gray-300" />
         {mainImage && isValidImgSrc(mainImage) && (
           <div className="mt-3 flex items-center gap-3">
             <Image src={mainImage} alt="대표 사진" width={300} height={300} className="w-full max-w-[300px] h-auto" onLoad={() => setMainImageLoading(false)} onError={() => {
               setMainImageLoading(false);
               setMainImageError(true);
             }} />
-            {mainImageError && <div className="text-red-500">이미지 로드 실패</div>}
+            {mainImageError && <div className="text-red-500 dark:text-red-400">이미지 로드 실패</div>}
             <button
               type="button"
-              className="px-3 py-1 rounded bg-red-500 text-white"
+              className="px-3 py-1 rounded bg-red-500 text-white dark:bg-red-700 dark:hover:bg-red-800"
               onClick={clearMain}
             >
               삭제
             </button>
-            {mainImageError && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white" onClick={() => setMainImage(mainImageField)}>
+            {mainImageError && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white dark:bg-blue-700 dark:hover:bg-blue-800" onClick={() => setMainImage(getValues("mainImage"))}>
               재시도
             </button>}
           </div>
@@ -183,10 +183,10 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
 
       {/* 매물 사진들 */}
       <div className="mb-6">
-        <label className="block text-lg sm:text-xl font-semibold">매물 사진들</label>
-        <input type="file" accept="image/*" multiple onChange={onPickSubs} className="mt-2" />
-        {propertyImagesError.some(Boolean) && <div className="text-red-500">일부 이미지 로드 실패</div>}
-        {propertyImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white" onClick={() => setPropertyImages(subImageField ? [...subImageField] : [])}>재시도</button>}
+        <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">매물 사진들</label>
+        <input type="file" accept="image/*" multiple onChange={onPickSubs} className="mt-2 text-gray-700 dark:text-gray-300" />
+        {propertyImagesError.some(Boolean) && <div className="text-red-500 dark:text-red-400">일부 이미지 로드 실패</div>}
+        {propertyImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white dark:bg-blue-700 dark:hover:bg-blue-800" onClick={() => setPropertyImages(getValues("subImage") ? [...getValues("subImage")] : [])}>재시도</button>}
         {propertyImages.length > 0 && (
           <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
             {propertyImages.filter(isValidImgSrc).map((img, idx) => (
@@ -224,10 +224,10 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
 
       {/* 관리자 전용 사진들 */}
       <div className="mb-2">
-        <label className="block text-lg sm:text-xl font-semibold">관리자만 볼 수 있는 사진들</label>
-        <input type="file" accept="image/*" multiple onChange={onPickAdmins} className="mt-2" />
-        {adminImagesError.some(Boolean) && <div className="text-red-500">일부 이미지 로드 실패</div>}
-        {adminImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white" onClick={() => setAdminImages(adminImageField ? [...adminImageField] : [])}>재시도</button>}
+        <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">관리자만 볼 수 있는 사진들</label>
+        <input type="file" accept="image/*" multiple onChange={onPickAdmins} className="mt-2 text-gray-700 dark:text-gray-300" />
+        {adminImagesError.some(Boolean) && <div className="text-red-500 dark:text-red-400">일부 이미지 로드 실패</div>}
+        {adminImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white dark:bg-blue-700 dark:hover:bg-blue-800" onClick={() => setAdminImages(getValues("adminImage") ? [...getValues("adminImage")] : [])}>재시도</button>}
         {adminImages.length > 0 && (
           <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
             {adminImages.filter(isValidImgSrc).map((img, idx) => (
