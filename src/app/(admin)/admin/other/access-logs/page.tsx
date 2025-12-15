@@ -52,39 +52,39 @@ export default function AccessLogsPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">접속 기록</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="container mx-auto p-4 dark:bg-gray-800">
+      <h1 className="text-2xl font-bold mb-4 dark:text-gray-200">접속 기록</h1>
+      {loading && <p className="dark:text-gray-300">Loading...</p>}
+      {error && <p className="text-red-500 dark:text-red-400">{error}</p>}
       {!loading && !error && (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="py-2 px-4 border-b">번호</th>
-                <th className="py-2 px-4 border-b">아이피</th>
-                <th className="py-2 px-4 border-b">브라우저</th>
-                <th className="py-2 px-4 border-b">운영체제</th>
-                <th className="py-2 px-4 border-b">직전 URL</th>
-                <th className="py-2 px-4 border-b">접속 위치</th>
-                <th className="py-2 px-4 border-b">접속 시간</th>
+              <tr className="bg-gray-100 dark:bg-gray-700">
+                <th className="py-2 px-4 border-b dark:border-gray-600">번호</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">아이피</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">브라우저</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">운영체제</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">직전 URL</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">접속 위치</th>
+                <th className="py-2 px-4 border-b dark:border-gray-600">접속 시간</th>
               </tr>
             </thead>
             <tbody>
               {logs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">No access logs found.</td>
+                  <td colSpan={7} className="text-center py-4 dark:text-gray-400">No access logs found.</td>
                 </tr>
               ) : (
                 logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-gray-50">
-                    <td className="py-2 px-4 border-b text-center">{log.id}</td>
-                    <td className="py-2 px-4 border-b text-center">{log.ip}</td>
-                    <td className="py-2 px-4 border-b text-center">{log.browser}</td>
-                    <td className="py-2 px-4 border-b text-center">{log.os}</td>
-                    <td className="py-2 px-4 border-b text-center">{log.referrer}</td>
-                    <td className="py-2 px-4 border-b text-center">{log.location}</td>
-                    <td className="py-2 px-4 border-b text-center">
+                  <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.id}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.ip}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.browser}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.os}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.referrer}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">{log.location}</td>
+                    <td className="py-2 px-4 border-b text-center dark:border-gray-700">
                       {formatInKoreanTime(log.createdAt)}
                     </td>
                   </tr>

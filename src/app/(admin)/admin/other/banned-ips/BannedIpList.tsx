@@ -52,9 +52,9 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
   }
 
   return (
-    <div className="p-2 sm:p-4 md:p-6">
+    <div className="p-2 sm:p-4 md:p-6 dark:bg-gray-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-        <div className="text-lg sm:text-xl font-semibold">
+        <div className="text-lg sm:text-xl font-semibold dark:text-gray-200">
           차단된 IP 수: {filteredBannedIps().length}건
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
@@ -63,26 +63,26 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
             placeholder="IP, 연락처, 상세내용 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
           />
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gray-100">
+        <table className="min-w-full table-auto border-collapse dark:text-gray-300">
+          <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
-              <th className="p-2 text-xs sm:text-sm">ID</th>
-              <th className="p-2 text-xs sm:text-sm">차단 IP주소</th>
-              <th className="p-2 text-xs sm:text-sm">연락처</th>
-              <th className="p-2 text-xs sm:text-sm">상세내용</th>
-              <th className="p-2 text-xs sm:text-sm">등록일</th>
-              <th className="p-2 text-xs sm:text-sm">비고</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">ID</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">차단 IP주소</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">연락처</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">상세내용</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">등록일</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">비고</th>
             </tr>
           </thead>
           <tbody>
             {filteredBannedIps().map((ip, index) => (
-              <tr key={ip.id} className={index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}>
+              <tr key={ip.id} className={index % 2 === 0 ? 'bg-slate-200 dark:bg-gray-900' : 'bg-slate-300 dark:bg-gray-800'}>
                 <td className="p-2 text-xs sm:text-sm">{ip.id}</td>
                 <td className="p-2 text-xs sm:text-sm">{ip.ipAddress}</td>
                 <td className="p-2 text-xs sm:text-sm">{ip.contact}</td>
@@ -90,7 +90,7 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
                 <td className="p-2 text-xs sm:text-sm">{new Date(ip.createdAt).toLocaleString()}</td>
                 <td className="p-2">
                   <button
-                    className="p-2 bg-red-500 text-white rounded w-full"
+                    className="p-2 bg-red-500 text-white rounded w-full dark:bg-red-700 dark:hover:bg-red-800"
                     onClick={() => handleUnban(ip.id)}
                   >
                     차단해제

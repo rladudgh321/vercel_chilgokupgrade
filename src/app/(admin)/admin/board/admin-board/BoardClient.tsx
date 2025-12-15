@@ -119,18 +119,18 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
 
   if (loading) {
     return (
-      <div className="p-6">
+      <div className="p-6 dark:bg-gray-800">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg">로딩 중...</div>
+          <div className="text-lg dark:text-gray-200">로딩 중...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-2 sm:p-4 md:p-6">
+    <div className="p-2 sm:p-4 md:p-6 dark:bg-gray-800">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-        <div className="text-lg sm:text-xl font-semibold">
+        <div className="text-lg sm:text-xl font-semibold dark:text-gray-200">
           게시물: {filteredPosts.length}
         </div>
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -138,7 +138,7 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="p-2 border rounded w-full sm:w-auto"
+            className="p-2 border rounded w-full sm:w-auto dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
           >
             <option value="전체">전체</option>
             <option value="공지사항">공지사항</option>
@@ -153,13 +153,13 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
             placeholder="제목 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border rounded w-full sm:w-auto"
+            className="p-2 border rounded w-full sm:w-auto dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
           />
 
           {/* 글쓰기 버튼 */}
           <button 
             onClick={handleCreatePost}
-            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full sm:w-auto"
+            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full sm:w-auto dark:bg-blue-700 dark:hover:bg-blue-800"
           >
             글쓰기
           </button>
