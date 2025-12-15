@@ -8,7 +8,7 @@ const IfLandType = ({ themeImage }: { themeImage: Promise<ThemeImageProps[]> }) 
   return (
     <div className="mx-auto max-w-7xl text-center p-4">
       <h2 className="text-lg sm:text-xl font-bold">당신의 기준에 맞는 매물을 한눈에!</h2>
-      <p className="text-gray-600 text-sm sm:text-base">
+      <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
         테마별로 정리된 매물로 더 쉽게 만날 수 있습니다
       </p>
 

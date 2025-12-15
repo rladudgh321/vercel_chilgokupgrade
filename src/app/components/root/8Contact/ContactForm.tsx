@@ -84,8 +84,7 @@ const ContactForm = () => {
   return (
     <form className="m-4 sm:m-6 space-y-4" onSubmit={handleSubmit(onSubmit, onError)} noValidate>
       <input
-        className="block bg-white w-full h-10 rounded-b-md p-2 text-base"
-        type="text"
+        className="block bg-white w-full h-10 rounded-b-md p-2 text-base placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-gray-600"
         placeholder="이름"
         {...register("author", {
           required: { value: true, message: "이름을 입력해주세요." },
@@ -94,7 +93,7 @@ const ContactForm = () => {
       />
 
       <input
-        className="block bg-white w-full h-10 rounded-b-md p-2 text-base"
+        className="block bg-white w-full h-10 rounded-b-md p-2 text-base placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-gray-600"
         type="tel"
         placeholder="연락처 (예: 010-1234-5678)"
         {...register("contact", {
@@ -108,7 +107,7 @@ const ContactForm = () => {
 
       <textarea
         rows={6}
-        className="block bg-white w-full p-2 text-base"
+        className="block bg-white w-full p-2 text-base placeholder-gray-400 dark:placeholder-gray-500 border border-gray-300 dark:border-gray-600"
         placeholder="무엇이든 편히 말씀하세요"
         {...register("description", { required: true })}
       />

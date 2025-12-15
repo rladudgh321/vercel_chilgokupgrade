@@ -437,7 +437,7 @@ export default function SearchBar({
             <option value="">면적</option>
             {dynamicOptions.areaOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {openSelect === 'areaRange' ? `${opt.name} (${opt.count})` : opt.name}
+                {opt.name}
               </option>
             ))}
           </select>
@@ -497,7 +497,7 @@ export default function SearchBar({
             <option value="">층수</option>
             {dynamicOptions.floorOptions?.map((opt) => (
               <option key={opt.name} value={opt.name}>
-                {openSelect === 'floor' ? `${opt.name} (${opt.count})` : opt.name}
+                {opt.name}
               </option>
             ))}
           </select>
