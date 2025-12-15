@@ -115,9 +115,9 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
   return (
     <div
       ref={ref}
-      className={`p-2 sm:p-4 mb-2 border rounded-lg transition-all ${
-        disabled ? 'bg-gray-50 opacity-50' : 'bg-gray-100 hover:bg-gray-200'
-      } ${isEditing ? 'bg-blue-50 border-blue-300' : ''}`}
+      className={`p-2 sm:p-4 mb-2 border rounded-lg transition-all dark:border-gray-700 ${
+        disabled ? 'bg-gray-50 opacity-50 dark:bg-gray-900' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700'
+      } ${isEditing ? 'bg-blue-50 border-blue-300 dark:bg-blue-900 dark:border-blue-700' : ''}`}
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 flex-1 w-full">
@@ -129,7 +129,7 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                 alt={name}
                 width={64}
                 height={64}
-                className="w-full h-full object-cover rounded border"
+                className="w-full h-full object-cover rounded border dark:border-gray-700"
               />
             </div>
           )}
@@ -143,7 +143,7 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                   value={editValue}
                   onChange={(e) => setEditValue(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
                   autoFocus
                 />
                 {url !== undefined && (
@@ -152,15 +152,15 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                     value={editUrl}
                     onChange={(e) => setEditUrl(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    className="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
                     placeholder="URL"
                   />
                 )}
               </div>
             ) : (
               <div>
-                <span className="text-lg font-medium">{name}</span>
-                {url && <div className="text-sm text-gray-500">{url}</div>}
+                <span className="text-lg font-medium dark:text-gray-200">{name}</span>
+                {url && <div className="text-sm text-gray-500 dark:text-gray-400">{url}</div>}
               </div>
             )}
             
@@ -171,21 +171,21 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                   type="file"
                   accept="image/*"
                   onChange={(e) => setSelectedImageFile(e.target.files?.[0] || null)}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700"
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:text-gray-300 dark:file:bg-blue-700 dark:file:text-blue-100 dark:hover:file:bg-blue-800"
                 />
                 {selectedImageFile && (
                   <div className="flex space-x-2">
                     <button
                       onClick={handleImageEdit}
                       disabled={disabled}
-                      className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 disabled:opacity-50"
+                      className="px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-800"
                     >
                       이미지 저장
                     </button>
                     <button
                       onClick={handleImageCancel}
                       disabled={disabled}
-                      className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600 disabled:opacity-50"
+                      className="px-2 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600 disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-800"
                     >
                       취소
                     </button>
@@ -202,14 +202,14 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
               <button
                 onClick={handleEdit}
                 disabled={disabled}
-                className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 disabled:opacity-50 w-full sm:w-auto"
+                className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 disabled:opacity-50 w-full sm:w-auto dark:bg-green-700 dark:hover:bg-green-800"
               >
                 저장
               </button>
               <button
                 onClick={handleCancel}
                 disabled={disabled}
-                className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 disabled:opacity-50 w-full sm:w-auto"
+                className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 disabled:opacity-50 w-full sm:w-auto dark:bg-gray-700 dark:hover:bg-gray-800"
               >
                 취소
               </button>
@@ -220,7 +220,7 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                 <button
                   onClick={handleEdit}
                   disabled={disabled}
-                  className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 disabled:opacity-50 w-full sm:w-auto"
+                  className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 disabled:opacity-50 w-full sm:w-auto dark:bg-blue-700 dark:hover:bg-blue-800"
                 >
                   수정
                 </button>
@@ -229,7 +229,7 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                 <button
                   onClick={() => setIsImageEditing(!isImageEditing)}
                   disabled={disabled}
-                  className="px-3 py-1 bg-purple-500 text-white rounded text-sm hover:bg-purple-600 disabled:opacity-50 w-full sm:w-auto"
+                  className="px-3 py-1 bg-purple-500 text-white rounded text-sm hover:bg-purple-600 disabled:opacity-50 w-full sm:w-auto dark:bg-purple-700 dark:hover:bg-purple-800"
                 >
                   이미지 {isImageEditing ? '취소' : (imageUrl ? '변경' : '추가')}
                 </button>
@@ -238,7 +238,7 @@ const DraggableItem = ({ id, name, url, imageUrl, imageName, moveItem, onEdit, o
                 <button
                   onClick={() => onDelete(id, name)}
                   disabled={disabled}
-                  className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50 w-full sm:w-auto"
+                  className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50 w-full sm:w-auto dark:bg-red-700 dark:hover:bg-red-800"
                 >
                   삭제
                 </button>

@@ -283,12 +283,12 @@ const ListManager = ({
   const topError = localError || (q.isError ? (q.error as Error)?.message : null);
 
   return (
-    <div className="max-w-4xl mx-auto p-2 sm:p-4">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4">{title}</h1>
+    <div className="max-w-4xl mx-auto p-2 sm:p-4 dark:bg-gray-800">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 dark:text-gray-200">{title}</h1>
 
       {/* Error message */}
       {topError && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">{topError}</div>
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded dark:bg-red-900 dark:border-red-700 dark:text-red-300">{topError}</div>
       )}
 
       {/* Add new item */}
@@ -309,7 +309,7 @@ const ListManager = ({
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
             placeholder="URL을 입력하세요"
-            className="block w-full p-2 border border-gray-300 rounded-md"
+            className="block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
             disabled={isLoading}
           />
         </div>
@@ -318,7 +318,7 @@ const ListManager = ({
       {/* Image upload */}
       {enableImageUpload && (
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">이미지 업로드</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">이미지 업로드</label>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <input
               type="file"
@@ -342,17 +342,17 @@ const ListManager = ({
                   setSelectedFile(file);
                 }
               }}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:text-gray-300 dark:file:bg-blue-700 dark:file:text-blue-100 dark:hover:file:bg-blue-800"
               disabled={isLoading}
             />
-            {selectedFile && <span className="text-sm text-gray-600">선택됨: {selectedFile.name}</span>}
+            {selectedFile && <span className="text-sm text-gray-600 dark:text-gray-300">선택됨: {selectedFile.name}</span>}
           </div>
         </div>
       )}
 
       {/* Loading indicator */}
       {isLoading && (
-        <div className="text-center py-4">
+        <div className="text-center py-4 dark:text-gray-300">
           <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
           <span className="ml-2">처리 중...</span>
         </div>
@@ -386,7 +386,7 @@ const ListManager = ({
 
       {/* Empty state */}
       {!isLoading && items.length === 0 && (
-        <div className="text-center py-8 text-gray-500">등록된 항목이 없습니다.</div>
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">등록된 항목이 없습니다.</div>
       )}
     </div>
   );
