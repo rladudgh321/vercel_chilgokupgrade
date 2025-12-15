@@ -19,23 +19,23 @@ export default function PostView({ post }: { post: BoardPost }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 mt-16">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="p-4 sm:p-6 mt-16 bg-white dark:bg-white">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-4 sm:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4">{post.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-900">{post.title}</h1>
 
-          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-gray-600 mb-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-gray-600 dark:text-gray-600 mb-6">
             <span>등록일: {displayDate()}</span>
           </div>
 
           <div
-            className="prose max-w-none"
+            className="prose max-w-none text-gray-900 dark:text-gray-900"
             dangerouslySetInnerHTML={{ __html: post.content || '' }}
           />
         </div>
 
-        <div className="p-4 bg-gray-50 text-right">
-          <Link href="/notice" className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+        <div className="p-4 bg-gray-50 dark:bg-gray-50 text-right">
+          <Link href="/notice" className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-500 dark:bg-gray-500 text-white rounded hover:bg-gray-600 dark:hover:bg-gray-600">
             목록으로
           </Link>
         </div>
