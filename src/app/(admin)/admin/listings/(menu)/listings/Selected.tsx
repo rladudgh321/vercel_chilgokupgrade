@@ -39,7 +39,7 @@ const Selected = ({ totalCount, sortKey }: SelectedProps) => {
     <>
       {/* 컨트롤 인풋창 */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-200 flex-wrap p-4 gap-3">
-        <div className="border border-slate-500 p-2 rounded bg-white" role="presentation">
+        <div className="border border-slate-500 p-2 rounded bg-white dark:text-slate-700" role="presentation">
           전체매물: {totalCount.toLocaleString()}
         </div>
 

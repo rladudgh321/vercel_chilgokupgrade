@@ -25,7 +25,7 @@ export default function AdminLayoutClient({ children, logoUrlPromise }: { childr
         </div>
         <div
           className={clsx(
-            "w-full pt-14 transition-all duration-300",
+            "w-full pt-14 transition-all duration-300 bg-gray-50 dark:bg-gray-900",
             isMobileMenuOpen ? "sm:ml-64" : "sm:ml-20"
           )}
         >

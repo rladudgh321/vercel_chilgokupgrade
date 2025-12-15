@@ -274,11 +274,11 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                 {...register("keyword")}
                 type="text"
                 placeholder="매물번호 또는 주소"
-                className="h-full px-2 w-full rounded-l-xl"
+                className="h-full px-2 w-full rounded-l-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
             <button type="submit">
-              <SearchIcon className="w-8 bg-slate-400 rounded-r-xl p-1 h-full" />
+              <SearchIcon className="w-8 bg-slate-400 dark:bg-slate-500 rounded-r-xl p-1 h-full" />
             </button>
           </form>
         </div>
@@ -299,9 +299,9 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
         </div>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
         <table className="w-full table-auto text-center">
-          <thead className="bg-slate-600 text-white hidden md:table-header-group">
+          <thead className="bg-slate-600 dark:bg-slate-700 text-white hidden md:table-header-group">
             <tr>
               <th className="p-2 sm:p-3 text-xs sm:text-sm font-medium">
                 <input
@@ -363,8 +363,8 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                 <tr
                   key={id}
                   className={clsx(
-                    "block md:table-row hover:bg-slate-300 transition-colors duration-300",
-                    index % 2 === 0 ? "bg-slate-100" : "bg-slate-200"
+                    "block md:table-row hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300",
+                    index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"
                   )}
                 >
                   <td
@@ -545,7 +545,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                       </div>
                     )}
 
-                    <div className="mt-1 text-xs text-slate-600">
+                    <div className="mt-1 text-xs text-slate-600 dark:text-slate-200">
                       현장 확인일: {formatYYYYMMDD(confirmDate)}
                     </div>
                   </td>
@@ -568,7 +568,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
 
                       {/* 프린트 드롭다운 */}
                       {printMenuRowId === id && (
-                        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-56 bg-white border border-slate-200 rounded-lg shadow-lg text-sm">
+                        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-56 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg text-sm">
                           <button
                             type="button"
                             onClick={() => {
@@ -612,7 +612,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                           </button>
 
                           {menuRowId === id && (
-                            <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-36 bg-white border border-slate-200 rounded-lg shadow-lg text-sm">
+                            <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-36 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg text-sm">
                               <button
                                 onClick={() => updateConfirmDateToToday(id)}
                                 className="w-full text-left px-3 py-2 hover:bg-slate-100"
@@ -667,7 +667,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                     <div className="mt-3 relative group flex justify-center">
                       <div
                         aria-hidden
-                        className="inline-block select-none px-3 py-1 rounded-md border border-slate-400 bg-white text-slate-700 text-xs font-medium shadow-sm"
+                        className="inline-block select-none px-3 py-1 rounded-md border border-gray-400 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium shadow-sm"
                       >
                         비밀 메모
                       </div>
@@ -675,7 +675,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                       <div
                         className="
                           absolute left-1/2 top-full mt-2 -translate-x-1/2 z-20
-                          w-64 rounded-md border border-slate-200 bg-white p-3 text-left text-xs text-slate-700 shadow-xl
+                          w-64 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 text-left text-xs text-gray-700 dark:text-gray-300 shadow-xl
                           opacity-0 invisible group-hover:opacity-100 group-hover:visible
                         "
                         role="tooltip"
