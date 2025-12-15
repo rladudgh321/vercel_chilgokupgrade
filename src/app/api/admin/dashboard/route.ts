@@ -11,8 +11,8 @@ export async function GET(req: NextRequest) {
     const supabase = createClient(cookieStore);
 
     // Listing Stats
-    const { count: totalListings } = await supabase.from('Build').select('*', { count: 'exact', head: true });
-    const { data: viewsData, error: viewsError } = await supabase.from('Build').select('views').eq('visibility', true);
+    const { count: totalListings } = await supabase.from('Build').select('*', { count: 'exact', head: true }).is('deletedAt', null);
+    const { data: viewsData, error: viewsError } = await supabase.from('Build').select('views').eq('visibility', true).is('deletedAt', null);
     if (viewsError) console.error('Error fetching views:', viewsError);
     const totalViews = viewsData?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0;
 
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     const { count: contactRequests } = await supabase.from('ContactRequest').select('*', { count: 'exact', head: true }).eq('confirm', false);
 
     // Category Views
-    const { data: buildsForCategories, error: buildsForCatError } = await supabase.from('Build').select('views, listingTypeId').gt('views', 0).not('listingTypeId', 'is', null);
+    const { data: buildsForCategories, error: buildsForCatError } = await supabase.from('Build').select('views, listingTypeId').gt('views', 0).not('listingTypeId', 'is', null).is('deletedAt', null);
     if (buildsForCatError) {
       Sentry.captureException(buildsForCatError);
           await notifySlack(buildsForCatError, req.url);
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
     const categoryViews = Array.from(categoryViewsMap.values()).sort((a, b) => b.value - a.value);
 
     // Theme Views
-    const { data: buildsForThemes, error: buildsForThemesError } = await supabase.from('Build').select('themes, views').gt('views', 0);
+    const { data: buildsForThemes, error: buildsForThemesError } = await supabase.from('Build').select('themes, views').gt('views', 0).is('deletedAt', null);
     if (buildsForThemesError) console.error('Error fetching builds for themes:', buildsForThemesError);
     const themeViewsMap = new Map<string, number>();
     if (buildsForThemes) {
@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
       .sort((a, b) => b.value - a.value);
 
     // Top 5 Listings
-    const { data: topListings, error: topListingsError } = await supabase.from('Build').select('address, views').eq('visibility', true).not('address', 'is', null).order('views', { ascending: false }).limit(5);
+    const { data: topListings, error: topListingsError } = await supabase.from('Build').select('address, views').eq('visibility', true).not('address', 'is', null).is('deletedAt', null).order('views', { ascending: false }).limit(5);
     if (topListingsError) {
       Sentry.captureException(topListingsError);
           await notifySlack(topListingsError, req.url);
