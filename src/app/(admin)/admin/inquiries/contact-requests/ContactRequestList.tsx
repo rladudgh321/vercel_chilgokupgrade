@@ -126,9 +126,9 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
   };
 
   return (
-    <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
+    <div className={`p-2 sm:p-4 md:p-6 dark:bg-gray-800 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-        <div className="text-lg sm:text-xl font-semibold">
+        <div className="text-lg sm:text-xl font-semibold dark:text-gray-200">
           의뢰수: {filteredRequests().length}건
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
@@ -137,29 +137,29 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
             placeholder="연락처, 상세내용 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border rounded w-full"
+            className="p-2 border rounded w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
           />
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gray-100 hidden md:table-header-group">
+        <table className="min-w-full table-auto border-collapse dark:text-gray-300">
+          <thead className="bg-gray-100 hidden md:table-header-group dark:bg-gray-700">
             <tr>
-              <th className="p-2 text-xs sm:text-sm">번호</th>
-              <th className="p-2 text-xs sm:text-sm">확인여부</th>
-              <th className="p-2 text-xs sm:text-sm">이름</th>
-              <th className="p-2 text-xs sm:text-sm">연락처</th>
-              <th className="p-2 text-xs sm:text-sm">IP</th>
-              <th className="p-2 text-xs sm:text-sm">상세내용</th>
-              <th className="p-2 text-xs sm:text-sm">관리용메모</th>
-              <th className="p-2 text-xs sm:text-sm">등록일</th>
-              <th className="p-2 text-xs sm:text-sm">비고</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">번호</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">확인여부</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">이름</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">연락처</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">IP</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">상세내용</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">관리용메모</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">등록일</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">비고</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 md:table-row-group">
+          <tbody className="divide-y divide-gray-200 md:table-row-group dark:divide-gray-700">
             {filteredRequests().map((request, index) => (
-              <tr key={request.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}`}>
+              <tr key={request.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200 dark:bg-gray-900' : 'bg-slate-300 dark:bg-gray-800'}`}>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="번호">{request.id}</td>
                 <td className="p-2 block md:table-cell" data-label="확인여부">
                   <ToggleSwitch
@@ -184,11 +184,11 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
                     value={notes[request.id] ?? ''}
                     onChange={(e) => handleNoteChange(request.id, e.target.value)}
                     placeholder="관리용메모"
-                    className="p-2 border rounded w-full mt-2 text-xs sm:text-sm"
+                    className="p-2 border rounded w-full mt-2 text-xs sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
                   />
                   <button
                     onClick={() => handleSaveNote(request.id)}
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400"
+                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400 dark:bg-green-700 dark:hover:bg-green-800 dark:disabled:bg-gray-600"
                     disabled={updateRequestMutation.isPending}
                   >
                     메모저장
@@ -197,7 +197,7 @@ const ContactRequestList = ({ initialRequests, totalPages, currentPage }: Contac
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="등록일">{request.date}</td>
                 <td className="p-2 block md:table-cell" data-label="비고">
                   <button
-                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400"
+                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400 dark:bg-red-700 dark:hover:bg-red-800 dark:disabled:bg-gray-600"
                     onClick={() => handleDelete(request.id)}
                     disabled={deleteRequestMutation.isPending}
                   >

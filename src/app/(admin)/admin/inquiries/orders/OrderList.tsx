@@ -156,16 +156,16 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   }
 
   return (
-    <div className={`p-2 sm:p-4 md:p-6 ${isUpdating ? 'cursor-wait' : ''}`}>
+    <div className={`p-2 sm:p-4 md:p-6 dark:bg-gray-800 ${isUpdating ? 'cursor-wait' : ''}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-        <div className="text-lg sm:text-xl font-semibold">
+        <div className="text-lg sm:text-xl font-semibold dark:text-gray-200">
           의뢰수: {filteredOrders().length}건
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value as '전체' | '구해요' | '팔아요' | '기타')}
-            className="p-2 border rounded w-full sm:w-auto"
+            className="p-2 border rounded w-full sm:w-auto dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
           >
             <option value="전체">전체</option>
             <option value="구해요">구해요</option>
@@ -176,11 +176,11 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
             placeholder="연락처 또는 제목 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border rounded w-full sm:w-auto"
+            className="p-2 border rounded w-full sm:w-auto dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
           />
           <button
             onClick={() => {}}
-            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full sm:w-auto"
+            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full sm:w-auto dark:bg-blue-700 dark:hover:bg-blue-800"
           >
             검색
           </button>
@@ -188,28 +188,28 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gray-100 hidden md:table-header-group">
+        <table className="min-w-full table-auto border-collapse dark:text-gray-300">
+          <thead className="bg-gray-100 hidden md:table-header-group dark:bg-gray-700">
             <tr>
-              <th className="p-2 text-xs sm:text-sm">번호</th>
-              <th className="p-2 text-xs sm:text-sm">확인여부</th>
-              <th className="p-2 text-xs sm:text-sm">구분</th>
-              <th className="p-2 text-xs sm:text-sm">거래유형</th>
-              <th className="p-2 text-xs sm:text-sm">작성자</th>
-              <th className="p-2 text-xs sm:text-sm">매물종류</th>
-              <th className="p-2 text-xs sm:text-sm">견적금액</th>
-              <th className="p-2 text-xs sm:text-sm">연락처</th>
-              <th className="p-2 text-xs sm:text-sm">IP주소</th>
-              <th className="p-2 text-xs sm:text-sm">의뢰지역</th>
-              <th className="p-2 text-xs sm:text-sm">제목</th>
-              <th className="p-2 text-xs sm:text-sm">상세내용</th>
-              <th className="p-2 text-xs sm:text-sm">등록일</th>
-              <th className="p-2 text-xs sm:text-sm">비고</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">번호</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">확인여부</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">구분</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">거래유형</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">작성자</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">매물종류</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">견적금액</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">연락처</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">IP주소</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">의뢰지역</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">제목</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">상세내용</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">등록일</th>
+              <th className="p-2 text-xs sm:text-sm dark:text-gray-200">비고</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 md:table-row-group">
+          <tbody className="divide-y divide-gray-200 md:table-row-group dark:divide-gray-700">
             {filteredOrders().map((order, index) => (
-              <tr key={order.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}`}>
+              <tr key={order.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200 dark:bg-gray-900' : 'bg-slate-300 dark:bg-gray-800'}`}>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="번호">{order.id}</td>
                 <td className="p-2 block md:table-cell" data-label="확인여부">
                   <ToggleSwitch
@@ -234,16 +234,16 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="의뢰지역">{order.region}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="제목">
-                  <p className="border p-2">{order.title}</p>
+                  <p className="border p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">{order.title}</p>
                   <textarea
                     value={notes[order.id] || ''}
                     onChange={(e) => handleNoteChange(order.id, e.target.value)}
                     placeholder="관리용메모"
-                    className="p-2 border rounded w-full mt-2"
+                    className="p-2 border rounded w-full mt-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
                   />
                   <button
                     onClick={() => handleSaveNote(order.id)}
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400"
+                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600 w-full disabled:bg-gray-400 dark:bg-green-700 dark:hover:bg-green-800 dark:disabled:bg-gray-600"
                     disabled={updateOrderMutation.isPending}
                   >
                     메모저장
@@ -251,7 +251,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="상세내용">
                   <button
-                    className="p-2 bg-blue-500 text-white rounded w-full"
+                    className="p-2 bg-blue-500 text-white rounded w-full dark:bg-blue-700 dark:hover:bg-blue-800"
                     onClick={() => alert(`내용 보기: ${order.description}`)}
                   >
                     내용보기
@@ -260,7 +260,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="등록일">{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="비고">
                   <button
-                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400"
+                    className="p-2 bg-red-500 text-white rounded w-full disabled:bg-gray-400 dark:bg-red-700 dark:hover:bg-red-800 dark:disabled:bg-gray-600"
                     onClick={() => handleDelete(order.id)}
                     disabled={deleteOrderMutation.isPending}
                   >

@@ -53,7 +53,7 @@ const IpActions = ({ ipAddress, contact, details }: IpActionsProps) => {
       <div>
         <button
           type="button"
-          className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800 dark:focus:ring-indigo-600"
           id="options-menu"
           aria-haspopup="true"
           aria-expanded="true"
@@ -68,7 +68,7 @@ const IpActions = ({ ipAddress, contact, details }: IpActionsProps) => {
 
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 dark:bg-gray-800 dark:ring-gray-700"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -76,14 +76,14 @@ const IpActions = ({ ipAddress, contact, details }: IpActionsProps) => {
           <div className="py-1" role="none">
             <button
               onClick={() => handleBan(false)}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
               role="menuitem"
             >
               해당 항목 IP 차단
             </button>
             <button
               onClick={() => handleBan(true)}
-              className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900"
+              className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-red-900 dark:text-red-400 dark:hover:bg-gray-700 dark:hover:text-red-300"
               role="menuitem"
             >
               해당 IP 차단 및 전체항목 삭제
