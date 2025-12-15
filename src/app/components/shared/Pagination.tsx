@@ -19,8 +19,7 @@ const Pagination = ({
       {/* 이전 그룹 버튼 */}
       {currentGroup > 0 && (
         <button
-          onClick={() => onPageChange(startPage - pageGroupSize)}
-          className="px-4 py-2 bg-gray-300"
+          className="px-4 py-2 bg-gray-300 dark:bg-gray-300"
         >
           이전
         </button>
@@ -32,7 +31,7 @@ const Pagination = ({
           key={startPage + index}
           onClick={() => onPageChange(startPage + index)}
           className={`px-4 py-2 ${
-            currentPage === startPage + index ? "bg-blue-500 text-white" : "bg-gray-200"
+            currentPage === startPage + index ? "bg-blue-500 text-white dark:bg-blue-500 dark:text-white" : "bg-gray-200 dark:bg-gray-200 text-gray-900 dark:text-gray-900"
           }`}
         >
           {startPage + index}
@@ -43,7 +42,7 @@ const Pagination = ({
       {endPage < totalPages && (
         <button
           onClick={() => onPageChange(startPage + pageGroupSize)}
-          className="px-4 py-2 bg-gray-300"
+          className="px-4 py-2 bg-gray-300 dark:bg-gray-300"
         >
           다음
         </button>

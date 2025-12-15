@@ -354,7 +354,7 @@ export default function SearchBar({
               placeholder="관심지역 또는 매물번호를 입력"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
             />
           </div>
           <button
@@ -376,7 +376,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('propertyType')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">매물 종류</option>
             {dynamicOptions.propertyTypeOptions?.map((opt) => (
@@ -396,7 +396,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('buyType')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">거래유형</option>
             {dynamicOptions.buyTypeOptions?.map((opt) => (
@@ -411,7 +411,7 @@ export default function SearchBar({
           <select
             value={priceRange}
             onChange={(e) => setPriceRange(e.target.value)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
             disabled={!buyType || pricePresets.length === 0}
           >
             <option value="">금액</option>
@@ -432,7 +432,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('areaRange')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">면적</option>
             {dynamicOptions.areaOptions?.map((opt) => (
@@ -452,7 +452,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('theme')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">테마</option>
             {dynamicOptions.themeOptions?.map((opt) => (
@@ -472,7 +472,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('rooms')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">방</option>
             {dynamicOptions.roomOptions?.map((opt) => (
@@ -492,7 +492,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('floor')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">층수</option>
             {dynamicOptions.floorOptions?.map((opt) => (
@@ -512,7 +512,7 @@ export default function SearchBar({
             }}
             onFocus={() => setOpenSelect('bathrooms')}
             onBlur={() => setOpenSelect(null)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">화장실</option>
             {dynamicOptions.bathroomOptions?.map((opt) => (
@@ -527,7 +527,7 @@ export default function SearchBar({
           <select
             value={subwayLine}
             onChange={(e) => setSubwayLine(e.target.value)}
-            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+            className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm text-gray-700"
           >
             <option value="">호선 검색</option>
             <option value="1">1호선</option>

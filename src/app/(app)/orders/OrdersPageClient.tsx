@@ -52,7 +52,7 @@ export default function OrdersPageClient() {
 
   return (
     <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14">
-      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">매물 의뢰</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900 dark:text-gray-900">매물 의뢰</h1>
       <OrderForm propertyTypes={propertyTypes} buyTypes={buyTypes} isBanned={isBanned} />
     </main>
   );

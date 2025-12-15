@@ -45,25 +45,24 @@ const NoticeClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl p-2 sm:p-4 md:p-6 mt-14">
+    <div className="mx-auto max-w-7xl p-2 sm:p-4 md:p-6 mt-14 bg-white dark:bg-white">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-        <div className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">
+        <div className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0 text-gray-900 dark:text-gray-900">
           공지사항: {filteredPosts.length}
         </div>
         <div className="flex space-x-2 sm:space-x-4">
-          <input
-            type="text"
-            placeholder="제목 검색"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border rounded w-full sm:w-auto"
-          />
-        </div>
+                      <input
+                        type="text"
+                        placeholder="제목 검색"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="p-2 border rounded w-full sm:w-auto placeholder-gray-500 dark:placeholder-gray-500 text-gray-900 dark:text-gray-900 border-gray-300 dark:border-gray-300 bg-white dark:bg-white"
+                      />        </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 dark:bg-gray-100 text-gray-900 dark:text-gray-900">
             <tr>
               <th className="p-2 text-center text-sm sm:text-base">구분</th>
               <th className="p-2 text-center text-sm sm:text-base">제목</th>
@@ -73,7 +72,7 @@ const NoticeClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
           <tbody>
             {paginatedPosts.length === 0 ? (
               <tr>
-                <td colSpan={3} className="p-8 text-center text-gray-500">
+                <td colSpan={3} className="p-8 text-center text-gray-500 dark:text-gray-500 bg-white dark:bg-white">
                   게시물이 없습니다.
                 </td>
               </tr>
@@ -81,18 +80,18 @@ const NoticeClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
               paginatedPosts.map((post, index) => (
                 <tr 
                   key={post.id} 
-                  className={`${post.categoryName === '공지' ? 'bg-yellow-100' : (index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300')} cursor-pointer hover:bg-gray-400`}
+                  className={`${post.categoryName === '공지' ? 'bg-yellow-100 dark:bg-yellow-100' : (index % 2 === 0 ? 'bg-slate-200 dark:bg-slate-200' : 'bg-slate-300 dark:bg-slate-300')} cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-400`}
                   onClick={() => handlePostClick(post.id)}
                 >
-                  <td className="p-2 text-center text-sm sm:text-base">
+                  <td className="p-2 text-center text-sm sm:text-base text-gray-900 dark:text-gray-900">
                     {post.categoryName || post.id}
                   </td>
-                  <td className="p-2 text-sm sm:text-base">
+                  <td className="p-2 text-sm sm:text-base text-gray-900 dark:text-gray-900">
                     <div className="max-w-xs truncate" title={post.title}>
                       {post.title}
                     </div>
                   </td>
-                  <td className="p-2 text-center text-xs sm:text-sm">
+                  <td className="p-2 text-center text-xs sm:text-sm text-gray-900 dark:text-gray-900">
                     {post.registrationDate
                       ? new Date(post.registrationDate).toLocaleDateString('ko-KR')
                       : new Date(post.createdAt).toLocaleDateString('ko-KR')}
