@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
     const floor = searchParams.get("floor")?.trim();
     const priceRange = searchParams.get("priceRange")?.trim();
     const areaRange = searchParams.get("areaRange")?.trim();
-    console.log('1111', areaRange);
 
     const from = (page - 1) * limit;
     const to = from + limit - 1;

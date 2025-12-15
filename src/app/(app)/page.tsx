@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
 
 async function getPopupPosts(): Promise<PopupPost[]> {
-  const res = await fetch(`${BASE_URL}/api/popup`, { next: { tags: ['public', 'popup'] } });
+  const res = await fetch(`${BASE_URL}/api/popup`, { cache: 'force-cache', next: { tags: ['public', 'popup'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -34,7 +34,7 @@ async function getPopupPosts(): Promise<PopupPost[]> {
 }
 
 async function getBanners(): Promise<Banner[]> {
-    const res = await fetch(`${BASE_URL}/api/admin/webView/banner`, { next: { tags: ['public', 'banner'] }});
+    const res = await fetch(`${BASE_URL}/api/admin/webView/banner`, { cache: 'force-cache', next: { tags: ['public', 'banner'] }});
     if(!res.ok) {
       throw new Error('Network response was not ok');
     }
@@ -43,7 +43,9 @@ async function getBanners(): Promise<Banner[]> {
 }
 
 async function getListingType(): Promise<ListingTypeProps[]> {
-    const res = await fetch(`${BASE_URL}/api/listing-type`, { next: {
+    const res = await fetch(`${BASE_URL}/api/listing-type`, { 
+    cache: 'force-cache',
+    next: {
       tags: ['public', 'listing-type']
     }});
     if(!res.ok) {
@@ -58,6 +60,7 @@ async function getListingType(): Promise<ListingTypeProps[]> {
 
 async function getThemeImage(): Promise<ThemeImageProps[]> {
     const res = await fetch(`${BASE_URL}/api/theme-images`, {
+      cache: 'force-cache',
       next: { tags: ['public', 'theme-image'] }
     });
     if(!res.ok) {
@@ -79,12 +82,12 @@ async function getThemeImage(): Promise<ThemeImageProps[]> {
 
 export type ListingSectionProps = {
   currentPage: number; 
-  listings: Listing[]; 
+  listings: any[]; 
   totalPage: number;
 }
 
 async function getPopular(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?popularity=인기&limit=10`, { next: { tags: ['public', 'popular'] } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=인기&limit=10`, { cache: 'force-cache', next: { tags: ['public', 'popular'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -93,7 +96,7 @@ async function getPopular(): Promise<ListingSectionProps> {
 }
 
 async function getQuickSale(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?popularity=급매&limit=10`, { next: { tags: ['public', 'quick-sale'] } });
+  const res = await fetch(`${BASE_URL}/api/listings?popularity=급매&limit=10`, { cache: 'force-cache', next: { tags: ['public', 'quick-sale'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }
@@ -102,7 +105,7 @@ async function getQuickSale(): Promise<ListingSectionProps> {
 }
 
 async function getRecently(): Promise<ListingSectionProps> {
-  const res = await fetch(`${BASE_URL}/api/listings?sortBy=latest&limit=10`, { next: { tags: ['public', 'recently'] } });
+  const res = await fetch(`${BASE_URL}/api/listings?sortBy=latest&limit=10`, { cache: 'force-cache', next: { tags: ['public', 'recently'] } });
   if(!res.ok) {
     throw new Error('Network response was not ok');
   }

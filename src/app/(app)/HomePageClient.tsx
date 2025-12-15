@@ -8,8 +8,6 @@ import RecentlyLand from "../components/root/7RecentlyLand";
 import { ListingSectionProps } from "@/app/(app)/page";
 import { IBuild } from '../interface/build';
 import BuildDetailModalClient from '../components/root/BuildDetailModal';
-import { Listing } from '../components/root/ListingSection';
-
 
 const HomePageClient = ({ RecommendData, QuickSaleData, RecentlyData }:{
   RecommendData: Promise<ListingSectionProps>; QuickSaleData: Promise<ListingSectionProps>; RecentlyData: Promise<ListingSectionProps>;
@@ -20,7 +18,7 @@ const HomePageClient = ({ RecommendData, QuickSaleData, RecentlyData }:{
   const QuickSaleDataPromise = use(QuickSaleData);
   const RecentlyDataPromise = use(RecentlyData);
 
-  const allListings: Listing[] = [
+  const allListings = [
     ...(RecommendDataPromise?.listings || []),
     ...(QuickSaleDataPromise?.listings || []),
     ...(RecentlyDataPromise?.listings || []),

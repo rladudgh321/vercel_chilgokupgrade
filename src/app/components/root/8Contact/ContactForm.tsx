@@ -11,7 +11,7 @@ export type ContactRequestInput = {
 }
 
 async function getIpStatus(): Promise<{isBanned: boolean}> {
-  const res = await fetch(`/api/ip-status`);
+  const res = await fetch(`/api/ip-status`, { cache: 'force-cache', next: { tags: ['public'] } });
   if(!res.ok) {
     console.error('Network response was not ok');
     return { isBanned: false };

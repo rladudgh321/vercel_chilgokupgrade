@@ -142,7 +142,7 @@ export default function LandSearchClient() {
   const { data: allListingsForCounting = [] } = useQuery({
     queryKey: ["all-listings-for-counting"],
     queryFn: async () => {
-      const res = await fetch("/api/listings/all");
+      const res = await fetch("/api/listings/all", { cache: 'force-cache', next: { tags: ['public'] } });
       if (!res.ok) {
         console.error("Failed to fetch all listings for counting");
         return [];
