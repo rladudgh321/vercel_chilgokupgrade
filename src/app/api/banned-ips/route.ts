@@ -18,7 +18,9 @@ export async function GET(req: NextRequest) {
     if (error) {
       throw error;
     }
-    return NextResponse.json(data || []);
+
+    console.log('data', data);
+    return NextResponse.json(data);
   } catch (error) {
     Sentry.captureException(error);
     await notifySlack(error, req.url);

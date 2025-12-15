@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import Pagination from '@/app/components/shared/Pagination';
 
 interface AccessLog {
   id: number;
@@ -18,14 +19,19 @@ export default function AccessLogsPage() {
   const [logs, setLogs] = useState<AccessLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const limit = 10;
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const fetchLogs = async (page: number) => {
+      setLoading(true);
       try {
-        const response = await fetch('/api/admin/access-logs');
+        const response = await fetch(`/api/admin/access-logs?page=${page}&limit=${limit}`);
         if (response.ok) {
-          const data = await response.json();
+          const { data = [], totalPages: newTotalPages = 0 } = await response.json();
           setLogs(data);
+          setTotalPages(newTotalPages);
         } else {
           const errorData = await response.json();
           setError(`Error fetching logs: ${errorData.error || response.statusText}`);
@@ -37,8 +43,8 @@ export default function AccessLogsPage() {
       setLoading(false);
     };
 
-    fetchLogs();
-  }, []);
+    fetchLogs(currentPage);
+  }, [currentPage]);
 
   const formatInKoreanTime = (dateString: string) => {
     try {
@@ -49,6 +55,10 @@ export default function AccessLogsPage() {
       console.error('Error formatting date:', error);
       return 'Invalid date';
     }
+  };
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -92,6 +102,11 @@ export default function AccessLogsPage() {
               )}
             </tbody>
           </table>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+          />
         </div>
       )}
     </div>

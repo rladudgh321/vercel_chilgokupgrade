@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Pagination from '@/app/components/shared/Pagination';
 
 type BannedIp = {
   id: number;
@@ -13,17 +14,15 @@ type BannedIp = {
 
 interface BannedIpListProps {
   initialBannedIps: BannedIp[];
+  totalPages: number;
+  currentPage: number;
 }
 
-const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
+const BannedIpList = ({ initialBannedIps, totalPages, currentPage }: BannedIpListProps) => {
   const router = useRouter();
   const [bannedIps, setBannedIps] = useState<BannedIp[]>(initialBannedIps);
   const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    setBannedIps(initialBannedIps);
-  }, [initialBannedIps]);
-
+  console.log('bannedIps', bannedIps)
   const handleUnban = async (id: number) => {
     if (!window.confirm('정말로 이 IP를 차단 해제하시겠습니까?')) {
       return;
@@ -50,6 +49,10 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
       ip.details?.toLowerCase().includes(q)
     );
   }
+
+  const onPageChange = (page: number) => {
+    router.push(`/admin/other/banned-ips?page=${page}`);
+  };
 
   return (
     <div className="p-2 sm:p-4 md:p-6 dark:bg-gray-800">
@@ -101,6 +104,11 @@ const BannedIpList = ({ initialBannedIps }: BannedIpListProps) => {
           </tbody>
         </table>
       </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
