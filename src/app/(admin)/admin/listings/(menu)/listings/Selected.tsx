@@ -15,8 +15,8 @@ const tabBtn = (active: boolean) =>
   clsx(
     "w-full rounded-md border px-4 py-2 text-sm shadow transition",
     active
-      ? "bg-slate-800 text-white border-slate-800"
-      : "bg-white text-slate-700 border-slate-400 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+      ? "bg-slate-800 text-white border-slate-800 dark:bg-blue-700 dark:border-blue-700"
+      : "bg-white text-slate-700 border-slate-400 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
   );
 
 const Selected = ({ totalCount, sortKey }: SelectedProps) => {
@@ -38,8 +38,8 @@ const Selected = ({ totalCount, sortKey }: SelectedProps) => {
   return (
     <>
       {/* 컨트롤 인풋창 */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-200 flex-wrap p-4 gap-3">
-        <div className="border border-slate-500 p-2 rounded bg-white dark:text-slate-700" role="presentation">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-200 flex-wrap p-4 gap-3 dark:bg-gray-800">
+        <div className="border border-slate-500 p-2 rounded bg-white text-slate-700 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600" role="presentation">
           전체매물: {totalCount.toLocaleString()}
         </div>
 
@@ -88,7 +88,7 @@ const Selected = ({ totalCount, sortKey }: SelectedProps) => {
         <div>
           <Link
             href="/admin/listings/listings/create"
-            className="border border-slate-500 bg-pink-900 text-red-50 px-4 py-2 rounded w-full sm:w-auto block text-center"
+            className="border border-slate-500 bg-pink-900 text-red-50 px-4 py-2 rounded w-full sm:w-auto block text-center dark:bg-pink-700 dark:text-pink-100 dark:border-pink-600 hover:dark:bg-pink-800"
           >
             매물등록
           </Link>

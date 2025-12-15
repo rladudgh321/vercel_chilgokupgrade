@@ -43,13 +43,13 @@ const ToggleSwitch = ({
         <label
           htmlFor={id}
           className={clsx(
-            "flex justify-between items-center cursor-pointer w-20 h-10 rounded-full bg-gray-300 peer-checked:bg-blue-500 transition-colors duration-300",
-            "peer-disabled:cursor-not-allowed peer-disabled:bg-gray-400"
+            "flex justify-between items-center cursor-pointer w-20 h-10 rounded-full bg-gray-300 peer-checked:bg-blue-500 transition-colors duration-300 dark:bg-gray-600 dark:peer-checked:bg-blue-700",
+            "peer-disabled:cursor-not-allowed peer-disabled:bg-gray-400 dark:peer-disabled:bg-gray-500"
           )}
         >
           <span
             className={clsx(
-              "text-sm text-gray-700 transition-opacity duration-300 z-10 absolute right-4",
+              "text-sm text-gray-700 transition-opacity duration-300 z-10 absolute right-4 dark:text-gray-300",
               !isChecked ? "opacity-100" : "opacity-0"
             )}
           >
@@ -65,7 +65,7 @@ const ToggleSwitch = ({
           </span>
           <span
             style={isChecked ? { translate: "40px" } : undefined}
-            className="absolute top-1 left-1 w-8 h-8 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"
+            className="absolute top-1 left-1 w-8 h-8 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out dark:bg-gray-200"
           ></span>
         </label>
       </div>
