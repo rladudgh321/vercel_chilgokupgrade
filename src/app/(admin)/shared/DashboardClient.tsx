@@ -38,8 +38,8 @@ interface ChartWithSortedListProps {
 }
 
 const ChartWithSortedList = ({ title, data }: ChartWithSortedListProps) => (
-  <div className="bg-white p-6 rounded-lg shadow-md">
-    <h2 className="text-2xl font-bold mb-4">{title}</h2>
+  <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+    <h2 className="text-2xl font-bold mb-4 dark:text-gray-200">{title}</h2>
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
         <PieChart>
@@ -65,7 +65,7 @@ const ChartWithSortedList = ({ title, data }: ChartWithSortedListProps) => (
     <div className="mt-4">
       <ul>
         {data.sort((a, b) => b.value - a.value).map((item, index) => (
-          <li key={index} className="flex justify-between py-1 border-b">
+          <li key={index} className="flex justify-between py-1 border-b dark:border-gray-700 dark:text-gray-300">
             <span>{item.name}</span>
             <span>{item.value.toLocaleString()}</span>
           </li>
@@ -109,25 +109,25 @@ export default function DashboardClient({ dashboardData }: DashboardClientProps)
   // console.log('contactRequests',contactRequests);
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold mb-8">대시보드</h1>
+    <div className="p-8 bg-gray-50 min-h-screen dark:bg-gray-900">
+      <h1 className="text-4xl font-extrabold mb-8 dark:text-gray-200">대시보드</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">전체 매물</h2>
-          <p className="text-3xl">{listingStats.totalListings.toLocaleString()}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+          <h2 className="text-xl font-bold mb-2 dark:text-gray-200">전체 매물</h2>
+          <p className="text-3xl dark:text-gray-300">{listingStats.totalListings.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">총 조회수 (공개)</h2>
-          <p className="text-3xl">{listingStats.totalViews.toLocaleString()}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+          <h2 className="text-xl font-bold mb-2 dark:text-gray-200">총 조회수 (공개)</h2>
+          <p className="text-3xl dark:text-gray-300">{listingStats.totalViews.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">미확인 의뢰</h2>
-          <p className="text-3xl">매수: {inquiryStats.buy} | 매도: {inquiryStats.sell} | 기타: {inquiryStats.other}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+          <h2 className="text-xl font-bold mb-2 dark:text-gray-200">미확인 의뢰</h2>
+          <p className="text-3xl dark:text-gray-300">매수: {inquiryStats.buy} | 매도: {inquiryStats.sell} | 기타: {inquiryStats.other}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">미확인 연락요청</h2>
-          <p className="text-3xl">{contactRequests.toLocaleString()}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+          <h2 className="text-xl font-bold mb-2 dark:text-gray-200">미확인 연락요청</h2>
+          <p className="text-3xl dark:text-gray-300">{contactRequests.toLocaleString()}</p>
         </div>
       </div>
 
@@ -136,11 +136,11 @@ export default function DashboardClient({ dashboardData }: DashboardClientProps)
         <ChartWithSortedList title="테마별 조회수" data={themeViews} />
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">조회수 상위 5개 매물</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
+        <h2 className="text-2xl font-bold mb-4 dark:text-gray-200">조회수 상위 5개 매물</h2>
         <ul>
           {topListings.map((listing, index) => (
-            <li key={index} className="flex justify-between py-1 border-b">
+            <li key={index} className="flex justify-between py-1 border-b dark:border-gray-700 dark:text-gray-300">
               <span className="truncate pr-4">{listing.address}</span>
               <span>{listing.views.toLocaleString()}</span>
             </li>
