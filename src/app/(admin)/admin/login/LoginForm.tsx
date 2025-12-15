@@ -32,29 +32,46 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
-      {error && <p className="error-message">{error}</p>}
-      <div className="form-group">
-        <label htmlFor="email">이메일</label>
+    <form onSubmit={handleSubmit}>
+      {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+      <div className="mb-4">
+        <label
+          htmlFor="email"
+          className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          이메일
+        </label>
         <input
           type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500 sm:text-sm"
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="password">비밀번호</label>
+      <div className="mb-6">
+        <label
+          htmlFor="password"
+          className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          비밀번호
+        </label>
         <input
           type="password"
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-500 sm:text-sm"
         />
       </div>
-      <button type="submit">로그인</button>
+      <button
+        type="submit"
+        className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        로그인
+      </button>
     </form>
   );
 }
