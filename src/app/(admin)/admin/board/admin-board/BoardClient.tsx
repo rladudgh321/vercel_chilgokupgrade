@@ -30,10 +30,10 @@ const HoverContent = ({ content }: { content?: string }) => {
 
   return (
     <div className="relative group">
-      <button className="px-2 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600">
+      <button className="px-2 py-1 bg-gray-500 text-white text-xs rounded hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800">
         내용
       </button>
-      <div className="absolute bottom-full right-0 mb-2 w-96 max-h-96 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-left text-sm z-10 hidden group-hover:block">
+      <div className="absolute bottom-full right-0 mb-2 w-96 max-h-96 overflow-y-auto bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-left text-sm z-10 hidden group-hover:block dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
         <div dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>
@@ -167,30 +167,30 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gray-100 hidden md:table-header-group">
+        <table className="min-w-full table-auto border-collapse dark:text-gray-300">
+          <thead className="bg-gray-100 hidden md:table-header-group dark:bg-gray-700">
             <tr>
-              <th className="p-2 text-center text-xs sm:text-sm">번호</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">번호</th>
               {/* 카테고리 컬럼 삭제 */}
-              <th className="p-2 text-center text-xs sm:text-sm">제목</th>
-              <th className="p-2 text-center text-xs sm:text-sm">담당자</th>
-              <th className="p-2 text-center text-xs sm:text-sm">등록일</th>
-              <th className="p-2 text-center text-xs sm:text-sm">공지 / 일반</th>
-              <th className="p-2 text-center text-xs sm:text-sm">팝업여부</th>
-              <th className="p-2 text-center text-xs sm:text-sm">게시</th>
-              <th className="p-2 text-center text-xs sm:text-sm">비고</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">제목</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">담당자</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">등록일</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">공지 / 일반</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">팝업여부</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">게시</th>
+              <th className="p-2 text-center text-xs sm:text-sm dark:text-gray-200">비고</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 md:table-row-group">
+          <tbody className="divide-y divide-gray-200 md:table-row-group dark:divide-gray-700">
             {paginatedPosts.length === 0 ? (
               <tr>
-                <td colSpan={10} className="p-8 text-center text-gray-500">
+                <td colSpan={10} className="p-8 text-center text-gray-500 dark:text-gray-400">
                   게시물이 없습니다.
                 </td>
               </tr>
             ) : (
               paginatedPosts.map((post, index) => (
-                <tr key={post.id} className={`block md:table-row ${index % 2 === 0 ? 'bg-slate-200' : 'bg-slate-300'}`}>
+                <tr key={post.id} className={`block md:table-row hover:bg-slate-300 transition-colors duration-300 dark:hover:bg-gray-700 ${index % 2 === 0 ? 'bg-slate-200 dark:bg-gray-900' : 'bg-slate-300 dark:bg-gray-800'}`}>
                   <td className="p-2 text-center text-xs sm:text-sm block md:table-cell" data-label="번호">{post.id}</td>
                   <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="제목">
                     <div className="max-w-xs truncate" title={post.title}>
@@ -207,8 +207,8 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
                   <td className="p-2 text-center block md:table-cell" data-label="공지 / 일반">
                     <span className={`px-2 py-1 rounded text-xs ${
                       post.isAnnouncement 
-                        ? 'bg-red-100 text-red-800' 
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' 
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}>
                       {post.isAnnouncement ? '공지' : '일반'}
                     </span>
@@ -216,8 +216,8 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
                   <td className="p-2 text-center block md:table-cell" data-label="팝업여부">
                     <span className={`px-2 py-1 rounded text-xs ${
                       post.isPopup 
-                        ? 'bg-blue-100 text-blue-800' 
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' 
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}>
                       {post.isPopup ? '팝업' : '일반'}
                     </span>
@@ -225,8 +225,8 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
                   <td className="p-2 text-center block md:table-cell" data-label="게시">
                     <span className={`px-2 py-1 rounded text-xs ${
                       post.isPublished 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
+                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
                     }`}>
                       {post.isPublished ? '게시' : '비공개'}
                     </span>
@@ -236,13 +236,13 @@ const BoardClient = ({ initialPosts }: { initialPosts: BoardPost[] }) => {
                       <HoverContent content={post.content} />
                       <button
                         onClick={() => handleEditPost(post.id)}
-                        className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                        className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
                       >
                         수정
                       </button>
                       <button
                         onClick={() => handleDeletePost(post.id)}
-                        className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                        className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
                       >
                         삭제
                       </button>
