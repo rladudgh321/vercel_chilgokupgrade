@@ -1,25 +1,6 @@
-`/admin/other/banned-ips` 페이지에 페이지네이션 작업을 하고 싶어
-Pagination 컴포넌트를 재활용하여 item갯수가 10개 마다 쪽번호를 매겨줘
+DashboardClient컴포넌트를 수정하고자해
+DashboardClient컴포넌트의 `전체 매물`은 `/admin/listings/listings`의 전체 매물 갯수와 같게 해줘.
+또한 DashboardClient컴포넌트의 `총 조회수`는 `/admin/listings/deleted-listings`의 매물들의 조회수를 제외한 `/admin/listings/listings`의 매물들의 조회수의 총합이 되게 해줘
+
 ---
-Runtime TypeError
-
-
-Cannot read properties of undefined (reading 'length')
-src\app\(admin)\admin\other\banned-ips\page.tsx (20:10) @ BannedIpsPage
-
-
-  18 |   const { data:bannedIps, totalPages } = await getBannedIps(page, limit);
-  19 |
-> 20 |   return <BannedIpList initialBannedIps={bannedIps} totalPages={totalPages} currentPage={page} />;
-     |          ^
-  21 | };
-  22 |
-  23 | export default BannedIpsPage;
-Call Stack
-13
-
-Show 11 ignore-listed frame(s)
-BannedIpList
-file:///C:/proj/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_4c597f48._.js (181:48)
-BannedIpsPage
-src\app\(admin)\admin\other\banned-ips\page.tsx (20:10)
+`/apis/build.ts`파일에서 BuildFindAll함수에 대해서 visibility-build를 사용하고 있는데 수정해줘

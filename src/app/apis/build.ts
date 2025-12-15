@@ -36,10 +36,10 @@ export async function BuildFindAll(
 
   console.log('qdsf', qs.toString());
 
-  const res = await fetch(`${baseURL}/api/visibility-build?${qs.toString()}`, { cache: 'force-cache', next: { tags: ['public'] } });
+  const res = await fetch(`${baseURL}/api/supabase/build?${qs.toString()}`, { cache: 'force-cache', next: { tags: ['public'] } });
   if(!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`GET /api/visibility-build failed (${res.status}): ${text}`);
+    throw new Error(`GET /api/supabase/build failed (${res.status}): ${text}`);
   }
   return res.json();
 }
