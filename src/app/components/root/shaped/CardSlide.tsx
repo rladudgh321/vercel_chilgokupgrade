@@ -54,6 +54,10 @@ const CardSlide = ({listings, onCardClick}: {listings: Listing[], onCardClick: (
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
         className="mt-6"
+        style={{
+          '--swiper-pagination-color': 'var(--swiper-pagination-active-bullet-color)',
+          '--swiper-pagination-bullet-inactive-color': 'var(--swiper-pagination-inactive-bullet-color)',
+        }}
         breakpoints={{
           320: {
             slidesPerView: 1,

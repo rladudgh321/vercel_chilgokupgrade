@@ -41,3 +41,20 @@ body {
     margin-right: 1rem;
   }
 }
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --swiper-pagination-active-bullet-color: #4b5563; /* gray-600 */
+  --swiper-pagination-inactive-bullet-color: #9ca3af; /* gray-400 */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --swiper-pagination-active-bullet-color: #ef4444; /* red-500 */
+    --swiper-pagination-inactive-bullet-color: #f3f4f6; /* gray-100 */
+  }
+}
+

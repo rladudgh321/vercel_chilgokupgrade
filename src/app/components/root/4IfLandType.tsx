@@ -26,7 +26,7 @@ const IfLandType = ({ themeImage }: { themeImage: Promise<ThemeImageProps[]> }) 
                 className="h-[80px] sm:h-[100px] md:h-[115px] bg-center bg-cover bg-no-repeat"
                 style={{ backgroundImage: `url(${item.image})` }}
               />
-              <div className="text-center py-2 font-semibold text-sm sm:text-base">
+              <div className="text-center py-2 font-semibold text-sm sm:text-base dark:text-gray-700">
                 {item.name}
               </div>
             </Link>

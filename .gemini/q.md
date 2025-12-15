@@ -1,4 +1,13 @@
-Contact컴포넌트를 수정하고 싶어
-나는 `bg-[url('/img/contact.png')]`로 tailwindcss를 했지만 모바일이나 테블릿 반응형에서는 적당한 크기이지만 pc형 반응형크기로 되니까 점점 확대가되어서 보기 좋지 않은 이미지가 되네. 이러한 부분을 수정해줘.
+CardSlide컴포넌트에서 slide를 넘길 때마다 breakpoints의 색깔을 수정하고 싶어.
+밝은 테마에서도 어두운 테마에서도 어울리는 색깔을 해줘 나는 tailwindcss를 사용하고 있어.
 ---
-pc 반응형일 경우에는 너와 같이 해주고 모바일과 테블릿 반응형일 경우에는 이전처럼 해줄래?
+style={{
+          "--swiper-pagination-color": "#ff0000",
+    // 비활성 dot 색
+      "--swiper-pagination-bullet-inactive-color": "#999",
+        }}
+
+        ---
+      이렇게 하니까 되더라 어두운테마에서도 밝은 테마에서도 작동되게끔해줘
+      ---
+      밝은테마에서는 적당한데 어두운테마에서는 active한것은 빨간색으로 해주고 inactive한것은 하얀색으로 해줘

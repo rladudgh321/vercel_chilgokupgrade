@@ -21,7 +21,7 @@ const WhatTypeLand = ({listingType}: {listingType: Promise<ListingTypeProps[]>})
                 style={{ backgroundImage: `url(${property.imageUrl})` }}
                 className="h-[80px] sm:h-[100px] md:h-[115px] bg-center bg-cover"
               />
-              <div className="text-center py-2 font-semibold text-sm sm:text-base">{property.name}</div>
+              <div className="text-center py-2 font-semibold text-sm sm:text-base dark:text-gray-700">{property.name}</div>
             </Link>
           );
         })}
