@@ -6,7 +6,6 @@ import ImageSlider from "@/app/components/shared/ImageSlider";
 import { IBuild } from "@/app/interface/build";
 
 export default function BuildDetailModalClient({ build, onClose }: { build: IBuild, onClose: () => void }) {
-  const [areaUnit, setAreaUnit] = useState<"m2" | "pyeong">("m2");
   const [isExtraInfoVisible, setIsExtraInfoVisible] = useState(false);
 
   const convertToPyeong = (m2: number) => (m2 / 3.305785);
@@ -31,8 +30,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
       build?.mainImage
         ? [build.mainImage, ...(Array.isArray(build.subImage) ? build.subImage : [])]
         : [];
-  console.log('allImages', build);
-  const getAreaString = (build: IBuild, unit: "m2" | "pyeong"): string => {
+  const getAreaString = (build: IBuild): string => {
     const areas = [
       { label: "공급", value: build.supplyArea },
       { label: "실", value: build.actualArea },
@@ -48,11 +46,9 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
       return "";
     }
 
-    if (unit === "m2") {
-      return validAreas.map(area => `${area.label} ${area.value!.toLocaleString()}m²`).join(" / ");
-    } else {
-      return validAreas.map(area => `${area.label} ${convertToPyeong(area.value!).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}평`).join(" / ");
-    }
+    return validAreas.map(area => 
+      `${area.label} ${area.value!.toLocaleString()}m²(${convertToPyeong(area.value!).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}평)`
+    ).join(" / ");
   };
 
   const Row = (label: string, value: React.ReactNode) => (
@@ -155,17 +151,9 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
                 Row("방/화장실 수", `${build.roomOption?.name || "-"} / ${build.bathroomOption?.name || "-"}`)}
               {(build.supplyArea || build.actualArea || build.landArea || build.NetLeasableArea || build.buildingArea || build.totalArea) && Row(
                 "면적",
-                <div className="flex items-center gap-2">
-                  <span className="text-xs sm:text-sm">
-                    {getAreaString(build, areaUnit)}
-                  </span>
-                  <button
-                    onClick={() => setAreaUnit(areaUnit === "m2" ? "pyeong" : "m2")}
-                    className="text-xs bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200 rounded px-2 py-1 transition-colors"
-                  >
-                    {areaUnit === "m2" ? "평으로 보기" : "m²로 보기"}
-                  </button>
-                </div>
+                <span className="text-xs sm:text-sm">
+                  {getAreaString(build)}
+                </span>
               )}
             </div>
           </div>
