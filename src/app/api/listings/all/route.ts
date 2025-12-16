@@ -29,9 +29,7 @@ export async function GET(request: Request) {
       `
       )
       .is("deletedAt", null)
-      .eq("visibility", true)
-      .not("isAddressPublic", "eq", "private")
-      .not("isAddressPublic", "eq", "exclude");
+      .eq("visibility", true);
 
     const { data, error } = await q;
 
