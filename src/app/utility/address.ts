@@ -12,7 +12,7 @@ export const formatAddress = (
     case "public":
       return address;
     case "private":
-      return "비공개";
+      return "주소 비공개";
     case "exclude": {
       const parts = address.split(" ");
       const addressUpToEupMyeonDong = [];
