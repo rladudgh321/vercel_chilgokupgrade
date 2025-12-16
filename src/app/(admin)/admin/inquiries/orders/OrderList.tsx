@@ -7,6 +7,7 @@ import Pagination from '@/app/components/shared/Pagination';
 import IpActions from '@/app/(admin)/shared/IpActions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchOrders } from '@/app/hooks/useOrders';
+import { numberToKoreanWithDigits } from '@/app/utility/NumberToKoreanWithDigits';
 
 type Order = {
   id: number;
@@ -38,6 +39,11 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
   const [categoryFilter, setCategoryFilter] = useState<'전체' | '구해요' | '팔아요' | '기타'>('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+
+  const formatPrice = (price: number | undefined) => {
+      if (price === undefined || price === null) return "";
+      return numberToKoreanWithDigits(price);
+    };
 
   const { data: queryData } = useQuery({
     queryKey: ['orders', currentPage],
@@ -223,7 +229,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="거래유형">{order.transactionType}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="작성자">{order.author}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="매물종류">{order.propertyType}</td>
-                <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="견적금액">{order.estimatedAmount}</td>
+                <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="견적금액">{formatPrice(Number(order.estimatedAmount))}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="연락처">{order.contact}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="IP주소">
                   <IpActions

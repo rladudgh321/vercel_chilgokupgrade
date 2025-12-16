@@ -19,10 +19,10 @@ import SearchIcon from "@svg/Search";
 import { BuildDeleteSome, BuildFindAllAdmin, toggleBuild, updateConfirmDate, patchConfirmDateToToday } from "@/app/apis/build";
 import { WorkInfoFindOne } from "@/app/apis/workinfo";
 import { IBuild } from "@/app/interface/build";
-import formatFullKoreanMoney from "@/app/utility/NumberToKoreanMoney";
 import { formatYYYYMMDD } from "@/app/utility/koreaDateControl";
 import { printPhotoVersion } from "./shared/PrintPhotoVersion";
 import AreaInfo from "./shared/AreaInfo";
+import { numberToKoreanWithDigits } from "@/app/utility/NumberToKoreanWithDigits";
 
 type SearchFormValues = { keyword: string };
 
@@ -50,6 +50,12 @@ const LIMIT = 10;
 const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   const queryClient = useQueryClient();
 
+  const formatPrice = (price: number | undefined) => {
+      if (price === undefined || price === null) return "";
+      return numberToKoreanWithDigits(price);
+    };
+  
+
   // 검색 폼
   const methods = useForm<SearchFormValues>({ defaultValues: { keyword: "" } });
   const { register, handleSubmit } = methods;
@@ -71,17 +77,6 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
     const koreanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
     return koreanTime.toISOString().split('T')[0];
   }
-
-  const formatPriceWithDisplay = (price: number | undefined | null, priceDisplay: string | undefined | null) => {
-    if (price === undefined || price === null) return "";
-    let formattedPrice = formatFullKoreanMoney(price);
-    if (priceDisplay === "비공개") {
-      formattedPrice = `${formattedPrice} (비공개)`;
-    } else if (priceDisplay === "협의가능") {
-      formattedPrice = `${formattedPrice} (협의가능)`;
-    }
-    return formattedPrice;
-  };
 
   // Query Key
   const qk = ["builds", page, LIMIT, (searchKeyword ?? "").trim(), sortKey]
@@ -487,39 +482,39 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                   >
                     {listing.isSalePriceEnabled && listing.salePrice && (
                       <div>
-                        매: {formatPriceWithDisplay(Number(listing.salePrice), listing.priceDisplay)}
+                        매: {formatPrice(Number(listing.salePrice), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isLumpSumPriceEnabled && listing.lumpSumPrice && (
                         <div>
-                        전: {formatPriceWithDisplay(Number(listing.lumpSumPrice), listing.priceDisplay)}
+                        전: {formatPrice(Number(listing.lumpSumPrice), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isActualEntryCostEnabled && listing.actualEntryCost && (
                       <div>
                         실:{" "}
-                        {formatPriceWithDisplay(Number(listing.actualEntryCost), listing.priceDisplay)}
+                        {formatPrice(Number(listing.actualEntryCost), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isDepositEnabled && listing.deposit && (
                         <div>
-                        보: {formatPriceWithDisplay(Number(listing.deposit), listing.priceDisplay)}
+                        보: {formatPrice(Number(listing.deposit), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isRentalPriceEnabled && listing.rentalPrice && (
                       <div>
-                        월: {formatPriceWithDisplay(Number(listing.rentalPrice), listing.priceDisplay)}
+                        월: {formatPrice(Number(listing.rentalPrice), listing.priceDisplay)}
                       </div>
                     )}
                     {listing.isHalfLumpSumMonthlyRentEnabled && listing.halfLumpSumMonthlyRent && (
                         <div>
-                        반월: {formatPriceWithDisplay(Number(listing.halfLumpSumMonthlyRent), listing.priceDisplay)}
+                        반월: {formatPrice(Number(listing.halfLumpSumMonthlyRent), listing.priceDisplay)}
                         </div>
                     )}
                     {listing.isManagementFeeEnabled && listing.managementFee && (
                       <div>
                         관:{" "}
-                        {formatPriceWithDisplay(Number(listing.managementFee), listing.priceDisplay)}
+                        {formatPrice(Number(listing.managementFee), listing.priceDisplay)}
                       </div>
                     )}
                   </td>

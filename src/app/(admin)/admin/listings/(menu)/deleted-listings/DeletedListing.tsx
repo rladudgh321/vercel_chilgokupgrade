@@ -8,10 +8,10 @@ import ToggleSwitch from "@/app/components/admin/listings/ToggleSwitch";
 import { BuildFindAllDeleted, BuildHardDelete, BuildRestore } from "@/app/apis/build";
 import { clsx } from "clsx";
 import { IBuild } from "@/app/interface/build";
-import formatFullKoreanMoney from "@/app/utility/NumberToKoreanMoney";
 import CopyText from "@/app/utility/Copy";
 import SearchIcon from "@svg/Search";
 import AddressVisibility from "@/app/components/admin/listings/AddressVisibility";
+import { numberToKoreanWithDigits } from "@/app/utility/NumberToKoreanWithDigits";
 
 // 🔹 추가: 정렬 키 타입
 export type SortKey = "recent" | "views" | "price" | "totalArea";
@@ -39,6 +39,11 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
 
   const [page, setPage] = useState(DeletedData?.currentPage ?? 1);
   const [keyword, setKeyword] = useState("");
+
+  const formatPrice = (price: number | undefined) => {
+    if (price === undefined || price === null) return "";
+    return numberToKoreanWithDigits(price);
+  };
 
   const qk = 
     () => ["builds-deleted", page, LIMIT, (keyword ?? "").trim()];
@@ -220,39 +225,39 @@ const DeletedListings = ({ DeletedData, sortKey }: DeletedListingsProps) => {
                   <td className="p-2 sm:p-3 text-xs sm:text-sm block md:table-cell dark:text-gray-300" data-label="금액">
                     {listing.isSalePriceEnabled && listing.salePrice && (
                       <div>
-                        매: {formatFullKoreanMoney(Number(listing.salePrice))}
+                        매: {formatPrice(Number(listing.salePrice))}
                       </div>
                     )}
                     {listing.isLumpSumPriceEnabled && listing.lumpSumPrice && (
                         <div>
-                        전: {formatFullKoreanMoney(Number(listing.lumpSumPrice))}
+                        전: {formatPrice(Number(listing.lumpSumPrice))}
                         </div>
                     )}
                     {listing.isActualEntryCostEnabled && listing.actualEntryCost && (
                       <div>
                         실:{" "}
-                        {formatFullKoreanMoney(Number(listing.actualEntryCost))}
+                        {formatPrice(Number(listing.actualEntryCost))}
                       </div>
                     )}
                     {listing.isDepositEnabled && listing.deposit && (
                         <div>
-                        보: {formatFullKoreanMoney(Number(listing.deposit))}
+                        보: {formatPrice(Number(listing.deposit))}
                         </div>
                     )}
                     {listing.isRentalPriceEnabled && listing.rentalPrice && (
                       <div>
-                        월: {formatFullKoreanMoney(Number(listing.rentalPrice))}
+                        월: {formatPrice(Number(listing.rentalPrice))}
                       </div>
                     )}
                     {listing.isHalfLumpSumMonthlyRentEnabled && listing.halfLumpSumMonthlyRent && (
                         <div>
-                        반월: {formatFullKoreanMoney(Number(listing.halfLumpSumMonthlyRent))}
+                        반월: {formatPrice(Number(listing.halfLumpSumMonthlyRent))}
                         </div>
                     )}
                     {listing.isManagementFeeEnabled && listing.managementFee && (
                       <div>
                         관:{" "}
-                        {formatFullKoreanMoney(Number(listing.managementFee))}
+                        {formatPrice(Number(listing.managementFee))}
                       </div>
                     )}
                   </td>
