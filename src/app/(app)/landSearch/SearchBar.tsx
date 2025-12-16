@@ -24,7 +24,6 @@ export default function SearchBar({
   const pathname = usePathname();
   const sp = useSearchParams();
   const isInitial = useRef(true);
-
   // ── URL 동기화가 필요한 필터 상태만 state로 관리
   const [searchTerm, setSearchTerm] = useState(sp.get("keyword") ?? "");
   const deferredSearch = useDeferredValue(searchTerm); // 디바운스 대체
@@ -323,9 +322,7 @@ export default function SearchBar({
     floor,
     bathrooms,
     subwayLine,
-    router,
     pathname,
-    sp,
   ]);
 
   const handleReset = () => {

@@ -33,7 +33,11 @@ const fetchListings = async ({ pageParam = 1, queryKey }: any) => {
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
-  return res.json();
+  const data = await res.json();
+  if (!data) {
+    return { listings: [], currentPage: 1, totalPages: 1 };
+  }
+  return data;
 };
 
 const fetchMapListings = async ({ queryKey }: any) => {
@@ -49,7 +53,7 @@ const fetchMapListings = async ({ queryKey }: any) => {
     throw new Error("Network response was not ok");
   }
   const data = await res.json();
-  return data.data;
+  return data?.data || [];
 };
 
 export default function LandSearchClient() {
@@ -58,7 +62,7 @@ export default function LandSearchClient() {
   const currentSearchParams = useSearchParams();
   const sortBy = currentSearchParams.get("sortBy") ?? "latest";
 
-  const { data: settings } = useQuery({
+  const { data: settings = {} } = useQuery({
     queryKey: ["search-bar-settings"],
     queryFn: async () => {
       const res = await fetch("/api/search-bar-settings", { cache: 'force-cache', next: { tags: ['public'] } });
@@ -248,14 +252,14 @@ export default function LandSearchClient() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm border-b">
         <SearchBar
-          settings={settings}
-          roomOptions={roomOptions}
-          bathroomOptions={bathroomOptions}
-          floorOptions={floorOptions}
-          areaOptions={areaOptions}
-          themeOptions={themeOptions}
-          propertyTypeOptions={propertyTypeOptions}
-          buyTypeOptions={buyTypeOptions}
+          settings={settings || {}}
+          roomOptions={roomOptions || []}
+          bathroomOptions={bathroomOptions || []}
+          floorOptions={floorOptions || []}
+          areaOptions={areaOptions || []}
+          themeOptions={themeOptions || []}
+          propertyTypeOptions={propertyTypeOptions || []}
+          buyTypeOptions={buyTypeOptions || []}
           listings={allListingsForCounting ?? []}
         />
       </div>
