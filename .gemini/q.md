@@ -1,25 +1,10 @@
-`/landSearch`페이지에 있다가 `/card`페이지에 있다가 다시 `/landSearch`페이지에 가면 아래와 같은 오류가 있어
-하지만 `/card`페이지를 거치지 않고 다른 페이지에 왔다갔다하다가 다시 `/landSearch`페이지에 가도 오류가 나지 않아.`/landSearch`페이지와 `/card`페이지 간에 밀접한 연관성 때문에 오류가 있나봐
+`BuildDetailModalClient`컴포넌트를 수정하고자해
+라이트모드와 다크모드간에 잘 어울리도록 했으면 좋겠어
+나는 tailwindcss4를 사용하고 있어
 
 ---
-Runtime TypeError
+`{build.buildingOptions?.map((opt, index) => (
+                <OptionIcon key={`building-${opt.id || index}`} option={opt} />
+              ))}`
 
-
-Cannot read properties of undefined (reading 'length')
-src\app\(app)\landSearch\page.tsx (5:5) @ Page
-
-
-  3 | export default async function Page() {
-  4 |   return (
-> 5 |     <LandSearchClient />
-    |     ^
-  6 |   );
-  7 | }
-Call Stack
-28
-
-Show 26 ignore-listed frame(s)
-LandSearchClient
-file:///C:/proj/vercel_chilgokupgrade/.next/dev/static/chunks/src_app_6e8bdd91._.js (4013:334)
-Page
-src\app\(app)\landSearch\page.tsx (5:5)
+              이 부분에 dark:text-gray-50을 주고 싶은데 어떻게 주지?

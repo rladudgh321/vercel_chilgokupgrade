@@ -8,6 +8,7 @@ interface OptionIconProps {
     name: string;
     imageUrl?: string;
   };
+  className?: string; // Add className prop
 }
 
 const iconMap: Record<string, string> = {
@@ -26,7 +27,7 @@ const iconMap: Record<string, string> = {
   '엘리베이터': '/img/2/upper.png', // Placeholder, as I don't have a specific elevator icon
 };
 
-const OptionIcon = ({ option }: OptionIconProps) => {
+const OptionIcon = ({ option, className = "" }: OptionIconProps) => { // Destructure className with default
   if (!option || !option.name) {
     return null;
   }
@@ -39,7 +40,7 @@ const OptionIcon = ({ option }: OptionIconProps) => {
     return (
       <div className="flex flex-col items-center justify-center text-center">
         <div className="w-12 h-12 rounded-full bg-gray-200 mb-1" />
-        <span className="text-xs text-gray-700">{option.name}</span>
+        <span className={`text-xs text-gray-700 ${className}`}>{option.name}</span>
       </div>
     );
   }
@@ -49,7 +50,7 @@ const OptionIcon = ({ option }: OptionIconProps) => {
       <div className="relative w-12 h-12 mb-1">
         <Image src={iconPath} alt={option.name} fill objectFit="contain" />
       </div>
-      <span className="text-xs text-gray-700">{option.name}</span>
+      <span className={`text-xs text-gray-700 ${className}`}>{option.name}</span>
     </div>
   );
 };

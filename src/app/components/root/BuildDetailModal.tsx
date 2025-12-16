@@ -57,8 +57,8 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
 
   const Row = (label: string, value: React.ReactNode) => (
     <>
-      <div className="bg-gray-100 px-4 py-3 font-semibold text-sm">{label}</div>
-      <div className="px-4 py-3 text-sm">{value ?? "-"}</div>
+      <div className="bg-gray-100 dark:bg-gray-700 dark:text-gray-300 px-4 py-3 font-semibold text-sm">{label}</div>
+      <div className="px-4 py-3 text-sm dark:text-gray-200">{value ?? "-"}</div>
     </>
   );
 
@@ -113,10 +113,10 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
   return (
     <div className="fixed inset-0 backdrop-blur-sm z-50 flex justify-center items-center p-2 sm:p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-3xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-3 sm:p-4 border-b flex justify-between items-center bg-purple-800 text-white rounded-t-lg">
+        <div className="p-3 sm:p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-purple-800 text-white rounded-t-lg">
           <h2 className="text-lg sm:text-xl font-bold flex items-center gap-x-2">
             <span>매물 상세 정보 (번호: {build?.id})</span>
             {build.dealScope === '부분' && (
@@ -131,14 +131,14 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6" style={{ maxHeight: "85vh", overflowY: "auto" }}>
           <ImageSlider images={allImages() as string[]} />
 
-          <div className="pb-4 border-b">
-            <h3 className="text-xl sm:text-2xl font-bold">{build.title}</h3>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">{formatAddress()}</p>
+          <div className="pb-4 border-b border-gray-200 dark:border-gray-600">
+            <h3 className="text-xl sm:text-2xl font-bold dark:text-gray-100">{build.title}</h3>
+            <p className="text-gray-600 dark:text-gray-300 mt-1 text-sm sm:text-base">{formatAddress()}</p>
           </div>
 
           <div>
-            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">매물 정보</h4>
-            <div className="border rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
+            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800 dark:text-purple-400">매물 정보</h4>
+            <div className="border dark:border-gray-600 rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
               {Row("매물 종류", build.propertyType)}
               {Row("거래 종류", build.buyType)}
               {build.isSalePriceEnabled && Row("매매가", getFormattedPriceDisplay(build.salePrice, build.priceDisplay))}
@@ -161,7 +161,7 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
                   </span>
                   <button
                     onClick={() => setAreaUnit(areaUnit === "m2" ? "pyeong" : "m2")}
-                    className="text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-1 transition-colors"
+                    className="text-xs bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 dark:text-gray-200 rounded px-2 py-1 transition-colors"
                   >
                     {areaUnit === "m2" ? "평으로 보기" : "m²로 보기"}
                   </button>
@@ -173,14 +173,14 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
           <div>
             <button
               onClick={() => setIsExtraInfoVisible(!isExtraInfoVisible)}
-              className="w-full flex justify-between items-center p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className="w-full flex justify-between items-center p-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
             >
-              <span className="font-semibold text-purple-800">매물 추가 정보 확인하기</span>
-              {isExtraInfoVisible ? <ChevronUp className="w-5 h-5 text-purple-800" /> : <ChevronDown className="w-5 h-5 text-purple-800" />}
+              <span className="font-semibold text-purple-800 dark:text-purple-400">매물 추가 정보 확인하기</span>
+              {isExtraInfoVisible ? <ChevronUp className="w-5 h-5 text-purple-800 dark:text-purple-400" /> : <ChevronDown className="w-5 h-5 text-purple-800 dark:text-purple-400" />}
             </button>
 
             {isExtraInfoVisible && (
-              <div className="border rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 mt-4">
+              <div className="border dark:border-gray-600 rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 mt-4">
                 {build.managementEtc && Row("기타사항", build.managementEtc)}
                 {(build.totalParking || build.parkingPerUnit || build.parkingFee) && Row(
                   "주차 옵션",
@@ -219,26 +219,26 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
             )}
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">옵션 정보</h4>
+          <div className="bg-gray-50 dark:bg-gray-900  rounded-lg p-3 sm:p-4">
+            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800 dark:text-purple-400">옵션 정보</h4>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-4 pt-2">
               {build.buildingOptions?.map((opt, index) => (
-                <OptionIcon key={`building-${opt.id || index}`} option={opt} />
+                <OptionIcon key={`building-${opt.id || index}`} option={opt} className="dark:text-gray-50" />
               ))}
             </div>
           </div>
 
           <div>
-            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">상세 설명</h4>
+            <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800 dark:text-purple-400">상세 설명</h4>
             <div
-              className="prose max-w-none text-sm sm:text-base"
+              className="prose dark:prose-invert max-w-none text-sm sm:text-base"
               dangerouslySetInnerHTML={{ __html: build.editorContent || "" }}
             />
           </div>
 
           {build.isAddressPublic !== 'exclude' && build.isAddressPublic !== 'private' && (
             <div>
-              <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800">위치 및 주변 편의시설</h4>
+              <h4 className="text-base sm:text-lg font-semibold mb-3 text-purple-800 dark:text-purple-400">위치 및 주변 편의시설</h4>
               {build.address && <KakaoMapMarker address={build.address} />}
             </div>
           )}
