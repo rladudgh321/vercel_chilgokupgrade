@@ -166,7 +166,7 @@ export default function LandSearchClient() {
     isLoading: isLoadingListings,
     isFetching,
   } = useInfiniteQuery({
-    queryKey: ["listings", queryParams],
+    queryKey: ["listings-infinite", queryParams],
     queryFn: fetchListings,
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.currentPage < lastPage.totalPages) {
@@ -179,7 +179,7 @@ export default function LandSearchClient() {
   });
 
   const { data: mapListings = [] } = useQuery({
-    queryKey: ["map-listings", queryParams],
+    queryKey: ["map-listings-infinite", queryParams],
     queryFn: fetchMapListings,
   });
 

@@ -118,7 +118,7 @@ const CardPageClient = () => {
   }, [searchParams]);
 
   const { data: listingsData, isLoading: isLoadingListings } = useQuery({
-    queryKey: ["listings", queryParams],
+    queryKey: ["listings-paginated", queryParams],
     queryFn: () => fetchListings(queryParams),
   });
 
