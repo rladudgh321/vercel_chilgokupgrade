@@ -92,7 +92,7 @@ const CardPageClient = () => {
   const { data: buyTypeOptions = [] } = useQuery({
     queryKey: ["buy-types"],
     queryFn: async () => {
-      const res = await fetch("/api/buy-types-public", { cache: 'no-store', next: { tags: ['public'] } });
+      const res = await fetch("/api/buy-types-public", { cache: 'force-cache', next: { tags: ['public'] } });
       if (!res.ok) throw new Error("Failed to fetch buy types");
       const json = await res.json();
       return json.data;

@@ -13,6 +13,7 @@ type Listing = {
   title?: string;
   address?: string; // 옵션: 주소가 있으면 지오코딩
   mapLocation?: string; // "lat,lng" (좌표가 있으면 이 값을 우선 사용)
+  isAddressPublic?: "public" | "private" | "exclude";
 };
 
 type Props = {

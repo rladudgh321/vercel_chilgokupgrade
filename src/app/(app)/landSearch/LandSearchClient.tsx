@@ -183,6 +183,10 @@ export default function LandSearchClient() {
     queryFn: fetchMapListings,
   });
 
+  const visibleMapListings = useMemo(() => {
+    return mapListings.filter((l: any) => l.isAddressPublic === "public");
+  }, [mapListings]);
+
   const allListings = () =>
     paginatedData ? paginatedData.pages.flatMap((page: any) => page.listings) : [];
   const [filteredIds, setFilteredIds] = useState<number[] | null>(null);
@@ -288,7 +292,7 @@ export default function LandSearchClient() {
       <div className="flex flex-col sm:flex-row h-[calc(100vh-120px)]">
         <div className={`flex-1 min-w-0 ${view === "list" && "hidden sm:block"}`}>
           <Suspense>
-            <MapView listings={mapListings} onClusterClick={handleClusterClick} view={view} />
+            <MapView listings={visibleMapListings} onClusterClick={handleClusterClick} view={view} />
           </Suspense>
         </div>
 

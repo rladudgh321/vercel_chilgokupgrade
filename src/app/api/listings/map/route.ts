@@ -27,8 +27,6 @@ export async function GET(req: NextRequest) {
       .select('id, title, address, isAddressPublic, lat, lng')
       .is("deletedAt", null)
       .eq("visibility", true)
-      .not("isAddressPublic", "eq", "private")
-      .not("isAddressPublic", "eq", "exclude")
       .order("createdAt", { ascending: false });
 
     if (keyword) {

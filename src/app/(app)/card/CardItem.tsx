@@ -1,4 +1,5 @@
-import Image from "next/image"
+import Image from "next/image";
+import { formatAddress } from "@/app/utility/address";
 import {
   Building2,
   Square,
@@ -52,7 +53,7 @@ type Props = {
     themes?: string[];
     buildingOptions?: { id: number; name: string; imageUrl?: string }[];
     parking?: string[];
-    isAddressPublic?: string;
+    isAddressPublic?: "public" | "private" | "exclude";
     visibility?: boolean;
     yieldType?: string;
     otherYield?: string;
@@ -145,54 +146,6 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
     return validAreas.map(area => `${area.label} ${area.value!.toLocaleString()}m²`).join(" / ");
   };
 
-  const formatAddress = () => {
-    if (listing.isAddressPublic === 'private') {
-      return "주소 비공개";
-    }
-    if (listing.isAddressPublic === 'exclude') {
-      const fullAddress = listing.address || "";
-      if (!fullAddress) {
-        return "주소 정보 없음";
-      }
-
-      const parts = fullAddress.split(' ');
-      let sido = '';
-      let sigungu = '';
-      let eupmyeondongri = '';
-
-      // Find sido and sigungu
-      if (parts.length > 0) {
-          sido = parts[0];
-      }
-      if (parts.length > 1) {
-          sigungu = parts[1];
-      }
-
-      // Find eupmyeondongri
-      // 1. Check in parentheses for new addresses
-      const matchParentheses = fullAddress.match(/\(([^)]+(?:동|리|가))\)/);
-      if (matchParentheses && matchParentheses[1]) {
-          eupmyeondongri = matchParentheses[1];
-          // Also need to find eup/myeon if it exists
-          const eupmyeonPart = parts.find(p => p.endsWith('읍') || p.endsWith('면'));
-          if (eupmyeonPart) {
-              return `${sido} ${sigungu} ${eupmyeonPart} ${eupmyeondongri}`.trim();
-          }
-          return `${sido} ${sigungu} ${eupmyeondongri}`.trim();
-      }
-
-      // 2. Find last eup/myeon/dong/ri/ga in the address for old addresses
-      const adminParts = parts.filter(p => p.endsWith('읍') || p.endsWith('면') || p.endsWith('동') || p.endsWith('리') || p.endsWith('가'));
-      if (adminParts.length > 0) {
-          return parts.slice(0, parts.indexOf(adminParts[adminParts.length - 1]) + 1).join(' ');
-      }
-
-      // Fallback to first 2 parts if no admin parts found
-      return `${sido} ${sigungu}`.trim();
-    }
-    return listing.address || "주소 정보 없음";
-  };
-
   return (
     <div onClick={() => onClick(listing.id)} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer flex flex-col">
       {/* 매물 이미지 */}
@@ -253,7 +206,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
 
         {/* Address */}
         <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-1">
-          {formatAddress()}
+          {formatAddress(listing.address, listing.isAddressPublic)}
         </p>
 
         {/* Price */}

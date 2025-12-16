@@ -45,9 +45,7 @@ export async function GET(request: Request) {
         { count: "exact" }
       )
       .is("deletedAt", null)
-      .eq("visibility", true)
-      .not("isAddressPublic", "eq", "private")
-      .not("isAddressPublic", "eq", "exclude");
+      .eq("visibility", true);
 
     if (keyword) {
       if (/^\d+$/.test(keyword)) {
