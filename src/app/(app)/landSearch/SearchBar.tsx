@@ -18,7 +18,7 @@ export default function SearchBar({
   themeOptions: themeOpts0,
   propertyTypeOptions: propTypeOpts0,
   buyTypeOptions: buyTypeOpts,
-  listings,
+  listings = [],
 }: SearchBarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,6 +52,7 @@ export default function SearchBar({
 
   useEffect(() => {
     if (!listings) return;
+    if (!Array.isArray(listings)) return;
 
     const calculateDynamicOptions = () => {
       const activeFilters: any = {
@@ -275,11 +276,13 @@ export default function SearchBar({
   }, [buyType, buyTypeOpts]);
 
   // ── 정렬된 쿼리 문자열 빌더 (키 순서 고정 → 불필요 push 방지)
-  const buildSortedQueryString = (q: Record<string, string>) => {
-    const entries = Object.entries(q).filter(([, v]) => v && v.length > 0);
-    entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-    return new URLSearchParams(entries).toString();
-  };
+  const buildSortedQueryString = (q: Record<string, string | undefined>) => {
+  const entries = Object.entries(q).filter(
+    ([, v]) => typeof v === "string" && v.length > 0
+  );
+  entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  return new URLSearchParams(entries as [string, string][]).toString();
+};
 
   // ── URL 반영 (정렬/가드 포함)
   useEffect(() => {

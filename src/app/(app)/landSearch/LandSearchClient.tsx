@@ -165,7 +165,7 @@ export default function LandSearchClient() {
     queryKey: ["listings", queryParams],
     queryFn: fetchListings,
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
+      if (lastPage && lastPage.currentPage < lastPage.totalPages) {
         return lastPage.currentPage + 1;
       }
       return undefined;
@@ -256,7 +256,7 @@ export default function LandSearchClient() {
           themeOptions={themeOptions}
           propertyTypeOptions={propertyTypeOptions}
           buyTypeOptions={buyTypeOptions}
-          listings={allListingsForCounting}
+          listings={allListingsForCounting ?? []}
         />
       </div>
 
@@ -299,7 +299,7 @@ export default function LandSearchClient() {
                 onClick={handleResetFilter}
                 className="text-sm text-blue-600 hover:underline"
               >
-                {displayListings().length}개의 매물만 표시 중입니다. 전체
+                {displayListings().length ?? 0}개의 매물만 표시 중입니다. 전체
                 목록으로 돌아가기
               </button>
             </div>
