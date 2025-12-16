@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface HeaderProps {
@@ -15,6 +15,7 @@ interface HeaderProps {
 
 const Header = ({ isOpen, setIsOpen, logoUrl, companyName, logoName }: HeaderProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -73,23 +74,27 @@ const Header = ({ isOpen, setIsOpen, logoUrl, companyName, logoName }: HeaderPro
 
   return (
     <header className="fixed grow top-0 left-0 right-0 flex items-center h-14 px-4 bg-gray-800 text-white z-10">
-      <button 
-        className="p-2" 
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
+      {pathname !== '/admin/login' && (
+        <button 
+          className="p-2" 
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      )}
       <div className="flex-1 text-center">
         {renderAdminLogoAndBrand()}
       </div>
-      <div>
-        <button onClick={handleRevalidate} className="px-4 py-2 hover:bg-gray-700 rounded">데이터 최신화</button>
-        <button onClick={handleLogout} className="px-4 py-2 hover:bg-gray-700 rounded">
-          로그아웃
-        </button>
-      </div>
+      {pathname !== '/admin/login' && (
+        <div>
+          <button onClick={handleRevalidate} className="px-4 py-2 hover:bg-gray-700 rounded">데이터 최신화</button>
+          <button onClick={handleLogout} className="px-4 py-2 hover:bg-gray-700 rounded">
+            로그아웃
+          </button>
+        </div>
+      )}
     </header>
   );
 }
