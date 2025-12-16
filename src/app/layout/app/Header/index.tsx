@@ -25,18 +25,30 @@ const Header = async ({ headerPromise }: {headerPromise: ReturnType<typeof getWo
   if(!headerData.ok || !headerData.data) {
     return null;
   }
+  
+  const style = headerData.data.logoName?.split('#')[1] || 'both';
+  const showLogo = style === 'logo_only' || style === 'both';
+  const showBrand = style === 'brand_only' || style === 'both';
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 border-b border-white/10 bg-black">
       <div className="mx-auto max-w-7xl h-14 px-4 flex items-center justify-between">
-        <Link href="/" className="relative h-8 w-28 md:h-9 md:w-32" aria-label="홈으로">
-          {headerData.data.logoUrl && <Image
-            alt="logo"
-            src={headerData.data.logoUrl!}
-            fill
-            priority
-            sizes="(max-width: 768px) 112px, 128px"
-            className="object-contain"
-          />}
+        <Link href="/" className="flex items-center gap-2" aria-label="홈으로">
+          {showLogo && headerData.data.logoUrl && (
+            <div className="relative h-8 w-28 md:h-9 md:w-32">
+              <Image
+                alt="logo"
+                src={headerData.data.logoUrl}
+                fill
+                priority
+                sizes="(max-width: 768px) 112px, 128px"
+                className="object-contain"
+              />
+            </div>
+          )}
+          {showBrand && headerData.data.companyName && (
+            <span className="text-xl font-bold text-white">{headerData.data.companyName}</span>
+          )}
         </Link>
 
         {/* Desktop Nav */}
@@ -44,7 +56,11 @@ const Header = async ({ headerPromise }: {headerPromise: ReturnType<typeof getWo
 
         {/* Mobile button */}
         <div className="md:hidden">
-          <Header_Button>
+          <Header_Button 
+            logoUrl={headerData.data.logoUrl}
+            companyName={headerData.data.companyName}
+            logoName={headerData.data.logoName}
+          >
             <OpenMenu headerPromise={headerData.data} />
           </Header_Button>
         </div>

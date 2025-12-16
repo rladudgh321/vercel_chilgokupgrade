@@ -10,15 +10,15 @@ export const metadata: Metadata = generatePageMetadata({
   description: '콘텐츠 및 설정을 관리하는 페이지입니다.',
 });
 
-async function getLogoUrl() {
+async function getWorkInfoForAdmin() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
   const { data } = await supabase
     .from("WorkInfo")
-    .select("logoUrl")
+    .select("logoUrl, companyName, logoName")
     .eq("id", "main")
     .single();
-  return data?.logoUrl || null;
+  return data;
 }
 
 export default function RootLayout({
@@ -26,11 +26,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const logoUrlPromise = getLogoUrl();
+  const workInfoPromise = getWorkInfoForAdmin();
 
   return (
     <Suspense>
-      <AdminLayoutClient logoUrlPromise={logoUrlPromise}>{children}</AdminLayoutClient>
+      <AdminLayoutClient workInfoPromise={workInfoPromise}>{children}</AdminLayoutClient>
     </Suspense>
   );
 }

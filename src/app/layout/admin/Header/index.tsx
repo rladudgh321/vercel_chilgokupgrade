@@ -1,21 +1,24 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react'; // Added useState and useEffect
+import { useEffect, useState } from 'react';
 
 interface HeaderProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  logoUrl: string | null; // Changed type to string | null
+  logoUrl?: string | null;
+  companyName?: string | null;
+  logoName?: string | null;
 }
 
-const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
+const Header = ({ isOpen, setIsOpen, logoUrl, companyName, logoName }: HeaderProps) => {
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false); // Added isMounted state
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true); // Set isMounted to true after client-side mount
+    setIsMounted(true);
   }, []);
 
   const handleLogout = async () => {
@@ -28,18 +31,44 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
       router.refresh();
     } else {
       console.error('Logout failed');
-      // Optionally, show an error message to the user
     }
   };
 
   const handleRevalidate = async () => {
-    const response = await fetch('/api/revalidate', { cache:'no-store' });
+    const response = await fetch('/api/revalidate', { cache: 'no-store' });
     if (response.ok) {
       alert('데이터가 최신화되었습니다.');
     } else {
       alert('데이터 최신화에 실패했습니다.');
       console.error('Revalidation failed');
     }
+  };
+
+  const renderAdminLogoAndBrand = () => {
+    if (!isMounted) return null;
+
+    const style = logoName?.split('#')[1] || 'both';
+    const showLogo = style === 'logo_only' || style === 'both';
+    const showBrand = style === 'brand_only' || style === 'both';
+
+    return (
+      <Link href="/admin" className="flex items-center justify-center gap-2">
+        {showLogo && logoUrl && (
+          <div className="relative h-10 w-24">
+            <Image
+              alt="logo"
+              src={logoUrl}
+              fill
+              style={{objectFit:"contain"}}
+              priority={true}
+            />
+          </div>
+        )}
+        {showBrand && companyName && (
+          <span className="text-lg font-semibold text-white">{companyName}</span>
+        )}
+      </Link>
+    );
   };
 
   return (
@@ -53,9 +82,7 @@ const Header = ({ isOpen, setIsOpen, logoUrl }: HeaderProps) => {
         </svg>
       </button>
       <div className="flex-1 text-center">
-        <div className="relative inline-block h-10 w-24">
-          {isMounted && logoUrl && <Image alt="logo" src={logoUrl} fill objectFit="contain" priority={true} />}
-        </div>
+        {renderAdminLogoAndBrand()}
       </div>
       <div>
         <button onClick={handleRevalidate} className="px-4 py-2 hover:bg-gray-700 rounded">데이터 최신화</button>

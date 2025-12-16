@@ -5,15 +5,27 @@ import Header from '../layout/admin/Header';
 import AdminNav from '../components/admin/nav';
 import { clsx } from 'clsx';
 
-export default function AdminLayoutClient({ children, logoUrlPromise }: { children: React.ReactNode, logoUrlPromise: Promise<string | null> }) {
+interface WorkInfo {
+  logoUrl?: string | null;
+  companyName?: string | null;
+  logoName?: string | null;
+}
+
+export default function AdminLayoutClient({ children, workInfoPromise }: { children: React.ReactNode, workInfoPromise: Promise<WorkInfo | null> }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const logoUrl = use(logoUrlPromise);
+  const workInfo = use(workInfoPromise);
 
 
   return (
     <>
       <div className="relative z-10 flex">
-        <Header isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} logoUrl={logoUrl!} />
+        <Header 
+          isOpen={isMobileMenuOpen} 
+          setIsOpen={setIsMobileMenuOpen} 
+          logoUrl={workInfo?.logoUrl} 
+          companyName={workInfo?.companyName}
+          logoName={workInfo?.logoName}
+        />
       </div>
       <div className="relative flex -z-0">
         <div
