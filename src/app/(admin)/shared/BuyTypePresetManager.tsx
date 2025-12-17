@@ -48,7 +48,7 @@ const BuyTypePresetManager = () => {
       )}
 
       <div className="mb-4">
-        <label htmlFor="buy-type-select" className="block text-sm font-medium text-gray-700">거래 유형</label>
+        <label htmlFor="buy-type-select" className="block text-sm font-medium text-gray-700 dark: text-slate-100">거래 유형</label>
         <select
           id="buy-type-select"
           value={selectedBuyType ?? ''}

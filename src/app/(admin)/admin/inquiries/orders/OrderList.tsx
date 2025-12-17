@@ -256,12 +256,7 @@ const OrderList = ({ initialOrders, totalPages, currentPage }: OrderListProps) =
                   </button>
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="상세내용">
-                  <button
-                    className="p-2 bg-blue-500 text-white rounded w-full dark:bg-blue-700 dark:hover:bg-blue-800"
-                    onClick={() => alert(`내용 보기: ${order.description}`)}
-                  >
-                    내용보기
-                  </button>
+                  <p className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 break-words whitespace-pre-wrap">{order.description}</p>
                 </td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="등록일">{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td className="p-2 text-xs sm:text-sm block md:table-cell" data-label="비고">

@@ -78,21 +78,21 @@ export default function OrderForm({ propertyTypes, buyTypes, isBanned }: OrderFo
 
   if (isBanned) {
     return (
-      <div className="max-w-4xl mx-auto bg-white dark:bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md text-center">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-md text-center">
         <h2 className="text-2xl font-bold text-red-600">접근 제한</h2>
-        <p className="text-gray-700 dark:text-gray-700 mt-4">귀하의 IP 주소에서는 이 양식을 제출할 수 없습니다.</p>
+        <p className="text-gray-700 dark:text-gray-300 mt-4">귀하의 IP 주소에서는 이 양식을 제출할 수 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white dark:bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg shadow-md">
       {/* 구분 */}
       <div className="mb-6">
-        <label className="block text-gray-700 dark:text-gray-700 font-bold mb-2">구분</label>
+        <label className="block text-gray-700 dark:text-gray-300 font-bold mb-2">구분</label>
         <div className="flex flex-col sm:flex-row flex-wrap gap-4">
           {["구해요", "팔아요", "기타"].map(val => (
-            <label key={val} className="flex items-center text-gray-900 dark:text-gray-900">
+            <label key={val} className="flex items-center text-gray-900 dark:text-gray-300">
               <input
                 type="radio"
                 name="category"
@@ -189,7 +189,7 @@ export default function OrderForm({ propertyTypes, buyTypes, isBanned }: OrderFo
       <div className="text-center">
         <button
           type="submit"
-          className="w-full md:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:bg-gray-400"
+          className="w-full md:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:bg-gray-400 dark:disabled:bg-gray-600"
           disabled={isBanned || submitting}
           aria-busy={submitting}
         >
@@ -221,7 +221,7 @@ function TextInput({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-gray-700 dark:text-gray-700 font-bold mb-2">
+      <label htmlFor={id} className="block text-gray-700 dark:text-gray-300 font-bold mb-2">
         {label}
       </label>
       <input
@@ -230,7 +230,7 @@ function TextInput({
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border-gray-300 dark:border-gray-300 placeholder-gray-500 dark:placeholder-gray-500"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
         placeholder={placeholder}
         required={required}
       />
@@ -257,7 +257,7 @@ function Textarea({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-gray-700 dark:text-gray-700 font-bold mb-2">
+      <label htmlFor={id} className="block text-gray-700 dark:text-gray-300 font-bold mb-2">
         {label}
       </label>
       <textarea
@@ -266,7 +266,7 @@ function Textarea({
         value={value}
         onChange={onChange}
         rows={rows ?? 6}
-        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border-gray-300 dark:border-gray-300 placeholder-gray-500 dark:placeholder-gray-500"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400"
         required={required}
       />
     </div>
@@ -292,7 +292,7 @@ function Select({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-gray-700 dark:text-gray-700 font-bold mb-2">
+      <label htmlFor={id} className="block text-gray-700 dark:text-gray-300 font-bold mb-2">
         {label}
       </label>
       <select
@@ -300,7 +300,7 @@ function Select({
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900 border-gray-300 dark:border-gray-300"
+        className="w-full px-3 py-2 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
         required={required}
       >
         <option value="" disabled>

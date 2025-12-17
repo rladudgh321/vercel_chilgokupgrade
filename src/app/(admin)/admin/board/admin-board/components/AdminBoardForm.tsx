@@ -149,8 +149,9 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
     }
   };
 
-  return (    <div className="min-h-screen bg-gray-50">
-      <div className="bg-purple-600 text-white py-3 sm:py-4 px-4 sm:px-6">
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="bg-purple-600 dark:bg-purple-800 text-white py-3 sm:py-4 px-4 sm:px-6">
         <h1 className="text-xl sm:text-2xl font-bold">{isEdit ? '글수정' : '글쓰기'}</h1>
       </div>
 
@@ -158,7 +159,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 등록일
               </label>
               <Suspense>
@@ -171,7 +172,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                       setFormData(prev => ({ ...prev, registrationDate: new Date() })); // Default to new Date()
                     }
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
                   dateFormat="yyyy-MM-dd"
                   locale={ko}
                 />
@@ -179,13 +180,13 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 담당자
               </label>
               <select
                 value={formData.manager}
                 onChange={(e) => setFormData(prev => ({ ...prev, manager: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
               >
                 <option value="데모">데모</option>
                 <option value="관리자">관리자</option>
@@ -195,7 +196,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               공개여부
             </label>
             <div className="flex items-center gap-4">
@@ -206,9 +207,9 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                   value="true"
                   checked={formData.isPublished === true}
                   onChange={() => setFormData(prev => ({ ...prev, isPublished: true }))}
-                  className="form-radio h-4 w-4 text-purple-600"
+                  className="form-radio h-4 w-4 text-purple-600 dark:text-purple-500"
                 />
-                <span className="ml-2 text-gray-700">공개</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">공개</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -217,15 +218,15 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                   value="false"
                   checked={formData.isPublished === false}
                   onChange={() => setFormData(prev => ({ ...prev, isPublished: false }))}
-                  className="form-radio h-4 w-4 text-purple-600"
+                  className="form-radio h-4 w-4 text-purple-600 dark:text-purple-500"
                 />
-                <span className="ml-2 text-gray-700">비공개</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">비공개</span>
               </label>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               제목
             </label>
             <input
@@ -233,12 +234,12 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="제목"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               내용
             </label>
             <Suspense>
@@ -248,7 +249,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 공지여부
               </label>
               <select
@@ -262,7 +263,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                     isAnnouncement: selectedCategory ? selectedCategory.name === '공지' : false
                   }));
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
               >
                 <option value="">선택</option>
                 {categories.map(category => (
@@ -272,13 +273,13 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 팝업여부
               </label>
               <select
                 value={formData.isPopup}
                 onChange={(e) => setFormData(prev => ({ ...prev, isPopup: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
               >
                 <option value="미사용">미사용</option>
                 <option value="사용">사용</option>
@@ -286,7 +287,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 팝업크기
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -295,27 +296,27 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                     type="number"
                     value={formData.popupWidth}
                     onChange={(e) => setFormData(prev => ({ ...prev, popupWidth: e.target.value }))}
-                    className="w-full sm:w-20 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full sm:w-20 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
                     placeholder="400"
                   />
-                  <span className="flex items-center text-gray-500">px</span>
+                  <span className="flex items-center text-gray-500 dark:text-gray-400">px</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <input
                     type="number"
                     value={formData.popupHeight}
                     onChange={(e) => setFormData(prev => ({ ...prev, popupHeight: e.target.value }))}
-                    className="w-full sm:w-20 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full sm:w-20 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 dark:border-gray-600"
                     placeholder="400"
                   />
-                  <span className="flex items-center text-gray-500">px</span>
+                  <span className="flex items-center text-gray-500 dark:text-gray-400">px</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               팝업 타입
             </label>
             <div className="flex items-center gap-4">
@@ -326,9 +327,9 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                   value="IMAGE"
                   checked={formData.popupType === 'IMAGE'}
                   onChange={() => setFormData(prev => ({ ...prev, popupType: 'IMAGE' }))}
-                  className="form-radio h-4 w-4 text-purple-600"
+                  className="form-radio h-4 w-4 text-purple-600 dark:text-purple-500"
                 />
-                <span className="ml-2 text-gray-700">팝업이미지</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">팝업이미지</span>
               </label>
               <label className="flex items-center">
                 <input
@@ -337,19 +338,19 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                   value="CONTENT"
                   checked={formData.popupType === 'CONTENT'}
                   onChange={() => setFormData(prev => ({ ...prev, popupType: 'CONTENT' }))}
-                  className="form-radio h-4 w-4 text-purple-600"
+                  className="form-radio h-4 w-4 text-purple-600 dark:text-purple-500"
                 />
-                <span className="ml-2 text-gray-700">팝업내용</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">팝업내용</span>
               </label>
             </div>
           </div>
 
           {formData.popupType === 'IMAGE' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 팝업이미지
               </label>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 가로 1600px 이상은 자동 리사이징 됩니다.
               </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -362,11 +363,11 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
                 />
                 <label
                   htmlFor="image-upload"
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600"
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
                 >
                   파일 선택
                 </label>
-                <span className="text-gray-600">
+                <span className="text-gray-600 dark:text-gray-400">
                   {formData.representativeImage ? formData.representativeImage.name : (initialData?.representativeImage ? "기존 이미지" : "선택된 파일 없음")}
                 </span>
               </div>
@@ -380,24 +381,24 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
 
           {formData.popupType === 'CONTENT' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 팝업내용
               </label>
               <Editor value={formData.popupContent} onChange={handlePopupContentChange} />
 
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   팝업 미리보기
                 </label>
                 <div
-                  className="border-2 border-dashed border-gray-400 p-4 overflow-y-auto w-full h-auto"
+                  className="border-2 border-dashed border-gray-400 dark:border-gray-500 p-4 overflow-y-auto w-full h-auto"
                   style={{
                     maxWidth: `${formData.popupWidth || 400}px`,
                     maxHeight: `${formData.popupHeight || 400}px`,
                   }}
                 >
                   <div
-                    className="prose max-w-none break-words h-full"
+                    className="prose dark:prose-invert max-w-none break-words h-full"
                     dangerouslySetInnerHTML={{ __html: formData.popupContent || '' }}
                   />
                 </div>
@@ -409,13 +410,14 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
             <button
               type="button"
               onClick={() => router.push("/admin/board/admin-board")}
-              className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 w-full sm:w-auto"
+              className="px-6 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 w-full sm:w-auto"
             >
               목록
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 w-full sm:w-auto"
+              className="px-6 py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-800 w-full sm:w-auto"
+              disabled={postMutation.isPending}
             >
               {isEdit ? '수정' : '저장'}
             </button>
@@ -424,6 +426,6 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
       </div>
     </div>
   )
-}
 
+}
 export default AdminBoardForm

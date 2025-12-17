@@ -44,15 +44,15 @@ export default function OrdersPageClient() {
 
   if (loading) {
     return (
-      <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14 flex justify-center items-center">
+      <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14 flex justify-center items-center text-gray-900 dark:text-gray-100">
         <div>Loading...</div>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14">
-      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900 dark:text-gray-900">매물 의뢰</h1>
+    <main className="container mx-auto p-4 sm:px-4 sm:py-8 mt-14 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-gray-900 dark:text-gray-100">매물 의뢰</h1>
       <OrderForm propertyTypes={propertyTypes} buyTypes={buyTypes} isBanned={isBanned} />
     </main>
   );

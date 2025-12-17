@@ -1,1 +1,2 @@
-`/admin/login`페이지에서 `데이터 최신화` 버튼은 로그인 하지 않은 사람은 볼 수 없도록 해줘
+`/admin/board/admin-board/create`페이지에서
+라이트모드와 다크모드에 어울리도록 tailwindcss4버전으로 작성해줘

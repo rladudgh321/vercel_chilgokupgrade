@@ -1,6 +1,5 @@
 "use client";
 
-import { koreanToNumber } from "@/app/utility/koreanToNumber";
 import { useState, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -273,7 +272,9 @@ export default function LandSearchClient() {
           <button
             onClick={() => setView("list")}
             className={`px-4 py-2 rounded-lg ${
-              view === "list" ? "bg-blue-500 text-white" : "bg-gray-200"
+              view === "list"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200"
             }`}
           >
             목록
@@ -281,7 +282,9 @@ export default function LandSearchClient() {
           <button
             onClick={() => setView("map")}
             className={`px-4 py-2 rounded-lg ${
-              view === "map" ? "bg-blue-500 text-white" : "bg-gray-200"
+              view === "map"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 dark:bg-gray-700 dark:text-gray-200"
             }`}
           >
             지도
