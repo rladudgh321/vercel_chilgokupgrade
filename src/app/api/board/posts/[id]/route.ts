@@ -19,15 +19,21 @@ const UpdatePostSchema = z.object({
   isAnnouncement: z.boolean().optional(),
 });
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
+
+    const postId = parseInt(id, 10);
+    if (isNaN(postId)) {
+        return NextResponse.json({ message: "Invalid ID format" }, { status: 400 });
+    }
 
     const { data: post, error } = await supabase
       .from("BoardPost")
       .select("*")
-      .eq("id", Number(params.id))
+      .eq("id", postId)
       .single();
 
     if (error) {
@@ -44,8 +50,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const postId = parseInt(id, 10);
+    if (isNaN(postId)) {
+        return NextResponse.json({ message: "Invalid ID format" }, { status: 400 });
+    }
+
     const raw = await req.json().catch(() => null);
     if (!raw || typeof raw !== "object") {
       return NextResponse.json({ message: "잘못된 요청 본문" }, { status: 400 });
@@ -59,7 +71,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const { data, error } = await supabase
       .from("BoardPost")
       .update(validatedData)
-      .eq("id", params.id)
+      .eq("id", postId)
       .select()
       .single();
 
@@ -82,15 +94,21 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const postId = parseInt(id, 10);
+    if (isNaN(postId)) {
+        return NextResponse.json({ message: "Invalid ID format" }, { status: 400 });
+    }
+
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
     const { error } = await supabase
       .from("BoardPost")
       .delete()
-      .eq("id", params.id);
+      .eq("id", postId);
 
     if (error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

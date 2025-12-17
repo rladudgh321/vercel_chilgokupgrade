@@ -1,4 +1,5 @@
 import AdminBoardEditClient from "./client";
+import { notFound } from 'next/navigation'; // Import notFound
 
 interface PostForForm {
   id: number;
@@ -26,25 +27,33 @@ interface Category {
 }
 
 interface AdminBoardEditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  }
+  }>
 }
 
 export default async function AdminBoardEditPage({ params }: AdminBoardEditPageProps) {
-  const { id } = params;
+  const { id: postIdString } = await params;
 
-  const postResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/board/posts/${id}`, { cache: 'no-store' });
+  // Validate postIdString
+  const postId = parseInt(postIdString, 10);
+  if (isNaN(postId)) {
+    console.error('Invalid post ID provided:', postIdString);
+    notFound(); // Redirect to 404 page
+  }
+
+  const postResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/board/posts/${postId}`); // Use postId
 
   if (!postResponse.ok) {
     const errorText = await postResponse.text();
     console.error('Error fetching post:', errorText);
+    // Consider handling specific HTTP statuses, e.g., if (postResponse.status === 404) notFound();
     throw new Error('Failed to fetch post');
   }
 
   const post: PostForForm = await postResponse.json();
 
-  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`, { cache: 'no-store' });
+  const categoriesResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`);
   if (!categoriesResponse.ok) {
     console.error('Failed to fetch categories');
     return <AdminBoardEditClient post={post} categories={[]} />;

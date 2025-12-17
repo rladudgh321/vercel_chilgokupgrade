@@ -44,7 +44,7 @@ const AdminBoardForm = ({ initialData, isEdit = false, categories }: AdminBoardF
   const [formData, setFormData] = useState({
     representativeImage: null as File | null,
     representativeImageUrl: initialData?.representativeImage || null,
-    registrationDate: initialData?.createdAt ? new Date(initialData.createdAt) : new Date(),
+    registrationDate: initialData?.registrationDate ? new Date(initialData.registrationDate) : new Date(),
     manager: initialData?.manager || "데모",
     title: initialData?.title || "",
     content: initialData?.content || "",
