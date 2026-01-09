@@ -1,1 +1,1 @@
-SaveImage컴포넌트에서 사진을 첨부할 때 `Request body exceeded 10MB`가 나오도록 된다면 해당 upload한 곳 아래에 `10MB미만 사진을 업로드해주세요`라고 빨간 표시로 표시해줘
+`/admin/listings/listings`페이지에서 프린트를 클릭하면 `사진버전(관리자용 사진 제외한 모든 사진)`을 클릭 할 수 있도록 해주고, 클릭을 했을 경우에 printPhotoVersion컴포넌트에서 이미지를 제한하지 말고 adminImage를 제외한 mainImage와 subImage 모두를 나열해줘

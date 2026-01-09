@@ -51,6 +51,11 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   const [propertyImagesError, setPropertyImagesError] = useState<boolean[]>([]);
   const [adminImagesError, setAdminImagesError] = useState<boolean[]>([]);
 
+  // 업로드 에러 메시지
+  const [mainImageUploadError, setMainImageUploadError] = useState<string | null>(null);
+  const [propertyImagesUploadError, setPropertyImagesUploadError] = useState<string | null>(null);
+  const [adminImagesUploadError, setAdminImagesUploadError] = useState<string | null>(null);
+
 
 
   // ─────────────────────────────────────────────────────────
@@ -68,6 +73,10 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       if (getValues("mainImage") !== url) {
         setValue("mainImage", url, { shouldDirty: true });
       }
+      setMainImageUploadError(null); // Clear error on success
+    },
+    onError: (error) => {
+      setMainImageUploadError("업로드 실패: " + error.message);
     },
   });
 
@@ -80,6 +89,10 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
         const newImages = unique([...propertyImages, ...urls]);
         setPropertyImages(newImages);
         setValue("subImage", newImages, { shouldDirty: true });
+        setPropertyImagesUploadError(null); // Clear error on success
+      },
+      onError: (error) => {
+        setPropertyImagesUploadError("업로드 실패: " + error.message);
       },
     });
 
@@ -92,6 +105,10 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
         const newImages = unique([...adminImages, ...urls]);
         setAdminImages(newImages);
         setValue("adminImage", newImages, { shouldDirty: true });
+        setAdminImagesUploadError(null); // Clear error on success
+      },
+      onError: (error) => {
+        setAdminImagesUploadError("업로드 실패: " + error.message);
       },
     });
 
@@ -106,8 +123,15 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   // /api/image/uploads: file1(매물), file2(관리자)
   // ─────────────────────────────────────────────────────────
   const onPickMain = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMainImageUploadError(null);
     const f = e.target.files?.[0];
     if (!f) return;
+
+    if (f.size > 10 * 1024 * 1024) {
+      setMainImageUploadError(`10MB미만 사진을 업로드해주세요 (현재: ${(f.size / 1024 / 1024).toFixed(2)}MB)`);
+      return;
+    }
+
     const fd = new FormData();
     fd.append("file", f);
     // 필요 시 버킷/프리픽스 지정
@@ -117,8 +141,16 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   };
 
   const onPickSubs = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPropertyImagesUploadError(null);
     const files = e.target.files;
     if (!files?.length) return;
+
+    const totalSize = Array.from(files).reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 10 * 1024 * 1024) {
+      setPropertyImagesUploadError(`10MB미만 사진을 업로드해주세요 (현재: ${(totalSize / 1024 / 1024).toFixed(2)}MB)`);
+      return;
+    }
+
     const fd = new FormData();
     Array.from(files).forEach((f) => fd.append("file1", f));
     // fd.append("bucket", "build-public");
@@ -127,8 +159,16 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
   };
 
   const onPickAdmins = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAdminImagesUploadError(null);
     const files = e.target.files;
     if (!files?.length) return;
+
+    const totalSize = Array.from(files).reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 10 * 1024 * 1024) {
+      setAdminImagesUploadError(`10MB미만 사진을 업로드해주세요 (현재: ${(totalSize / 1024 / 1024).toFixed(2)}MB)`);
+      return;
+    }
+
     const fd = new FormData();
     Array.from(files).forEach((f) => fd.append("file2", f));
     // fd.append("bucket", "build-admin");
@@ -162,6 +202,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       <div className="mb-6">
         <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">매물 대표 사진</label>
         <input type="file" accept="image/*" onChange={onPickMain} className="mt-2 text-gray-700 dark:text-gray-300" />
+        {mainImageUploadError && <div className="text-red-500 dark:text-red-400 text-sm mt-1">{mainImageUploadError}</div>}
         {mainImage && isValidImgSrc(mainImage) && (
           <div className="mt-3 flex items-center gap-3">
             <Image src={mainImage} alt="대표 사진" width={300} height={300} className="w-full max-w-[300px] h-auto" onLoad={() => setMainImageLoading(false)} onError={() => {
@@ -187,6 +228,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       <div className="mb-6">
         <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">매물 사진들</label>
         <input type="file" accept="image/*" multiple onChange={onPickSubs} className="mt-2 text-gray-700 dark:text-gray-300" />
+        {propertyImagesUploadError && <div className="text-red-500 dark:text-red-400 text-sm mt-1">{propertyImagesUploadError}</div>}
         {propertyImagesError.some(Boolean) && <div className="text-red-500 dark:text-red-400">일부 이미지 로드 실패</div>}
         {propertyImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white dark:bg-blue-700 dark:hover:bg-blue-800" onClick={() => setPropertyImages(getValues("subImage") ? [...getValues("subImage")] : [])}>재시도</button>}
         {propertyImages.length > 0 && (
@@ -228,6 +270,7 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
       <div className="mb-2">
         <label className="block text-lg sm:text-xl font-semibold dark:text-gray-300">관리자만 볼 수 있는 사진들</label>
         <input type="file" accept="image/*" multiple onChange={onPickAdmins} className="mt-2 text-gray-700 dark:text-gray-300" />
+        {adminImagesUploadError && <div className="text-red-500 dark:text-red-400 text-sm mt-1">{adminImagesUploadError}</div>}
         {adminImagesError.some(Boolean) && <div className="text-red-500 dark:text-red-400">일부 이미지 로드 실패</div>}
         {adminImagesError.some(Boolean) && <button type="button" className="px-3 py-1 rounded bg-blue-500 text-white dark:bg-blue-700 dark:hover:bg-blue-800" onClick={() => setAdminImages(getValues("adminImage") ? [...getValues("adminImage")] : [])}>재시도</button>}
         {adminImages.length > 0 && (
