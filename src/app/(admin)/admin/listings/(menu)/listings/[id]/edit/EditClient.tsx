@@ -187,6 +187,7 @@ function normalizeForForm(d: any, themeOptions: string[], labelOptions: Option[]
         : (typeof d.mainImage === "object" && d.mainImage?.url ? d.mainImage.url : ""),
     subImage: toStrArray(d.subImage),
     adminImage: toStrArray(d.adminImage),
+    blogUrl: d.blogUrl ?? "",
   } as FormData;
 }
 
@@ -346,6 +347,7 @@ export default function EditClient({ id }: { id: number }) {
         mainImage: payload.mainImage ?? null,
         subImage: payload.subImage ?? [],
         adminImage: payload.adminImage ?? [],
+        blogUrl: payload.blogUrl ?? null,
       };
 
       return BuildUpdate(id, serverPayload);

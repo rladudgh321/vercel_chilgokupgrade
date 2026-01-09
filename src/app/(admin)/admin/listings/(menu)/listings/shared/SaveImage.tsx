@@ -10,6 +10,7 @@ type FormShape = {
   mainImage?: string;
   subImage?: string[];
   adminImage?: string[];
+  blogUrl?: string;
 };
 
 const isValidImgSrc = (s: unknown): s is string => {
@@ -32,7 +33,7 @@ const arraysEqual = (a: string[] = [], b: string[] = []) => {
 const unique = (arr: string[]) => Array.from(new Set(arr));
 
 const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => void }> = ({ onImageLoadingStateChange }) => {
-  const { getValues, setValue } = useFormContext<FormShape>();
+  const { getValues, setValue, register } = useFormContext<FormShape>();
 
   // 미리보기용 로컬 상태 (getValues로 초기화)
   const [mainImage, setMainImage] = useState<string | null>(() => getValues("mainImage"));
@@ -261,6 +262,17 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
             ))}
           </div>
         )}
+      </div>
+
+      {/* 블로그 url 주소 */}
+      <div className="mb-6">
+        <label htmlFor="blogUrl" className="block text-lg sm:text-xl font-semibold dark:text-gray-300">블로그 URL 주소</label>
+        <input 
+          id="blogUrl"
+          type="url"
+          {...register("blogUrl")}
+          className="mt-2 text-gray-700 dark:text-gray-300 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        />
       </div>
     </div>
   );

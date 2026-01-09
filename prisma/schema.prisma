@@ -97,6 +97,7 @@ model Build {
   mainImage        String?
   subImage         Json?
   adminImage       Json?
+  blogUrl          String?
   lat              Float?
   lng              Float?
   createdAt        DateTime       @default(now())

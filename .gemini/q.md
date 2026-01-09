@@ -1,6 +1,3 @@
-`/admin/board/admin-board/edit/[id]`페이지에서 Editor컴포넌트를 수정하고 싶어
-
-nextjs16 app router를 사용하고 있고 tailwindcss4버전을 사용하고 있어
-git명령어는 절대 사용하지마.
-
-나는 라이트모드와 다크모드 구현이 적절하게 있었으면 좋겠어
+CardItem컴포넌트를 수정하고 싶어
+이미지에 라벨들이 왼쪽 상단과 오른쪽 상단에 있는데, 이번에는 오른쪽 하단에 표시하고 싶어.
+Build테이블의 BlogUrl이 존재하면 오른쪽하단에 초록색 배경에 흰색글자로 Blog로 표시되었으면 좋겠어

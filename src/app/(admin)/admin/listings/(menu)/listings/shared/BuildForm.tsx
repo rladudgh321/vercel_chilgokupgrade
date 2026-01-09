@@ -106,6 +106,7 @@ export interface FormData {
   mainImage: string | null;
   subImage: string[];     // 백엔드에서 Json으로 직렬화
   adminImage: string[];   // 백엔드에서 Json으로 직렬화
+  blogUrl: string | null;
 }
 
 // ✅ 기본값도 스키마 타입에 맞춤
@@ -201,6 +202,7 @@ export const BASE_DEFAULTS: FormData = {
   mainImage: "",
   subImage: [],
   adminImage: [],
+  blogUrl: "",
 };
 
 type Props = {
