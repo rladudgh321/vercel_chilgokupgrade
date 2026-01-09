@@ -145,13 +145,12 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
           @page {
             size: A4;
             margin: 20mm;
-            /* Clear default browser headers/footers */
-            @top-left { content: none; }
-            @top-center { content: none; }
-            @top-right { content: none; }
-            @bottom-left { content: none; }
-            @bottom-center { content: none; }
-            @bottom-right { content: none; }
+            @bottom-left { content: ''; }
+            @bottom-center { content: ''; }
+            @bottom-right { 
+              content: counter(page) " / " counter(pages);
+              font-size: 10pt;
+            }
           }
 
           body {
@@ -215,5 +214,5 @@ export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { s
     </html>
   `;
 
-  openPrintSafe({ title: `매물 #${listing.id}`, bodyHtml });
+  openPrintSafe({ title: `#매물 ${listing.id}`, bodyHtml });
 };

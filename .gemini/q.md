@@ -1,4 +1,1 @@
-ListingCard컴포넌트에서 Image의 오른쪽 하단에 isBlogUrl이 true이고 blogUrl이 존재하면 CardItem의 디자인과 같이 블로그라고 표시해줘
-
----
-npm run build와 npm run lint를 하지마
+SaveImage컴포넌트에서 사진을 첨부할 때 `Request body exceeded 10MB`가 나오도록 된다면 해당 upload한 곳 아래에 `10MB미만 사진을 업로드해주세요`라고 빨간 표시로 표시해줘
