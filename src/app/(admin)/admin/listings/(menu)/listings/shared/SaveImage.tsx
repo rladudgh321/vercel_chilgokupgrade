@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage, uploadImages } from "@/app/apis/build";
 
@@ -11,6 +11,7 @@ type FormShape = {
   subImage?: string[];
   adminImage?: string[];
   blogUrl?: string;
+  isBlogURL?: boolean;
 };
 
 const isValidImgSrc = (s: unknown): s is string => {
@@ -33,7 +34,7 @@ const arraysEqual = (a: string[] = [], b: string[] = []) => {
 const unique = (arr: string[]) => Array.from(new Set(arr));
 
 const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => void }> = ({ onImageLoadingStateChange }) => {
-  const { getValues, setValue, register } = useFormContext<FormShape>();
+  const { getValues, setValue, register, control } = useFormContext<FormShape>();
 
   // 미리보기용 로컬 상태 (getValues로 초기화)
   const [mainImage, setMainImage] = useState<string | null>(() => getValues("mainImage"));
@@ -272,6 +273,32 @@ const SaveImage: React.FC<{ onImageLoadingStateChange?: (isLoading: boolean) => 
           type="url"
           {...register("blogUrl")}
           className="mt-2 text-gray-700 dark:text-gray-300 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        />
+        <Controller
+          name="isBlogURL"
+          control={control}
+          render={({ field }) => (
+            <div className="mt-2 flex items-center gap-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  onChange={() => field.onChange(true)}
+                  checked={field.value === true}
+                  className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <span className="ml-2 text-gray-700 dark:text-gray-300">공개</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  onChange={() => field.onChange(false)}
+                  checked={field.value === false}
+                  className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <span className="ml-2 text-gray-700 dark:text-gray-300">비공개</span>
+              </label>
+            </div>
+          )}
         />
       </div>
     </div>

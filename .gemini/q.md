@@ -1,3 +1,1 @@
-CardItem컴포넌트를 수정하고 싶어
-이미지에 라벨들이 왼쪽 상단과 오른쪽 상단에 있는데, 이번에는 오른쪽 하단에 표시하고 싶어.
-Build테이블의 BlogUrl이 존재하면 오른쪽하단에 초록색 배경에 흰색글자로 Blog로 표시되었으면 좋겠어
+BuildDetailModalClient컴포넌트에서 `BlogUrl정보 삽입`이라고 내가 주석을 달아놓았는데 해당 매물 정보와 같은 디자인으로 isBlogUrl이 true이고 blogUrl이 존재하면 `블로그 주소`와 blogUrl 문자열을 보여주고 하이퍼링크로 클릭하면 새창으로 하게 해줘 noopener noreffer로 해줘

@@ -59,6 +59,8 @@ type Props = {
     otherYield?: string;
     priceDisplay?: string;
     dealScope?: string;
+    blogUrl?: string;
+    isBlogURL?: boolean;
   };
 };
 
@@ -165,7 +167,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
           </div>
         )}
 
-        {/* 라벨들 (Existing from CardItem) */}
+        {/* 기존 좌측 상단 라벨들 */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-wrap gap-1">
           {listing.label && (
             <span className="px-2 py-1 bg-red-500 text-white text-xs rounded-full">
@@ -184,7 +186,7 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
           )}
         </div>
 
-        {/* 매물 ID (Existing from CardItem) */}
+        {/* 기존 우측 상단 라벨들 (매물 ID 및 dealScope) */}
         <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-x-2">
           {listing.dealScope === '부분' && (
             <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-md">
@@ -195,6 +197,15 @@ const CardItem = ({ listing, onClick, priority }: Props & { onClick: (id: number
             #{listing.id}
           </div>
         </div>
+
+        {/* 블로그 URL 라벨 (오른쪽 하단) */}
+        {listing.blogUrl && listing.isBlogURL === true && (
+          <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3">
+            <span className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">
+              블로그
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 매물 정보 */}

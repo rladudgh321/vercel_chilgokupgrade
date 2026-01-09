@@ -147,6 +147,8 @@ export interface IBuild {
   mainImage?: string | null;
   subImage?: string[] | JsonValue | null;   // DB Json을 그대로 두거나, 사용처에서 string[]로 정규화
   adminImage?: string[] | JsonValue | null; // DB Json
+  blogUrl?: string | null;
+  isBlogURL?: boolean | null;
 
   // 시스템
   createdAt?: string | Date | null;

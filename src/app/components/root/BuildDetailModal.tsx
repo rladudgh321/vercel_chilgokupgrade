@@ -155,6 +155,8 @@ export default function BuildDetailModalClient({ build, onClose }: { build: IBui
                   {getAreaString(build)}
                 </span>
               )}
+              {/* BlogUrl정보 삽입 */}
+              {build.isBlogURL && build.blogUrl && Row("블로그 주소", <a href={build.blogUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{build.blogUrl}</a>)}
             </div>
           </div>
 
