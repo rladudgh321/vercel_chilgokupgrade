@@ -1,1 +1,4 @@
-BuildDetailModalClient컴포넌트에서 `BlogUrl정보 삽입`이라고 내가 주석을 달아놓았는데 해당 매물 정보와 같은 디자인으로 isBlogUrl이 true이고 blogUrl이 존재하면 `블로그 주소`와 blogUrl 문자열을 보여주고 하이퍼링크로 클릭하면 새창으로 하게 해줘 noopener noreffer로 해줘
+ListingCard컴포넌트에서 Image의 오른쪽 하단에 isBlogUrl이 true이고 blogUrl이 존재하면 CardItem의 디자인과 같이 블로그라고 표시해줘
+
+---
+npm run build와 npm run lint를 하지마

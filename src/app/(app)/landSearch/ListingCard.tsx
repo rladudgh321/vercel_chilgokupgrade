@@ -57,6 +57,8 @@ type Props = {
     otherYield?: string; // Added
     priceDisplay?: string;
     dealScope?: string;
+    blogUrl?: string;
+    isBlogURL?: boolean;
   };
 };
 
@@ -175,6 +177,13 @@ const ListingCard = ({ listing, onClick }: Props & { onClick: (id: number) => vo
               #{listing.id}
             </div>
           </div>
+          {listing.blogUrl && listing.isBlogURL === true && (
+            <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3">
+              <span className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">
+                블로그
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content Section */}
