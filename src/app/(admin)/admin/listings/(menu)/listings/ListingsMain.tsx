@@ -1,6 +1,6 @@
 "use client";
 import type { SortKey } from "./ListingsShell";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   keepPreviousData,
@@ -49,6 +49,7 @@ const LIMIT = 10;
 
 const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   const queryClient = useQueryClient();
+  const printMenuRef = useRef<HTMLDivElement>(null);
 
   const formatPrice = (price: number | undefined) => {
       if (price === undefined || price === null) return "";
@@ -255,6 +256,24 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
   };
 
 
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (printMenuRef.current && !printMenuRef.current.contains(event.target as Node)) {
+        setPrintMenuRowId(null);
+      }
+    };
+
+    if (printMenuRowId !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [printMenuRowId]);
 
   if (isLoading) return <p>로딩 중...</p>;
   if (isError) return <p>데이터를 불러오는 중 오류가 발생했습니다.</p>;
@@ -563,7 +582,7 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
 
                       {/* 프린트 드롭다운 */}
                       {printMenuRowId === id && (
-                        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-56 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg text-sm">
+                        <div ref={printMenuRef} className="absolute top-10 left-1/2 -translate-x-1/2 z-10 w-56 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg text-sm">
                           <button
                             type="button"
                             onClick={() => {
@@ -572,7 +591,27 @@ const ListingsMain = ({ ListingsData, sortKey }: ListingsMainProps) => {
                             }}
                             className="w-full text-left px-3 py-2 hover:bg-slate-100"
                           >
-                            사진 버전 (대표 + 최대 3장)
+                            사진 버전 (관리자용 사진 제외한 최대 4장)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPrintMenuRowId(null);
+                              printPhotoVersion(listing, workInfoData?.data, { excludeAdminImages: true });
+                            }}
+                            className="w-full text-left px-3 py-2 hover:bg-slate-100"
+                          >
+                            사진 버전(관리자용 사진 제외한 모든 사진)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPrintMenuRowId(null);
+                              printPhotoVersion(listing, workInfoData?.data, { includeAdminImages: true });
+                            }}
+                            className="w-full text-left px-3 py-2 hover:bg-slate-100"
+                          >
+                            사진 버전(관리자용 사진 포함한 모든 사진)
                           </button>
                           <button
                             type="button"

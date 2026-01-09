@@ -3,17 +3,35 @@ import { numberToKoreanWithDigits } from '@/app/utility/NumberToKoreanWithDigits
 import { formatYYYYMMDD } from "@/app/utility/koreaDateControl";
 import { openPrintSafe } from "@/app/utility/print";
 
-export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { showPhotos: boolean }) => {
+export const printPhotoVersion = async (listing: IBuild, workInfo, options?: { showPhotos?: boolean; excludeAdminImages?: boolean; includeAdminImages?: boolean }) => {
   const showPhotos = options?.showPhotos ?? true;
+  const excludeAdminImages = options?.excludeAdminImages ?? false;
+  const includeAdminImages = options?.includeAdminImages ?? false;
 
-  const formatPrice = (price: number | undefined) => {
-    if (price === undefined || price === null) return "";
-    return numberToKoreanWithDigits(price);
-  };
+  let imageSources: (string | null | undefined)[] = [];
 
-  const mainImages = [listing.mainImage, ...(Array.isArray(listing.subImage) ? listing.subImage : [])]
-    .filter(src => !!src)
-    .slice(0, 4);
+  if (includeAdminImages) {
+    // New: All photos, including admin
+    imageSources = [
+      listing.mainImage,
+      ...(Array.isArray(listing.subImage) ? listing.subImage : []),
+      ...(Array.isArray(listing.adminImage) ? listing.adminImage : [])
+    ];
+  } else if (showPhotos) {
+    // Original photo versions (with or without slice)
+    imageSources = [listing.mainImage, ...(Array.isArray(listing.subImage) ? listing.subImage : [])];
+  }
+
+  const filteredSources = imageSources.filter(src => src && typeof src === 'string') as string[];
+
+  let mainImages: string[] = [];
+  if (includeAdminImages || excludeAdminImages) {
+    // For both "all photos" versions, don't slice
+    mainImages = filteredSources;
+  } else if (showPhotos) {
+    // Original "photo version" with limit
+    mainImages = filteredSources.slice(0, 4);
+  }
 
   const cleanedAddress = listing.address ? String(listing.address).replace(/\(.*?\)/g, '').trim() : "";
 

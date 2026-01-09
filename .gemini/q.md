@@ -1,1 +1,1 @@
-`/admin/listings/listings`페이지에서 프린트를 클릭하면 `사진버전(관리자용 사진 제외한 모든 사진)`을 클릭 할 수 있도록 해주고, 클릭을 했을 경우에 printPhotoVersion컴포넌트에서 이미지를 제한하지 말고 adminImage를 제외한 mainImage와 subImage 모두를 나열해줘
+`/admin/listings/listings`페이지에서 프린트를 클릭하면 `사진 버전`, `텍스트 버전` 이렇게 나오는데 다른 데를 클릭했을 때 이 버튼이 사라지도록 해줘 실수로 눌렀을 때를 대비하도록 다른데를 클릭하면 안나오도록 해줘
